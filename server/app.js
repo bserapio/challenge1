@@ -10,16 +10,20 @@ const model = require('./db/model/index.js').init(sequelize);
 const user = require('./routes/users');
 const index = require('./routes/index');
 const app = express();
+var passport = require('passport');
 
-
+require('./config/passport')(passport); // pass passport for configuration
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
-//json parser
 app.use(bodyParser.json());
-// Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')))
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
+
+
 
 app.use('/', index);
 app.use('/user', user);
