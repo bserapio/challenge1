@@ -7,8 +7,8 @@ const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('database', 'user', 'password', {dialect: 'postgres', logging: false});
 const model = require('./db/model/index.js').init(sequelize);
-const user = require('./controllers/users');
-const index = require('./controllers/index');
+const user = require('./routes/users');
+const index = require('./routes/index');
 const app = express();
 
 

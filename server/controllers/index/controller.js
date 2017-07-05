@@ -5,3 +5,7 @@ var model = require('../../db/model/index.js');
 exports.home = function(req, res) {
     res.send('NOT IMPLEMENTED: Author list');
 };
+
+exports.login = function(req, res) {
+    res.send('NOT IMPLEMENTED: Author list');
+};

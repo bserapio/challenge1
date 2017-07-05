@@ -1,0 +1,6 @@
+{
+  "presets": ["env"],
+  "plugins": [
+    ["import", { libraryName: "antd", style: "css" }] // `style: true` for less
+  ]
+}
