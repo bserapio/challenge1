@@ -25,31 +25,25 @@ exports.addUser = function(req, res) {
     }
 
 };
+exports.listUser = function(req,res) {
+    var userModel = req.model.User;
+    var limit = req.param('limit',10);
+    var page = req.param('page',1);
+    var offset = limit * ( page -1);
+    limit = (limit >0) ? limit : 10;
+    offset = (offset >=0)? offset: 0;
+    userModel.findAndCountAll({
 
-// Display detail page for a specific Author
-exports.addClient = function(req, res) {
-    var clientDbModel = req.model.ClientDb;
-    var clientMetaModel = req.model.ClientMeta;
-    var input = req.body;
-    var result = t.validate(input, domain.CreateDbInput);
-    if (result.isValid()) {
+        limit: limit,
+        offset: offset,
+    }).then(function (result) {
+        res.json(result);
+    });
 
-        input.autoUpdate= true;
-        input.dbName = 'client_'+input.identifier;
-        input.dbLogin = 'b7_'+input.identifier;
-        input.active=true;
-        if (!(input.hasOwnProperty('dbPass'))) {
-            input.dbPass = randomstring.generate(20);
-        }
-
-
-        clientDbModel.create(input).then(clientdb => {
-            res.json(clientdb);
-
-        })
-
-    } else {
-        res.status(400).json(result.errors);
-    }
-
+};
+exports.detailUser = function(req,res) {
+    var userModel = req.model.User;
+    userModel.findById(req.params.id).then(user => {
+        res.json(user);
+    });
 };

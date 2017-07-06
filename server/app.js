@@ -22,9 +22,10 @@ app.use(requestMiddleware);
 
 
 const index = require('./routes/index')(passport,express);
-const user = require('./routes/users')(passport,express);
+const user = require('./routes/user')(passport,express);
 
-
+const client = require('./routes/client')(passport,express);
+app.use('/api/client',client);
 app.use('/api/user',user);
 app.use('/', index);
 
