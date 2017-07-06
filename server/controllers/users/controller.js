@@ -1,5 +1,5 @@
 
-var model = require('../../db/model/index.js');
+var model = require('../../db/models/index.js');
 
 // Display list of all Authors
 exports.user_list = function(req, res) {

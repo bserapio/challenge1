@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('database', 'user', 'password', {dialect: 'postgres', logging: false});
-const model = require('./db/model/index.js').init(sequelize);
+const model = require('./db/models/index.js');
 const user = require('./routes/users');
 const index = require('./routes/index');
 const app = express();
@@ -27,7 +27,6 @@ app.use(passport.session()); // persistent login sessions
 
 app.use('/', index);
 app.use('/user', user);
-app.use('/catalog', catalog);
 
 
 app.get('*', (req, res) => {

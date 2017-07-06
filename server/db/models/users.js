@@ -1,7 +1,9 @@
 /* eslint new-cap: "off", global-require: "off" */
 
+var roles = require('../../config/role');
+var bcrypt = require('bcrypt-nodejs');
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('User', {
+    const User = sequelize.define('User', {
         id: {
             type: DataTypes.INTEGER,
             field: 'id',
@@ -22,7 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         role: {
             type: DataTypes.STRING(255),
             field: 'role',
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAllowed(value) {
+                    if(!roles.hasOwnProperty(value.trim().toLowerCase())){
+                        throw new Error('Role is not permitted')
+                    }
+                    this.setDataValue('role', value.trim().toLowerCase());
+                }
+            }
         },
         password: {
             type: DataTypes.STRING(255),
@@ -42,8 +52,20 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         schema: 'public',
         tableName: 'users',
-        timestamps: false
+        timestamps: false,
+        hooks: {
+            beforeCreate: (user, options) => {
+               user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
+            }
+        }
     });
+
+    User.validPassword= function(password) {
+        var hash =this.password;
+        hash = hash.substring(4);
+        hash = '$2a$'+hash;
+        return bcrypt.compareSync(password,hash);
+    }
 };
 
 module.exports.initRelations = () => {

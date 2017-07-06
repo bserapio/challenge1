@@ -1,7 +1,7 @@
 /* eslint new-cap: "off", global-require: "off" */
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('ClientMetum', {
+    return sequelize.define('ClientMeta', {
         id: {
             type: DataTypes.INTEGER,
             field: 'id',
