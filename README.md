@@ -45,7 +45,29 @@ public function create($password)
 
 ```
 
+* Create Client Account
+```
+ $expireDate = mktime(0, 0, 0, date("m"), date("d")+30, date("Y"));
+          $misc = $this->_helper->Misc;
+          $dbName = 'client_'.$input['opcode'];
+          $dbUser = 'b7_'.$input['opcode'];
+          $password = $misc->randomPassword();
 
+          $data = array(
+            'identifier' => $input['opcode'],
+            'client_id' => null,
+            'name' => $input['name'],
+            'lang' => $input['lang'],
+            'db_name' => $dbName,
+            'db_login' => $dbUser,
+            'db_pass' => $password,
+            'active' => 1,
+            'maintenance' => 0,
+            'auto_update' => 1,
+            'expire_date' => date('Y-m-d', $expireDate),
+          );
+
+```
 
 
 CLIENT SIDE

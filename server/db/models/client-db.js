@@ -74,7 +74,15 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         schema: 'public',
         tableName: 'client_db',
-        timestamps: false
+        timestamps: false,
+        hooks: {
+            afterCreate: (client, options) => {
+                return client.set('clientId', client.get('id')).save().then((self) => {
+                    return self;
+                });
+
+            }
+        }
     });
 };
 

@@ -1,5 +1,4 @@
 module.exports = {
-
         "guest":"guest",
         "user":"user",
         "finance":"finance",
