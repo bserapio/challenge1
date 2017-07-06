@@ -1,6 +1,6 @@
 
 
-var client_controller = require('../controllers/clients');
+var client_controller = require('../controllers/client');
 var middleware = require('../middleware');
 module.exports = function(passport,express) {
     var router = express.Router();
