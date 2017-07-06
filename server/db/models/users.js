@@ -60,15 +60,13 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    User.validPassword= function(password) {
+    User.prototype.validPassword= function(password) {
         var hash =this.password;
         hash = hash.substring(4);
         hash = '$2a$'+hash;
-        return bcrypt.compareSync(password,hash);
-    }
-};
+        var compare = bcrypt.compareSync(password,hash);
 
-module.exports.initRelations = () => {
-    delete module.exports.initRelations; // Destroy itself to prevent repeated calls.
-
+        return compare
+    };
+    return User;
 };

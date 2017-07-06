@@ -1,6 +1,5 @@
 module.exports = {
 
-    "permissions": {
         "guest":"guest",
         "user":"user",
         "finance":"finance",
@@ -9,5 +8,5 @@ module.exports = {
         "account-manager":"account-manager",
         "admin":"admin",
         "super":"super"
-    }
+
 }
