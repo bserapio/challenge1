@@ -41,6 +41,15 @@ var CreateInput = t.struct({
     role:   Role
 });
 
+
+var CreateUpdateInput = t.struct({
+    username: t.maybe(t.Str),
+    name: t.maybe(t.Str),
+    password: t.maybe(Password),
+    role:   t.maybe(Role),
+});
+
+
 var CreateDbInput = t.struct({
     identifier:Opcode,
     lang : Language,
@@ -54,4 +63,6 @@ module.exports = {
     Password:     Password,
     CreateInput:  CreateInput,
     CreateDbInput: CreateDbInput,
+    CreateUpdateInput:CreateUpdateInput,
 };
+

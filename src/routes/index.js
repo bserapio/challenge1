@@ -20,7 +20,7 @@ const Routes = () => {
 export const childRoutes = [
     {
         'path':'/home',
-        'component': Home,
+        'component': App,
         'exactly': true
     }
 

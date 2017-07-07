@@ -23,7 +23,6 @@ exports.addUser = function(req, res) {
     } else {
         res.status(400).json(result.errors);
     }
-
 };
 exports.listUser = function(req,res) {
     var userModel = req.model.User;
@@ -47,3 +46,31 @@ exports.detailUser = function(req,res) {
         res.json(user);
     });
 };
+exports.updateUser = function(req,res) {
+    var input = req.body;
+    var result = t.validate(input, domain.CreateUpdateInput);
+    if (result.isValid()) {
+        var userModel = req.model.User;
+        userModel.findById(req.params.id).then(user => {
+            if (user) {
+                userModel.update(input, {
+                    where: { id: user.id },
+                    returning: true,
+                    plain: true
+                })
+                    .then(function (result) {
+                        res.json(result)
+                    });
+            } else {
+                res.status(404).json({message:"user does not exists"});
+            }
+
+
+        })
+    } else {
+
+        res.status(400).json(result.errors);
+    }
+};
+
+
