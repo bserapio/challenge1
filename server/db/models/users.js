@@ -3,6 +3,7 @@
 var roles = require('../../config/role');
 var bcrypt = require('bcrypt-nodejs');
 module.exports = (sequelize, DataTypes) => {
+
     const User = sequelize.define('User', {
         id: {
             type: DataTypes.INTEGER,

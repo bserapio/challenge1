@@ -8,6 +8,22 @@ Conventions:
 * Db : Have all about db: Models
 
 
+routes
+
+* /login : Log user
+
+* /api/user : User EndPoints
+
+    * /:id/client/:idMeta (GET/PUT) :client "IdMeta" from client :id
+    * /:id/client (GET): List all Client from users ( paginated)
+    * /:id (GET/PUT): List a clientID
+    * / (GET/POST) List all users or create one
+    
+* /api/client :Client EndPoints
+    * / (GET/POST) : List all clientsdb (Paginated) or create a Client DB
+    * /:id(GET/PUT) : Show one client id or updated
+
+
 
 Salt Password
 ```
@@ -70,12 +86,19 @@ public function create($password)
 ```
 
 
+
+
+
 CLIENT SIDE
 ===========
 
 Conventions
 
 * Routes: Will have all about routes
+
+
+
+
 * Containers : Will have components
 
 

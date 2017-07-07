@@ -72,5 +72,64 @@ exports.updateUser = function(req,res) {
         res.status(400).json(result.errors);
     }
 };
+exports.clientListUser = function(req,res) {
+    var limit = req.param('limit',10);
+    var page = req.param('page',1);
+    var offset = limit * ( page -1);
+    limit = (limit >0) ? limit : 10;
+    offset = (offset >=0)? offset: 0;
+    var clientMetaModel = req.model.ClientMeta;
+    clientMetaModel.findAndCountAll({
+        where:{userId:req.user.id},
+        limit: limit,
+        offset: offset,
+    }).then(function (result) {
+        res.json(result);
+    });
+
+};
+exports.clientDetailUser = function(req,res) {
+
+    var clientMetaModel = req.model.ClientMeta;
+    clientMetaModel.findOne({
+        where:{userId:req.params.id,id:req.params.idMeta},
+    }).then(function (result) {
+        res.json(result);
+    });
+
+};
+
+exports.clientUpdateDetailUser = function(req,res) {
+
+    var input = req.body;
+    var result = t.validate(input, domain.CreateUpdateMetaDbInput);
+    if (result.isValid()) {
+
+        var clientMetaModel = req.model.ClientMeta;
+        clientMetaModel.findOne({
+            where:{userId:req.params.id,id:req.params.idMeta},
+        }).then( client => {
+
+            if (client) {
+                clientMetaModel.update(input, {
+                    where: { id: client.id },
+                    returning: true,
+                    plain: true
+                })
+                    .then(function (result) {
+                        res.json(result)
+                    });
+
+            } else {
+                res.status(404);
+            }
+        });
 
 
+    } else {
+        res.status(400).json(result.errors);
+    }
+
+
+
+};

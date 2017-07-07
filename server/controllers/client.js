@@ -22,8 +22,30 @@ exports.addClient = function(req, res) {
 
 
         clientDbModel.create(input).then(clientdb => {
-            res.json(clientdb);
 
+            /**
+             * We put all the info that we need for the client_meta
+             *
+             */
+                var clientMeta;
+                clientMeta ={
+                    clientId:clientdb.id,
+                    userId:req.user.id,
+                    type:input.type,
+                    createdAt: new Date(),
+                    modifiedAt: new Date(),
+                }
+            clientMetaModel.create(clientMeta).then(clientmeta=>{
+                if (clientmeta) {
+                    result = {
+                        client:clientdb,
+                        meta:clientmeta
+                    };
+                    res.json(result);
+                } else {
+                    res.json(400).json({message:"Error Creating clientMeta"});
+                }
+            });
         })
 
     } else {
@@ -71,6 +93,13 @@ exports.updateClient = function(req,res) {
                     plain: true
                 })
                     .then(function (result) {
+                        /**
+                         * We put all the info that we need for the client_meta
+                         *
+                         */
+
+
+
                         res.json(result)
                     });
             } else {

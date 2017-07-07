@@ -56,7 +56,7 @@ var CreateDbInput = t.struct({
     name : t.Str,
     dbPass: t.maybe(Password),
     type:Type
-})
+});
 
 var CreateUpdateDbInput = t.struct({
     identifier:t.maybe(Opcode),
@@ -64,14 +64,27 @@ var CreateUpdateDbInput = t.struct({
     name : t.maybe(t.Str),
     dbPass: t.maybe(Password),
     type:t.maybe(Type)
-})
+});
+
+
+var CreateUpdateMetaDbInput = t.struct({
+    newInvoice : t.maybe(t.Bool),
+    newChannel : t.maybe(t.Bool),
+    cubilis : t.maybe(t.Bool),
+    ikentoo : t.maybe(t.Bool),
+    seekda : t.maybe(t.Bool),
+    channelManager : t.maybe(t.Bool),
+});
+
+
 
 module.exports = {
     Password:     Password,
     CreateInput:  CreateInput,
     CreateDbInput: CreateDbInput,
     CreateUpdateInput:CreateUpdateInput,
-    CreateUpdateDbInput:CreateUpdateDbInput
+    CreateUpdateDbInput:CreateUpdateDbInput,
+    CreateUpdateMetaDbInput:CreateUpdateMetaDbInput
 
 };
 
