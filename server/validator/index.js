@@ -58,11 +58,20 @@ var CreateDbInput = t.struct({
     type:Type
 })
 
+var CreateUpdateDbInput = t.struct({
+    identifier:t.maybe(Opcode),
+    lang : t.maybe(Language),
+    name : t.maybe(t.Str),
+    dbPass: t.maybe(Password),
+    type:t.maybe(Type)
+})
 
 module.exports = {
     Password:     Password,
     CreateInput:  CreateInput,
     CreateDbInput: CreateDbInput,
     CreateUpdateInput:CreateUpdateInput,
+    CreateUpdateDbInput:CreateUpdateDbInput
+
 };
 

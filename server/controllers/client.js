@@ -53,3 +53,35 @@ exports.detailClient = function(req,res) {
         res.json(user);
     });
 };
+
+exports.updateClient = function(req,res) {
+    var input = req.body;
+    var result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        var clientDbModel = req.model.ClientDb;
+        clientDbModel.findById(req.params.id).then(client => {
+            if (client) {
+                input.autoUpdate= true;
+                input.dbName = 'client_'+input.identifier;
+                input.dbLogin = 'b7_'+input.identifier;
+                input.active=true;
+                clientDbModel.update(input, {
+                    where: { id: client.id },
+                    returning: true,
+                    plain: true
+                })
+                    .then(function (result) {
+                        res.json(result)
+                    });
+            } else {
+                res.status(404).json({message:"client does not exists"});
+            }
+
+
+        })
+    } else {
+
+        res.status(400).json(result.errors);
+    }
+};
+

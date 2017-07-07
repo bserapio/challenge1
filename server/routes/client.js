@@ -7,6 +7,8 @@ module.exports = function(passport,express) {
     router.post('/',middleware.isAuthenticated,client_controller.addClient);
     router.get('/',middleware.isAuthenticated,client_controller.listClient);
     router.get('/:id',middleware.isAuthenticated,client_controller.detailClient);
+    router.put('/:id',client_controller.updateClient);
+
 
     return router;
 
