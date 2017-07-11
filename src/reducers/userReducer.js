@@ -1,15 +1,35 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
-const history = require('../store/configureStore').history;
 
-export default function userReducer(state = initialState.session, action) {
+
+export default function userReducer(state = initialState.user, action) {
     switch(action.type) {
         case types.LOG_IN_SUCCESS:
-            history.push('/cats')
-            return !!sessionStorage.jwt
+            const {user} = action.payload;
+            return {
+                ...state,
+                user:user,
+                loginError: null
+
+            }
+
+            break;
         case types.LOG_OUT:
-            history.push('/')
-            return !!sessionStorage.jwt
+            return {
+                ...state,
+                user:null,
+                loginError: null
+
+            }
+            break;
+        case types.LOGIN_FAIL:
+            const {err} = action.payload;
+            return {
+                ...state,
+                loginError:err
+
+            }
+            break;
         default:
             return state;
     }

@@ -1,5 +1,6 @@
 export default {
     cats: [],
     hobbies: [],
-    user: null
+    user: null,
+    loginError:null,
 }

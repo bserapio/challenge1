@@ -1,26 +1,31 @@
 import * as types from './actionTypes';
-import sessionApi from '../api/SessionApi';
-import auth from '../auth/authenticator';
-
-
-export function loginSuccess() {
-    return {type: types.LOG_IN_SUCCESS}
+import connectService from '../services/connect';
+import configureStore from '../store/configureStore'
+export function loginSuccess(res) {
+    return {type: types.LOG_IN_SUCCESS,payload:{res}}
+}
+export function loginFail(err) {
+    return {type: types.LOGIN_FAIL,payload:{err}}
 }
 
 export function loginUser(credentials) {
     return function(dispatch) {
-        return sessionApi.login(credentials).then(response => {
-            debugger
-            sessionStorage.setItem('jwt', response.jwt);
-            dispatch(loginSuccess());
-        }).catch(error => {
-            debugger;
-            throw(error);
-        });
+        connectService.login(credentials).then(
+            (res)=> {
+
+                dispatch(loginSuccess(res));
+                configureStore.history.push('/cats')
+            },
+            (err) => {
+                dispatch(loginFail(err));
+
+            }
+        );
+
     };
 }
 
 export function logOutUser() {
-    auth.logOut();
+
     return {type: types.LOG_OUT}
 }

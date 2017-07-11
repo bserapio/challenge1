@@ -10,8 +10,7 @@ export default() => (
         <ConnectedRouter history={configureStore.history}>
 
             <div>
-                <Route exact path="/" component={Home}>
-                </Route>
+                <Route exact path="/" component={Home}></Route>
             </div>
 
         </ConnectedRouter>
