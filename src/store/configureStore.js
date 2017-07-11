@@ -21,10 +21,7 @@ const enhancer = composeEnhancers(
 
 const configureStore = () =>{
  return    createStore(
-        combineReducers({
-            ...reducers,
-            router: routerReducer
-        }),enhancer
+            reducers, enhancer
 
 
     )

@@ -2,10 +2,11 @@ import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
 
-export default function userReducer(state = initialState.user, action) {
+export default function userReducer(state = initialState, action) {
     switch(action.type) {
         case types.LOG_IN_SUCCESS:
             const {user} = action.payload;
+            debugger;
             return {
                 ...state,
                 user:user,
