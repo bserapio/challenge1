@@ -33,6 +33,7 @@ module.exports = function(passport) {
             session: true
         },
         function(req, username, password, done) {
+            console.log(req.body);
             console.log(username)
             userModel = req.model.User;
             userModel.findOne({ where:{ 'username' :  username } }).then(user => {

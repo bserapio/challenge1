@@ -35,7 +35,7 @@
     "react-redux": "5.0.5",
     "react-router": "4.1.1",
     "react-router-dom": "4.1.1",
-    "react-router-redux": "4.0.8",
+    "react-router-redux": "5.0.0-alpha.6",
     "react-scripts": "1.0.10",
     "redux": "3.7.1",
     "redux-logger": "3.0.6",
@@ -74,5 +74,5 @@
     "validate-npm-package-name": "^3.0.0",
     "webpack": "2.6.1"
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://127.0.0.1:8000"
 }

@@ -1,30 +1,20 @@
 import React from 'react';
-import App from '../containers/AppContainer';
-import About from '../components/About/About';
+import Home from '../containers/home/home';
+import { Route, Switch } from 'react-router-dom';
+import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
+import configureStore from '../store/configureStore'
+import  App from '../app';
+export default() => (
+    <App>
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+        <ConnectedRouter history={configureStore.history}>
 
-const Routes = () => {
-    return (
-        <Router>
             <div>
-                <Route exact path="/" component={App} />
-                <Route exact path="/about" component={About} />
+                <Route exact path="/" component={Home}>
+                </Route>
             </div>
-        </Router>
-    )
-};
 
+        </ConnectedRouter>
+    </App>
 
-
-export const childRoutes = [
-    {
-        'path':'/home',
-        'component': App,
-        'exactly': true
-    }
-
-    ]
-
-
-export default Routes;
+);

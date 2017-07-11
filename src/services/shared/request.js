@@ -1,16 +1,10 @@
 import axios     from 'axios'
-import apiEndPoints from 'endpoints'
+import apiEndPoints from './endpoints'
 
 
-
-/**
- * Create an Axios Client with defaults
- */
 const client = axios.create({
     baseURL: apiEndPoints.baseUrl
 });
-
-
 
 const request = function(options) {
     const Success = function(response) {
@@ -40,6 +34,6 @@ const request = function(options) {
     return client(options)
         .then(Success)
         .catch(Error);
-}
+};
 
 export default request;

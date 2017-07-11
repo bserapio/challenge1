@@ -1,6 +1,7 @@
 
-import request from 'shared/request'
-import apiEndPoints from 'shared/endpoints'
+
+import request from './shared/request'
+import apiEndPoints from './shared/endpoints'
 
 function get(id) {
 

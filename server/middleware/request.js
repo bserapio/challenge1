@@ -5,3 +5,4 @@ module.exports = function(model) {
     };
     return addModels;
 };
+
