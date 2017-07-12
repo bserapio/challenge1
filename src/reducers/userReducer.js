@@ -16,7 +16,8 @@ export default function userReducer(state = initialState, action) {
             return {
                 ...state,
                 auth: null,
-                loginError: null
+                loginError: null,
+                users: []
 
             };
             break;
@@ -27,6 +28,13 @@ export default function userReducer(state = initialState, action) {
                 loginError:err
             };
             break;
+
+        case types.GET_USERS_SUCCESS:
+            const {users} = action.payload;
+            return {
+                ...state,
+                users: users
+            };
         default:
             return state;
     }

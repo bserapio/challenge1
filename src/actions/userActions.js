@@ -8,7 +8,17 @@ export function loginSuccess(auth) {
     };
 }
 
+export function getUserSuccess(users) {
+
+    return {
+        type: types.GET_USERS_SUCCESS,
+        payload: {users}
+    };
+}
+
+
 export function checkAuth(auth) {
+
     return function (dispatch) {
         dispatch({
             type: types.CHECK_LOGIN,
@@ -16,10 +26,43 @@ export function checkAuth(auth) {
         });
         if (!auth) {
             configureStore.history.push('/')
-        }
+            dispatch({
+                type: types.NOT_LOGGED,
+                payload: {}
+            });
 
+        }
+        else {
+            dispatch({
+                type: types.USER_LOGGED,
+                payload: {auth}
+            });
+
+
+        }
     }
 }
+
+export function getUsers() {
+    return function (dispatch) {
+        dispatch({
+            type: types.GET_USERS_REQUEST,
+            payload: {}
+        });
+
+        connectService.getUsers().then(
+            (res) => {
+
+                dispatch(getUserSuccess(res.data));
+            },
+            (loginError) => {
+                dispatch(loginFail(loginError));
+            }
+        );
+    };
+}
+
+
 
 export function loginFail(loginError) {
     return {type: types.LOGIN_FAIL,payload:{loginError}}

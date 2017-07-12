@@ -8,6 +8,19 @@ function login(data) {
             password:data.password
     });
 }
-const connectService = { login };
+
+function getUsers() {
+    let url = apiEndPoints.userList;
+    return axios.get(url);
+
+}
+
+function getClients() {
+    let url = apiEndPoints.clientList;
+    return axios.get(url);
+
+}
+
+const connectService = {login, getUsers, getClients};
 
 export default connectService;
