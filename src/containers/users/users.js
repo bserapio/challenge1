@@ -16,7 +16,7 @@ const mapDispatchToProps = function (dispatch) {
     return {
         actions: bindActionCreators(userActions, dispatch)
     };
-}
+};
 
 const data = [];
 class User extends React.Component {

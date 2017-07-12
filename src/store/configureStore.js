@@ -1,6 +1,6 @@
-import { createStore, combineReducers, applyMiddleware,compose} from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import createHistory from 'history/createBrowserHistory'
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
+import {routerMiddleware} from 'react-router-redux'
 import reducers from '../reducers'
 import thunk from 'redux-thunk'
 const history = createHistory();
@@ -13,7 +13,6 @@ const composeEnhancers =
             // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
         }) : compose;
 
-
 const enhancer = composeEnhancers(
     applyMiddleware(thunk, middleware),
     // other store enhancers if any
@@ -22,12 +21,8 @@ const enhancer = composeEnhancers(
 const configureStore = () =>{
  return    createStore(
             reducers, enhancer
-
-
     )
 }
-
-
 
 export default {
     history:     history,

@@ -1,12 +1,27 @@
 
 import React, { Component } from 'react';
 
-import { Layout, Menu, Breadcrumb } from 'antd';
-
+import {Layout, Menu} from 'antd';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import * as userActions from './actions/userActions';
+import Link from 'react-router-redux-dom-link';
 import 'antd/dist/antd.css';
 const { Header, Content, Footer } = Layout;
-const mapStateToProps = state => ({appName: state.appName});
+
+
+const mapStateToProps = function (state) {
+    return {
+        auth: state.user.auth,
+        users: state.user.users
+    }
+};
+
+const mapDispatchToProps = function (dispatch) {
+    return {
+        actions: bindActionCreators(userActions, dispatch)
+    };
+};
 class App extends Component {
 
 
@@ -14,11 +29,15 @@ class App extends Component {
         return (<Layout className="layout">
             <Header>
                 <div className="logo" />
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }} >
-                    <Menu.Item key="1">nav 1</Menu.Item>
-                    <Menu.Item key="2">nav 2</Menu.Item>
-                    <Menu.Item key="3">nav 3</Menu.Item>
+                {this.props.auth !== null &&
+                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{lineHeight: '64px'}}>
+
+                    <Menu.Item key="1"><Link to="/users" activeClassName="active">Users</Link></Menu.Item>
+                    <Menu.Item key="2"><Link to="/clients" activeClassName="active">Clients</Link></Menu.Item>
+                    <Menu.Item key="3"><Link to="/client_meta" activeClassName="active">Databases</Link></Menu.Item>
+
                 </Menu>
+                }
             </Header>
             <Content style={{ padding: '0 50px' }}>
                 {this.props.children}
@@ -27,4 +46,4 @@ class App extends Component {
         </Layout>)
     }
 }
-export default connect(mapStateToProps, () => ({}))(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
