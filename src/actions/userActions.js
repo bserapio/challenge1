@@ -1,12 +1,26 @@
 import * as types from './actionTypes';
 import connectService from '../services/connect';
 import configureStore from '../store/configureStore'
-export function loginSuccess(user) {
+export function loginSuccess(auth) {
     return {
         type: types.LOG_IN_SUCCESS,
-        payload: { user }
+        payload: {auth}
     };
 }
+
+export function checkAuth(auth) {
+    return function (dispatch) {
+        dispatch({
+            type: types.CHECK_LOGIN,
+            payload: {auth}
+        });
+        if (!auth) {
+            configureStore.history.push('/')
+        }
+
+    }
+}
+
 export function loginFail(loginError) {
     return {type: types.LOGIN_FAIL,payload:{loginError}}
 }
@@ -15,9 +29,9 @@ export function loginUser(credentials) {
     return function(dispatch) {
         connectService.login(credentials).then(
             (res)=> {
-                debugger;
+
                 dispatch(loginSuccess(res.data));
-                configureStore.history.push('/cats')
+                configureStore.history.push('/users')
             },
             (loginError) => {
                 dispatch(loginFail(loginError));

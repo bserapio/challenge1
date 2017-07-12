@@ -1,6 +1,7 @@
 export default {
-    cats: [],
-    hobbies: [],
-    user: null,
+    users: [],
+    clients: [],
+    clientsMeta: [],
+    auth: null,
     loginError:null,
 }

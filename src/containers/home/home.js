@@ -7,6 +7,13 @@ import * as userActions from '../../actions/userActions';
 import './home.css'
 const FormItem = Form.Item;
 
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(userActions, dispatch)
+    };
+}
+
+
 class NormalLoginForm extends React.Component {
 
     constructor(props,context) {
@@ -67,9 +74,5 @@ class NormalLoginForm extends React.Component {
 
 const Home = Form.create()(NormalLoginForm);
 
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(userActions, dispatch)
-    };
-}
+
 export default connect(null, mapDispatchToProps)(Home);
