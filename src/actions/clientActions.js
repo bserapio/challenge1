@@ -10,6 +10,14 @@ export function getClientSuccess(clients) {
     };
 }
 
+export function getClientUpdateSuccess(clients) {
+    return {
+        type: types.GET_CLIENTS_UPDATE_SUCCESS,
+        payload: {clients}
+    };
+}
+
+
 
 export function getClientError(clientError) {
 
@@ -19,6 +27,7 @@ export function getClientError(clientError) {
     };
 }
 
+
 export function getClients() {
     return function (dispatch) {
         dispatch({
@@ -26,14 +35,29 @@ export function getClients() {
             payload: {}
         });
 
-        connectService.getClients().then(
+        return connectService.getClients().then(
             (res) => {
-                dispatch(getClientSuccess(res.data));
+                return dispatch(getClientSuccess(res.data));
             },
             (clientError) => {
-                dispatch(getClientError(clientError));
+                return dispatch(getClientError(clientError));
             }
         );
     };
 }
 
+export function updateClient(record) {
+    return function (dispatch) {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record}
+        });
+        return connectService.updateClient(record).then(
+            (res) => {
+                return dispatch(getClients());
+            }
+        )
+    }
+
+
+}

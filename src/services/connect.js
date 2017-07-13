@@ -21,6 +21,15 @@ function getClients() {
 
 }
 
-const connectService = {login, getUsers, getClients};
+function updateClient(data) {
+    let url = apiEndPoints.clientDetail;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data)
+
+
+}
+
+
+const connectService = {login, getUsers, getClients, updateClient};
 
 export default connectService;

@@ -21,12 +21,15 @@ exports.addUser = function (req, res) {
     }
 };
 exports.listUser = function (req, res) {
-    let limit = req.param('limit', 10);
+    let limit = req.param('limit');
     const page = req.param('page', 1);
     let offset = limit * (page - 1);
-    limit = (limit > 0) ? limit : 10;
     offset = (offset >= 0) ? offset : 0;
     db.User.findAndCountAll({
+        include: [{
+            model: db.ClientMeta,
+            attributes: {},
+        }],
         limit,
         offset,
     }).then(result => {

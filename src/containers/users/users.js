@@ -93,7 +93,11 @@ const columns = [
             {text: 'Female', value: 'female'},
         ],
         width: '20%',
-    }
+    },
+
+
+
+
 ];
 
 
