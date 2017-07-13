@@ -1,13 +1,13 @@
+'use strict';
+
 const t = require('tcomb-validation');
-const validate = t.validate;
 const domain = require('../validator');
 const moment = require('moment');
 const randomstring = require('randomstring');
+const db = require('../db/models');
 
 
 exports.addClient = function (req, res) {
-    const clientDbModel = req.model.ClientDb;
-    const clientMetaModel = req.model.ClientMeta;
     const input = req.body;
     let result = t.validate(input, domain.CreateDbInput);
     if (result.isValid()) {
@@ -20,20 +20,16 @@ exports.addClient = function (req, res) {
         }
 
 
-        clientDbModel.create(input).then(clientdb => {
-            /**
-             * We put all the info that we need for the client_meta
-             *
-             */
-            let clientMeta;
-            clientMeta = {
+        db.ClientDb.create(input).then(clientdb => {
+            const clientMeta = {
                 clientId: clientdb.id,
                 userId: req.user.id,
                 type: input.type,
                 createdAt: new Date(),
                 modifiedAt: new Date(),
             };
-            clientMetaModel.create(clientMeta).then(clientmeta => {
+
+            db.ClientMeta.create(clientMeta).then(clientmeta => {
                 if (clientmeta) {
                     result = {
                         client: clientdb,
@@ -50,13 +46,12 @@ exports.addClient = function (req, res) {
     }
 };
 exports.listClient = function (req, res) {
-    const clientDbModel = req.model.ClientDb;
     let limit = req.param('limit', 10);
     const page = req.param('page', 1);
     let offset = limit * (page - 1);
     limit = (limit > 0) ? limit : 10;
     offset = (offset >= 0) ? offset : 0;
-    clientDbModel.findAndCountAll({
+    db.ClientDb.findAndCountAll({
 
         limit,
         offset,
@@ -65,8 +60,7 @@ exports.listClient = function (req, res) {
     });
 };
 exports.detailClient = function (req, res) {
-    const clientDbModel = req.model.ClientDb;
-    clientDbModel.findById(req.params.id).then(user => {
+    db.ClientDb.findById(req.params.id).then(user => {
         res.json(user);
     });
 };
@@ -75,26 +69,25 @@ exports.updateClient = function (req, res) {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateDbInput);
     if (result.isValid()) {
-        const clientDbModel = req.model.ClientDb;
-        clientDbModel.findById(req.params.id).then(client => {
+        db.ClientDb.findById(req.params.id).then(client => {
             if (client) {
                 input.autoUpdate = true;
                 input.dbName = `client_${input.identifier}`;
                 input.dbLogin = `b7_${input.identifier}`;
                 input.active = true;
-                clientDbModel.update(input, {
+                db.ClientDb.update(input, {
                     where: { id: client.id },
                     returning: true,
                     plain: true,
                 })
-                    .then(result => {
+                    .then(data => {
                         /**
                          * We put all the info that we need for the client_meta
                          *
                          */
 
 
-                        res.json(result);
+                        res.json(data);
                     });
             } else {
                 res.status(404).json({message: 'client does not exists'});

@@ -1,11 +1,9 @@
 exports.isAuthenticated = function (req, res, next) {
-    console.log(req.session);
     try {
         if (req.user.id) {
             return next();
         }
     } catch (Excep) {
-        console.log(Excep);
         res.status(403).json({message: "You're not allow"});
     }
 };
@@ -22,12 +20,6 @@ exports.isAdmin = function (req, res, next) {
     }
 };
 
-exports.test = function (req, res, next) {
-    console.log('Hola tio');
-    console.log(req.session);
-    console.log(req.isAuthenticated());
-    return next();
-};
 
 exports.cors = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');

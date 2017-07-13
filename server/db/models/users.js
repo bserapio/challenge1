@@ -1,7 +1,9 @@
-/* eslint new-cap: "off", global-require: "off" */
+'use strict';
 
 const roles = require('../../config/role');
+
 const bcrypt = require('bcrypt-nodejs');
+
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         id: {
@@ -53,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
         schema: 'public',
         tableName: 'users',
         timestamps: false,
+        underscored: true,
         hooks: {
             beforeCreate: (user, options) => {
                 user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
@@ -67,9 +70,16 @@ module.exports = (sequelize, DataTypes) => {
         let hash = this.password;
         hash = hash.substring(4);
         hash = `$2a$${hash}`;
-        const compare = bcrypt.compareSync(password, hash);
-
-        return compare;
+        return bcrypt.compareSync(password, hash);
     };
+
+    User.associate = function (models) {
+        User.hasMany(models.ClientMeta, {
+            onDelete: 'CASCADE',
+            foreignKey: 'user_id',
+
+        });
+    };
+
     return User;
 };
