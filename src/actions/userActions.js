@@ -1,20 +1,6 @@
 import * as types from './actionTypes';
 import connectService from '../services/connect';
 import configureStore from '../store/configureStore'
-export function loginSuccess(auth) {
-    return {
-        type: types.LOG_IN_SUCCESS,
-        payload: {auth}
-    };
-}
-
-export function getUserSuccess(users) {
-
-    return {
-        type: types.GET_USERS_SUCCESS,
-        payload: {users}
-    };
-}
 
 
 export function checkAuth(auth) {
@@ -42,7 +28,6 @@ export function checkAuth(auth) {
         }
     }
 }
-
 export function getUsers() {
     return function (dispatch) {
         dispatch({
@@ -50,24 +35,16 @@ export function getUsers() {
             payload: {}
         });
 
-        connectService.getUsers().then(
+       return  connectService.getUsers().then(
             (res) => {
-
-                dispatch(getUserSuccess(res.data));
+                return dispatch(getUserSuccess(res.data));
             },
             (loginError) => {
-                dispatch(loginFail(loginError));
+               return  dispatch(loginFail(loginError));
             }
         );
     };
 }
-
-
-
-export function loginFail(loginError) {
-    return {type: types.LOGIN_FAIL,payload:{loginError}}
-}
-
 export function loginUser(credentials) {
     return function(dispatch) {
         connectService.login(credentials).then(
@@ -84,8 +61,47 @@ export function loginUser(credentials) {
 
     };
 }
+export function createUser(data) {
+    return function(dispatch) {
 
+       return  connectService.createUser(data).then(
+            (res) => {
+
+                return dispatch(getUsers());
+            },
+            (loginError) => {
+
+            }
+
+
+        )
+
+    }
+
+}
+
+
+
+// ACTIONS CALLS
+
+export function loginSuccess(auth) {
+    return {
+        type: types.LOG_IN_SUCCESS,
+        payload: {auth}
+    };
+}
 export function logOutUser() {
 
     return {type: types.LOG_OUT}
+}
+export function getUserSuccess(users) {
+
+    return {
+        type: types.GET_USERS_SUCCESS,
+        payload: {users}
+    };
+}
+
+export function loginFail(loginError) {
+    return {type: types.LOGIN_FAIL,payload:{loginError}}
 }

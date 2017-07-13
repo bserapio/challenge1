@@ -1,10 +1,13 @@
 import {Table} from 'antd';
 import React from 'react';
-
+import { Button } from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as userActions from '../../actions/userActions';
 
+import CollectionCreateForm from '../../components/modals/createUserForm'
+
+import * as userActions from '../../actions/userActions';
+import './user.css'
 const mapStateToProps = function (state) {
     return {
         auth: state.user.auth,
@@ -107,6 +110,8 @@ class User extends React.Component {
         data: [],
         pagination: {},
         loading: false,
+        visible: false,
+        confirmLoading: false
     };
     componentDidMount() {
         this.props.actions.checkAuth(this.props.auth);
@@ -116,8 +121,59 @@ class User extends React.Component {
     handleTableChange = (pagination, filters, sorter) => {
 
     };
+
+    showModal = () => {
+        this.setState({ visible: true });
+    }
+    handleCancel = () => {
+        this.setState({ visible: false });
+    }
+    handleCreate = () => {
+        const form = this.form;
+        this.setState({
+            ModalText: 'The modal will be closed after two seconds',
+            confirmLoading: true,
+        });
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            } else {
+                this.props.actions.createUser(values).then(
+                    (res)=> {
+                        this.setState({ visible: false,confirmLoading: false });
+                    },
+                    (err)=> {
+
+                    }
+                )
+
+            }
+
+            console.log('Received values of form: ', values);
+            form.resetFields();
+            this.setState({ visible: false });
+        });
+    }
+    saveFormRef = (form) => {
+        this.form = form;
+    }
+
+
+
+
+
     render() {
         return (
+           <div>
+        <Button type="primary" onClick={this.showModal} class="wrapper">Create an User</Button>
+                <CollectionCreateForm
+                    ref={this.saveFormRef}
+                    visible={this.state.visible}
+                    onCancel={this.handleCancel}
+                    confirmLoading={this.state.confirmLoading}
+                    onCreate={this.handleCreate}
+                />
+
             <Table columns={columns}
                    rowKey={record => record.id}
                    dataSource={this.props.users.rows}
@@ -125,6 +181,7 @@ class User extends React.Component {
                    loading={this.state.loading}
                    onChange={this.handleTableChange}
             />
+            </div>
         );
 
     }

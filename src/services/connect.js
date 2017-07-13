@@ -9,6 +9,11 @@ function login(data) {
     });
 }
 
+function createUser(data) {
+    let url = apiEndPoints.userList;
+    return  axios.post(url,data);
+}
+
 function getUsers() {
     let url = apiEndPoints.userList;
     return axios.get(url);
@@ -30,6 +35,6 @@ function updateClient(data) {
 }
 
 
-const connectService = {login, getUsers, getClients, updateClient};
+const connectService = {login, getUsers, getClients, updateClient,createUser};
 
 export default connectService;
