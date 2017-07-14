@@ -18,9 +18,7 @@ const mapStateToProps = function (state) {
         auth: state.user.auth,
         users: state.user.users,
         clients: (state.client.searchText !== '' && state.client.searchText ) ? state.client.clients.rows.map((record) => {
-
             const match = record.identifier.match(reg);
-            console.log(match);
             if (!match) {
                 return {};
             }
@@ -28,9 +26,11 @@ const mapStateToProps = function (state) {
                 ...record,
                 identifier: (
                     <span>
-              {record.identifier.split(reg).map((text, i) => (
+              {
+                  record.identifier.split(reg).map((text, i) => (
                   i > 0 ? [<span className="highlight">{match[0]}</span>, text] : text
-              ))}
+                  ))
+              }
             </span>
                 ),
             };
