@@ -1,9 +1,10 @@
+'use strict';
 import {Button, Table} from "antd";
 import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 
-import CollectionCreateForm from "../../components/modals/createUserForm";
+import UserCreateForm from "../../components/modals/createUserForm";
 
 import * as userActions from "../../actions/userActions";
 import "./user.css";
@@ -61,6 +62,40 @@ class User extends React.Component {
                 dataIndex: 'role',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => stringOrder(a, b),
+                filters: [
+                    {
+                        text: 'Guest',
+                        value: 'Guest',
+                    },
+                    {
+                        text: 'User',
+                        value: 'user',
+                    },
+                    {
+                        text: 'Finance',
+                        value: 'finance',
+                    },
+                    {
+                        text: 'Manager',
+                        value: 'manager',
+                    }
+                    , {
+                        text: 'Sales',
+                        value: 'sales',
+                    }, {
+                        text: 'Account manager',
+                        value: 'account-manager',
+                    }
+                    , {
+                        text: 'Admin',
+                        value: 'admin',
+                    }
+                    , {
+                        text: 'Super',
+                        value: 'super',
+                    }
+
+                ],
             },
             {
                 title: 'Created',
@@ -79,6 +114,11 @@ class User extends React.Component {
             loading: false,
             visible: false,
             confirmLoading: false,
+            locale: {
+                filterConfirm: 'Ok',
+                filterReset: 'Reset',
+                emptyText: 'No Data'
+            },
             userForm: {
                 username: '',
                 password: '',
@@ -97,7 +137,6 @@ class User extends React.Component {
     handleTableChange = (pagination, filters, sorter) => {
 
     };
-
     showModal = () => {
         this.setState({visible: true});
     };
@@ -129,7 +168,6 @@ class User extends React.Component {
     saveFormRef = (form) => {
         this.form = form;
     };
-
     sendForm() {
 
         this.props.actions.createUser(this.state.userForm).then(
@@ -140,7 +178,6 @@ class User extends React.Component {
             }
         )
     };
-
     handleSelectChange = (value) => {
         let userForm = this.state.userForm;
         userForm.role = value;
@@ -152,7 +189,7 @@ class User extends React.Component {
         return (
             <div>
                 <Button type="primary" onClick={this.showModal}>Create an User</Button>
-                <CollectionCreateForm
+                <UserCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
@@ -168,6 +205,7 @@ class User extends React.Component {
                        pagination={this.state.pagination}
                        loading={this.state.loading}
                        onChange={this.handleTableChange}
+                       locale={this.state.locale}
                 />
             </div>
         );

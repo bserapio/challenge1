@@ -103,3 +103,11 @@ Conventions
 
 
 
+CONSIDERATIONS
+====================
+
+All the filters are hardcoded and the selectors.
+Is a think that I want to change in new challenge, but at the moment I need to show you a functional example
+
+
+

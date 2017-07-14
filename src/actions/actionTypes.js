@@ -12,3 +12,5 @@ export const GET_CLIENTS_REQUEST = 'dashboard/client/GET_CLIENT_REQUEST';
 export const GET_CLIENTS_ERROR = 'dashboard/client/GET_CLIENTS_ERROR';
 export const GET_CLIENTS_UPDATE_REQUEST = 'dashboard/client/GET_CLIENTS_UPDATE_REQUEST';
 export const GET_CLIENTS_UPDATE_SUCCESS = 'dashboard/client/GET_UPDATE_SUCCESS';
+export const GET_CLIENTS_CREATION_REQUEST = 'dashboard/client/GET_CLIENTS_CREATION_REQUEST';
+export const GET_CLIENTS_ELEVATOR_REQUEST = 'dashboard/client/GET_CLIENTS_ELEVATOR_REQUEST';

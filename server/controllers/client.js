@@ -15,11 +15,9 @@ exports.addClient = function (req, res) {
         input.dbName = `client_${input.identifier}`;
         input.dbLogin = `b7_${input.identifier}`;
         input.active = true;
-        if (!(input.hasOwnProperty('dbPass'))) {
+        if (!(input.dbPass)) {
             input.dbPass = randomstring.generate(20);
         }
-
-
         db.ClientDb.create(input).then(clientdb => {
             const clientMeta = {
                 clientId: clientdb.id,
@@ -28,7 +26,6 @@ exports.addClient = function (req, res) {
                 createdAt: new Date(),
                 modifiedAt: new Date(),
             };
-
             db.ClientMeta.create(clientMeta).then(clientmeta => {
                 if (clientmeta) {
                     result = {
@@ -46,15 +43,11 @@ exports.addClient = function (req, res) {
     }
 };
 exports.listClient = function (req, res) {
-    let limit = req.param('limit', 10);
-    const page = req.param('page', 1);
-    let offset = limit * (page - 1);
-    limit = (limit > 0) ? limit : 10;
-    offset = (offset >= 0) ? offset : 0;
     db.ClientDb.findAndCountAll({
-
-        limit,
-        offset,
+        include: [{
+            model: db.ClientMeta,
+            attributes: {},
+        }],
     }).then(result => {
         res.json(result);
     });

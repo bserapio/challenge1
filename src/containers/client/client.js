@@ -1,9 +1,13 @@
-import {Table, Icon, Input, Popconfirm} from 'antd';
+import {Table, Icon, Input, Popconfirm, Button} from 'antd';
 
 import React from 'react';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import ClientCreateForm from "../../components/modals/createClientForm";
+import EditableCell from "../../components/editableCell";
+import ElevatePrigilegesForm from "../../components/modals/elevatePrivileges";
+
 import * as userActions from '../../actions/userActions';
 import * as clientActions from '../../actions/clientActions';
 
@@ -22,74 +26,39 @@ const mapDispatchToProps = function (dispatch) {
     };
 };
 
-
-class EditableCell extends React.Component {
-
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        this.props.onChange(value);
-    }
-
-
-    checked(value) {
-        if (value) {
-            return "checked";
-        }
-        return ""
-    }
-
-    render() {
-        const {value, editable, type, name} = this.props;
-
-        let returnObject;
-        let returnValue = '';
-
-        if (!editable) {
-            try {
-                returnValue = value.toString() || ' ';
-            } catch (exception) {
-                returnValue = ' '
-            }
-            returnObject = (<div className="editable-row-text">{returnValue}</div>);
-        } else {
-
-            switch (type) {
-
-
-                case 'boolean':
-                    let checkActive = this.checked(value);
-                    returnObject = (
-                        <div><input type="checkbox" onChange={e => this.handleInputChange(e)} checked={checkActive}/>
-                        </div>)
-                    break;
-
-                default:
-                    returnObject = (<div><Input value={value} onChange={e => this.handleInputChange(e)}/></div>)
-            }
-
-        }
-        return (
-            <div>
-                {returnObject}
-            </div>
-        );
-    }
-}
-
 class Clients extends React.Component {
-
-
-    state = {
-        editedRecord: {},
-        pagination: {},
-        loading: false,
-        editIndex: -1,
-    };
-
     constructor(props, context) {
         super(props, context);
         this.columns = [
+            {
+                title: 'operation',
+                dataIndex: 'operation',
+                render: (text, record, index) => {
+
+                    return (
+                        <div className="editable-row-operations">
+                            {
+                                this.state.editedRecord.id === record.id ?
+                                    <span>
+                                        <a onClick={() => this.editDone(record, 'save')}>Save</a>|
+                                        <Popconfirm
+                                            title="Sure to cancel?"
+                                            okText="Yes"
+                                            cancelText="No"
+                                            onConfirm={
+                                                () => this.editDone(index, 'cancel')}
+                                        >
+                                            <a>Cancel</a>
+                                        </Popconfirm>
+                                    </span>
+                                    :
+                                    <span> <a onClick={() => this.edit(record)}>Edit</a>| <Button type="primary"
+                                                                                                  onClick={() => this.showElevateModal(record)}>Create an Client</Button></span>
+                            }
+                        </div>
+                    );
+                },
+            },
             {
                 title: 'identifier',
                 dataIndex: 'identifier',
@@ -138,6 +107,36 @@ class Clients extends React.Component {
 
             },
             {
+                title: 'Type',
+                dataIndex: 'ClientMetum#type',
+                onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'ClientMetum#type', text, 'text'),
+                filters: [
+                    {
+                        text: 'Demo',
+                        value: 'demo',
+                    },
+                    {
+                        text: 'Client',
+                        value: 'client',
+                    },
+                    {
+                        text: 'Dev',
+                        value: 'dev',
+                    },
+                    {
+                        text: 'Edu',
+                        value: 'edu',
+                    }
+                    , {
+                        text: 'Closed',
+                        value: 'closed',
+                    }
+
+                ]
+
+            },
+            {
                 title: 'Active',
                 dataIndex: 'active',
                 key: 'active',
@@ -157,7 +156,6 @@ class Clients extends React.Component {
                 render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'autoUpdate', text, 'boolean'),
 
             },
-
             {
                 title: 'expireDate',
                 dataIndex: 'expireDate',
@@ -168,74 +166,76 @@ class Clients extends React.Component {
                 dataIndex: 'archivedAt',
 
             },
-            {
-                title: 'operation',
-                dataIndex: 'operation',
-                render: (text, record, index) => {
 
-                    return (
-                        <div className="editable-row-operations">
-                            {
-                                this.state.editedRecord.id === record.id ?
-                                    <span>
-                                        <a onClick={() => this.editDone(record, 'save')}>Save</a>
-                                        <Popconfirm
-                                            title="Sure to cancel?"
-                                            okText="Yes"
-                                            cancelText="No"
-                                            onConfirm={
-                                                () => this.editDone(index, 'cancel')}
-                                        >
-                                            <a>Cancel</a>
-                                        </Popconfirm>
-                                    </span>
-                                    :
-                                    <span> <a onClick={() => this.edit(record)}>Edit</a> </span>
-                            }
-                        </div>
-                    );
-                },
-            }
 
 
         ];
+        this.state = {
+            editedRecord: {},
+            pagination: {},
+            loading: false,
+            visible: false,
+            visibleElevate: false,
+            confirmLoading: false,
+            confirmElevateLoading: false,
+            clientRequest: {},
+            editIndex: -1,
+
+            locale: {
+                filterConfirm: 'Ok',
+                filterReset: 'Reset',
+                emptyText: 'No Data'
+            },
+            elevatorForm: {
+                password: '',
+                username: '',
+                identifier: ''
+            },
+            clientForm: {
+                identifier: '',
+                name: '',
+                lang: 'en',
+                type: 'demo'
+            }
+        };
+
 
     }
     componentDidMount() {
         this.props.userActions.checkAuth(this.props.auth);
         this.props.actions.getClients();
     }
-
     renderColumns(data, index, key, text, type) {
         if (this.state.editable === -1) {
             return text;
         } else {
+            let value;
+            value = this.state.editedRecord.id === data[index].id ? this.state.editedRecord[key] : data[index][key];
+
             return (<EditableCell type={type}
                                   editable={this.state.editedRecord.id === data[index].id}
-                                  value={this.state.editedRecord.id === data[index].id ? this.state.editedRecord[key] : data[index][key]}
+                                  value={value}
                                   name={key}
                                   onChange={value => this.handleChange(key, value)}
             />);
         }
 
     }
-
     handleChange(key, value) {
         const editedRecord = this.state.editedRecord;
         editedRecord[key] = value;
 
         this.setState({editedRecord: editedRecord});
     }
-
     edit(record) {
         this.setState({editedRecord: {...record}});
 
     }
-
     editDone(record, type) {
 
         if (type === 'save') {
             // Save the record
+            console.log(this.state.editedRecord);
 
             if (record !== this.state.editedRecord) {
                 this.props.actions.updateClient(this.state.editedRecord).then(
@@ -253,14 +253,149 @@ class Clients extends React.Component {
         }
 
     }
+
+    showModal = () => {
+        this.setState({visible: true});
+    };
+    handleCancel = () => {
+        this.setState({visible: false});
+    };
+
+    saveFormRef = (form) => {
+        this.form = form;
+    };
+
+    handleCreate = () => {
+        const form = this.form;
+        this.setState({
+            ModalText: 'The modal will be closed after two seconds',
+            confirmLoading: true,
+        });
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            } else {
+                let clientForm = this.state.clientForm;
+                clientForm.identifier = values.identifier;
+                clientForm.name = values.name;
+
+                this.setState({clientForm: clientForm}, this.sendForm);
+                form.resetFields();
+                this.setState({visible: false});
+            }
+        })
+
+    };
+
+
+    sendForm() {
+
+        this.props.actions.createClient(this.state.clientForm).then(
+            () => {
+                this.setState({visible: false, confirmLoading: false});
+            },
+            (err) => {
+            }
+        )
+    };
+
+
+    handleSelectLanguageChange = (value) => {
+        let clientForm = this.state.clientForm;
+        clientForm.lang = value;
+        this.setState({clientForm: clientForm});
+
+    };
+    handleSelectTypeChange = (value) => {
+        let clientForm = this.state.clientForm;
+        clientForm.type = value;
+        this.setState({clientForm: clientForm});
+
+    };
+
+
+    handleModalCreate = () => {
+        const form = this.formElevator;
+        this.setState({
+            ModalText: 'The modal will be closed after two seconds',
+            confirmModalLoading: true,
+        });
+
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            } else {
+                let elevatorForm = this.state.elevatorForm;
+                elevatorForm.password = values.elevatorForm;
+                elevatorForm.username = this.props.auth.username;
+
+                this.setState({elevatorForm: elevatorForm}, this.sendElevatorForm);
+                form.resetFields();
+                this.setState({visible: false});
+            }
+        })
+    }
+
+
+    sendElevatorForm() {
+
+        this.props.actions.checkElevateClient(this.state.elevatorForm).then(
+            () => {
+                this.setState({visible: false, confirmLoading: false});
+            },
+            (err) => {
+            }
+        )
+    };
+
+
+    showElevateModal = (record) => {
+        let elevatorForm = this.state.elevatorForm;
+        elevatorForm.identifier = record.identifier;
+        this.setState({visibleElevate: true});
+    }
+
+    handleElevateCancel = () => {
+        this.setState({visibleElevate: false});
+    };
+
+    saveFormRefElevator = (form) => {
+        this.formElevator = form;
+    };
+
+
     render() {
         return (
-            <Table columns={this.columns}
-                   rowKey={record => record.id}
-                   dataSource={this.props.clients.rows}
-                   pagination={this.state.pagination}
-                   loading={this.state.loading}
-            />
+            <div>
+                <Button type="primary" onClick={this.showModal}>Create an Client</Button>
+                <ClientCreateForm
+                    ref={this.saveFormRef}
+                    visible={this.state.visible}
+                    onCancel={this.handleCancel}
+                    confirmLoading={this.state.confirmLoading}
+                    onCreate={this.handleCreate}
+                    onLanguageChange={value => this.handleSelectLanguageChange(value)}
+                    onTypeChange={value => this.handleSelectTypeChange(value)}
+                />
+
+
+                <ElevatePrigilegesForm
+                    ref={this.saveFormRefElevator}
+                    visible={this.state.visibleElevate}
+                    onElevatorCancel={this.handleElevateCancel}
+                    confirmElevatorLoading={this.state.confirmElevateLoading}
+                    onElevatorCreate={this.handleModalCreate}
+                />
+
+
+                <Table columns={this.columns}
+                       rowKey={record => record.id}
+                       dataSource={this.props.clients.rows}
+                       pagination={this.state.pagination}
+                       loading={this.state.loading}
+                       locale={this.state.locale}
+                />
+            </div>
         );
 
     }

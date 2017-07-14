@@ -34,7 +34,18 @@ function updateClient(data) {
 
 }
 
+function createClient(data) {
+    let url = apiEndPoints.clientList;
+    return axios.post(url, data);
+}
 
-const connectService = {login, getUsers, getClients, updateClient,createUser};
+
+function elevateClient(data) {
+    let url = apiEndPoints.clientList;
+    return axios.post(url, data);
+}
+
+
+const connectService = {login, getUsers, getClients, updateClient, createUser, createClient};
 
 export default connectService;

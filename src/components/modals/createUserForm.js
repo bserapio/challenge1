@@ -25,6 +25,7 @@ class CreateForm extends React.Component {
                 visible={visible}
                 title="Create a new User"
                 okText="Create"
+                cancelText="Cancel"
                 onCancel={onCancel}
                 confirmLoading={confirmLoading}
                 onOk={onCreate}
@@ -73,7 +74,7 @@ class CreateForm extends React.Component {
     }
 }
 
-const CollectionCreateForm = Form.create()(CreateForm);
+const UserCreateForm = Form.create()(CreateForm);
 
 
-export default CollectionCreateForm;
+export default UserCreateForm;
