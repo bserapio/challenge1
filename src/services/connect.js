@@ -41,11 +41,11 @@ function createClient(data) {
 
 
 function elevateClient(data) {
-    let url = apiEndPoints.clientList;
+    let url = apiEndPoints.clientElevate;
     return axios.post(url, data);
 }
 
 
-const connectService = {login, getUsers, getClients, updateClient, createUser, createClient};
+const connectService = {login, getUsers, getClients, updateClient, createUser, createClient, elevateClient};
 
 export default connectService;

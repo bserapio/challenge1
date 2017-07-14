@@ -14,9 +14,46 @@ class CreateElevatorForm extends React.Component {
     }
 
 
+
     render() {
 
-        const {visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading} = this.props;
+        const getHtml = (res) => {
+
+            return {__html: res};
+        }
+        const getModal = (modalText, getFieldDecorator) => {
+
+            if (modalText) {
+                let res = '';
+                for (var prop in modalText) {
+                    const url = modalText[prop];
+                    const text = prop;
+
+                    res += '<div> <a href=' + url + '">' + text + '</a></div>';
+
+
+                }
+
+
+                return <div dangerouslySetInnerHTML={ getHtml(res)}/>;
+            }
+            return (
+                <Form layout="vertical">
+                    <FormItem label="Password" hasFeedback>
+                        {getFieldDecorator('password', {
+                            rules: [{
+                                required: true,
+                                message: 'Please input your password!'
+                            }],
+                        })(<Input type="password"/>)}
+                    </FormItem>
+                </Form>
+            )
+
+
+        }
+
+        const {visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading, modalText} = this.props;
         const {getFieldDecorator} = form;
         return (
             <Modal
@@ -28,17 +65,9 @@ class CreateElevatorForm extends React.Component {
                 confirmLoading={confirmElevatorLoading}
                 onOk={onElevatorCreate}
             >
-                <Form layout="vertical">
-                    <FormItem label="Password" hasFeedback>
-                        {getFieldDecorator('password', {
-                            rules: [{required: true, message: 'Please input your password!'}],
-                        })(
-                            <Input type="password"/>
-                        )}
-                    </FormItem>
+                { getModal(modalText, getFieldDecorator)}
 
 
-                </Form>
             </Modal>
 
 

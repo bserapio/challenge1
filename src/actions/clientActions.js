@@ -17,12 +17,13 @@ export function getClientUpdateSuccess(clients) {
     };
 }
 
-export function getClientUpdateSuccess(clients) {
+export function getElevatorUpdateSuccess(res) {
     return {
         type: types.GET_CLIENTS_UPDATE_SUCCESS,
-        payload: {clients}
+        payload: {res}
     };
 }
+
 
 export function getClientError(clientError) {
 
@@ -96,9 +97,10 @@ export function checkElevateClient(record) {
             type: types.GET_CLIENTS_ELEVATOR_REQUEST,
             payload: {record}
         });
-        return connectService.createClient(record).then(
+        return connectService.elevateClient(record).then(
             (res) => {
-                return dispatch(getClients());
+                console.log(res);
+                return dispatch(getElevatorUpdateSuccess(res.data));
             }
         )
     }

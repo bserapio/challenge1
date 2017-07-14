@@ -18,166 +18,44 @@ const mapStateToProps = function (state) {
         clients: state.client.clients,
     }
 };
-
 const mapDispatchToProps = function (dispatch) {
     return {
         userActions: bindActionCreators(userActions, dispatch),
         actions: bindActionCreators(clientActions, dispatch)
     };
 };
+let data = [];
+const stringOrder = (a, b) => {
+    {
+        const nameA = a.username.toUpperCase();
+        const nameB = b.username.toUpperCase();
+        if (nameA < nameB) {
+            return -1;
+        } else if (nameA > nameB) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+};
 
 class Clients extends React.Component {
     constructor(props, context) {
         super(props, context);
-        this.columns = [
-            {
-                title: 'operation',
-                dataIndex: 'operation',
-                render: (text, record, index) => {
 
-                    return (
-                        <div className="editable-row-operations">
-                            {
-                                this.state.editedRecord.id === record.id ?
-                                    <span>
-                                        <a onClick={() => this.editDone(record, 'save')}>Save</a>|
-                                        <Popconfirm
-                                            title="Sure to cancel?"
-                                            okText="Yes"
-                                            cancelText="No"
-                                            onConfirm={
-                                                () => this.editDone(index, 'cancel')}
-                                        >
-                                            <a>Cancel</a>
-                                        </Popconfirm>
-                                    </span>
-                                    :
-                                    <span> <a onClick={() => this.edit(record)}>Edit</a>| <Button type="primary"
-                                                                                                  onClick={() => this.showElevateModal(record)}>Create an Client</Button></span>
-                            }
-                        </div>
-                    );
-                },
-            },
-            {
-                title: 'identifier',
-                dataIndex: 'identifier',
-                onFilter: (value, record) => record.username.indexOf(value) === 0,
-                sorter: (a, b) => {
-                    var nameA = a.identifier.toUpperCase(); // ignore upper and lowercase
-                    var nameB = b.identifier.toUpperCase(); // ignore upper and lowercase
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
-                        return 1;
-                    }
-
-                    // names must be equal
-                    return 0;
-
-                },
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'identifier', text),
-            },
-            {
-                title: 'Name',
-                dataIndex: 'name',
-                onFilter: (value, record) => record.role.indexOf(value) === 0,
-                sorter: (a, b) => {
-                    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-                    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
-                        return 1;
-                    }
-
-                    // names must be equal
-                    return 0;
-
-                },
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'name', text, 'text'),
-            },
-            {
-                title: 'Lang',
-                dataIndex: 'lang',
-                key: 'lang',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'lang', text, 'text'),
-
-            },
-            {
-                title: 'Type',
-                dataIndex: 'ClientMetum#type',
-                onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'ClientMetum#type', text, 'text'),
-                filters: [
-                    {
-                        text: 'Demo',
-                        value: 'demo',
-                    },
-                    {
-                        text: 'Client',
-                        value: 'client',
-                    },
-                    {
-                        text: 'Dev',
-                        value: 'dev',
-                    },
-                    {
-                        text: 'Edu',
-                        value: 'edu',
-                    }
-                    , {
-                        text: 'Closed',
-                        value: 'closed',
-                    }
-
-                ]
-
-            },
-            {
-                title: 'Active',
-                dataIndex: 'active',
-                key: 'active',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'active', text, 'boolean'),
-
-            },
-            {
-                title: 'Manteinance',
-                dataIndex: 'maintenance',
-                key: 'maintenance',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'maintenance', text, 'boolean'),
-            },
-            {
-                title: 'AutoUpdate',
-                dataIndex: 'autoUpdate',
-                key: 'autoUpdate',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'autoUpdate', text, 'boolean'),
-
-            },
-            {
-                title: 'expireDate',
-                dataIndex: 'expireDate',
-
-            },
-            {
-                title: 'archivedAt',
-                dataIndex: 'archivedAt',
-
-            },
-
-
-
-        ];
         this.state = {
             editedRecord: {},
             pagination: {},
             loading: false,
             visible: false,
+            filterDropdownVisible: false,
+            searchText: '',
+            filtered: false,
+            data,
             visibleElevate: false,
             confirmLoading: false,
             confirmElevateLoading: false,
+            elevateUrl: null,
             clientRequest: {},
             editIndex: -1,
 
@@ -198,12 +76,13 @@ class Clients extends React.Component {
                 type: 'demo'
             }
         };
-
-
+        data = this.props.clients.rows
     }
+
     componentDidMount() {
         this.props.userActions.checkAuth(this.props.auth);
         this.props.actions.getClients();
+
     }
     renderColumns(data, index, key, text, type) {
         if (this.state.editable === -1) {
@@ -326,7 +205,7 @@ class Clients extends React.Component {
                 return;
             } else {
                 let elevatorForm = this.state.elevatorForm;
-                elevatorForm.password = values.elevatorForm;
+                elevatorForm.password = values.password;
                 elevatorForm.username = this.props.auth.username;
 
                 this.setState({elevatorForm: elevatorForm}, this.sendElevatorForm);
@@ -340,8 +219,21 @@ class Clients extends React.Component {
     sendElevatorForm() {
 
         this.props.actions.checkElevateClient(this.state.elevatorForm).then(
-            () => {
-                this.setState({visible: false, confirmLoading: false});
+            (res) => {
+                // Need to fix that
+                const key = res.payload.res.key;
+                const elevatorUrl = {
+                    app: "https://app.stage.base7booking.com/api/backdoor/penetrate?key=" + key + "&opcode=" + this.state.elevatorForm.identifier,
+                    beta: "https://dev.base7.io/use-token?is_backdoor=1&token=" + key + "&opcode=" + this.state.elevatorForm.identifier,
+                    stage_app: "https://app.stage.base7booking.com/api/backdoor/penetrate?key=" + key + "&opcode=" + this.state.elevatorForm.identifier,
+                    stage_beta: "https://dev.stage.base7.io/use-token?is_backdoor=1&token=" + key + "&opcode=" + this.state.elevatorForm.identifier,
+
+                }
+                console.log(elevatorUrl);
+                this.setState({confirmLoading: false});
+
+                this.setState({elevateUrl: elevatorUrl})
+
             },
             (err) => {
             }
@@ -365,6 +257,120 @@ class Clients extends React.Component {
 
 
     render() {
+        const columns = [
+            {
+                title: 'operation',
+                dataIndex: 'operation',
+                render: (text, record, index) => {
+
+                    return (
+                        <div className="editable-row-operations">
+                            {
+                                this.state.editedRecord.id === record.id ?
+                                    <span>
+                                        <a onClick={() => this.editDone(record, 'save')}>Save</a>|
+                                        <Popconfirm
+                                            title="Sure to cancel?"
+                                            okText="Yes"
+                                            cancelText="No"
+                                            onConfirm={
+                                                () => this.editDone(index, 'cancel')}
+                                        >
+                                            <a>Cancel</a>
+                                        </Popconfirm>
+                                    </span>
+                                    :
+                                    <span> <a onClick={() => this.edit(record)}>Edit</a>| <Button type="primary"
+                                                                                                  onClick={() => this.showElevateModal(record)}>Elevate</Button></span>
+                            }
+                        </div>
+                    );
+                },
+            },
+            {
+                title: 'identifier',
+                dataIndex: 'identifier',
+                onFilter: (value, record) => record.role.indexOf(value) === 0,
+
+            },
+
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                onFilter: (value, record) => record.role.indexOf(value) === 0,
+                sorter: (a, b) => stringOrder(a, b),
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'name', text, 'text'),
+            },
+            {
+                title: 'Lang',
+                dataIndex: 'lang',
+                key: 'lang',
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'lang', text, 'text'),
+
+            },
+            {
+                title: 'Type',
+                dataIndex: 'ClientMetum#type',
+                onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'ClientMetum#type', text, 'text'),
+                filters: [
+                    {
+                        text: 'Demo',
+                        value: 'demo',
+                    },
+                    {
+                        text: 'Client',
+                        value: 'client',
+                    },
+                    {
+                        text: 'Dev',
+                        value: 'dev',
+                    },
+                    {
+                        text: 'Edu',
+                        value: 'edu',
+                    }
+                    , {
+                        text: 'Closed',
+                        value: 'closed',
+                    }
+
+                ]
+
+            },
+            {
+                title: 'Active',
+                dataIndex: 'active',
+                key: 'active',
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'active', text, 'boolean'),
+
+            },
+            {
+                title: 'Manteinance',
+                dataIndex: 'maintenance',
+                key: 'maintenance',
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'maintenance', text, 'boolean'),
+            },
+            {
+                title: 'AutoUpdate',
+                dataIndex: 'autoUpdate',
+                key: 'autoUpdate',
+                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'autoUpdate', text, 'boolean'),
+
+            },
+            {
+                title: 'expireDate',
+                dataIndex: 'expireDate',
+
+            },
+            {
+                title: 'archivedAt',
+                dataIndex: 'archivedAt',
+
+            },
+
+
+        ];
         return (
             <div>
                 <Button type="primary" onClick={this.showModal}>Create an Client</Button>
@@ -385,10 +391,11 @@ class Clients extends React.Component {
                     onElevatorCancel={this.handleElevateCancel}
                     confirmElevatorLoading={this.state.confirmElevateLoading}
                     onElevatorCreate={this.handleModalCreate}
+                    modalText={this.state.elevateUrl}
                 />
 
 
-                <Table columns={this.columns}
+                <Table columns={columns}
                        rowKey={record => record.id}
                        dataSource={this.props.clients.rows}
                        pagination={this.state.pagination}

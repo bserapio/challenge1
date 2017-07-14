@@ -91,3 +91,18 @@ exports.updateClient = function (req, res) {
     }
 };
 
+exports.elevateClient = function (req, res) {
+    const input = req.body;
+
+    db.User.findOne({where: {'username': input.username}}).then(user => {
+        if (!user) {
+            res.status(404).json({message: 'Incorrect username.'});
+        } else if (!user.validPassword(input.password)) {
+            res.status(404).json({message: 'Incorrect password.'});
+        } else {
+            res.json({key: 'doudfsifdkjasvgdasjhgdasgk'});
+        }
+        // Here I need call request function and return the correct key
+
+    });
+}
