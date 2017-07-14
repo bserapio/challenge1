@@ -14,6 +14,14 @@ export default function clientReducer(state = initialState, action) {
             };
             break;
 
+        case types.SEARCH_FILTER:
+
+            const {searchText} = action.payload;
+            return {
+                ...state,
+                searchText
+            }
+
         default:
             return state;
     }

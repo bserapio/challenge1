@@ -12,19 +12,38 @@ import * as userActions from '../../actions/userActions';
 import * as clientActions from '../../actions/clientActions';
 
 const mapStateToProps = function (state) {
+
+    const reg = new RegExp(state.client.searchText, 'gi');
     return {
         auth: state.user.auth,
         users: state.user.users,
-        clients: state.client.clients,
+        clients: (state.client.searchText !== '' && state.client.searchText ) ? state.client.clients.rows.map((record) => {
+
+            const match = record.identifier.match(reg);
+            console.log(match);
+            if (!match) {
+                return {};
+            }
+            return {
+                ...record,
+                identifier: (
+                    <span>
+              {record.identifier.split(reg).map((text, i) => (
+                  i > 0 ? [<span className="highlight">{match[0]}</span>, text] : text
+              ))}
+            </span>
+                ),
+            };
+        }) : state.client.clients.rows
     }
-};
+}
+
 const mapDispatchToProps = function (dispatch) {
     return {
         userActions: bindActionCreators(userActions, dispatch),
         actions: bindActionCreators(clientActions, dispatch)
     };
 };
-let data = [];
 const stringOrder = (a, b) => {
     {
         const nameA = a.username.toUpperCase();
@@ -51,7 +70,6 @@ class Clients extends React.Component {
             filterDropdownVisible: false,
             searchText: '',
             filtered: false,
-            data,
             visibleElevate: false,
             confirmLoading: false,
             confirmElevateLoading: false,
@@ -76,7 +94,6 @@ class Clients extends React.Component {
                 type: 'demo'
             }
         };
-        data = this.props.clients.rows
     }
 
     componentDidMount() {
@@ -85,6 +102,9 @@ class Clients extends React.Component {
 
     }
     renderColumns(data, index, key, text, type) {
+        if (!data) {
+            return text;
+        }
         if (this.state.editable === -1) {
             return text;
         } else {
@@ -229,7 +249,6 @@ class Clients extends React.Component {
                     stage_beta: "https://dev.stage.base7.io/use-token?is_backdoor=1&token=" + key + "&opcode=" + this.state.elevatorForm.identifier,
 
                 }
-                console.log(elevatorUrl);
                 this.setState({confirmLoading: false});
 
                 this.setState({elevateUrl: elevatorUrl})
@@ -255,6 +274,13 @@ class Clients extends React.Component {
         this.formElevator = form;
     };
 
+    onInputChange = (e) => {
+        this.setState({searchText: e.target.value});
+    }
+    onSearch = () => {
+        this.props.actions.searchFilter(this.state.searchText);
+
+    }
 
     render() {
         const columns = [
@@ -290,8 +316,25 @@ class Clients extends React.Component {
             {
                 title: 'identifier',
                 dataIndex: 'identifier',
-                onFilter: (value, record) => record.role.indexOf(value) === 0,
-
+                filterDropdown: (
+                    <div className="custom-filter-dropdown">
+                        <Input
+                            ref={ele => this.searchInput = ele}
+                            placeholder="Search name"
+                            value={this.state.searchText}
+                            onChange={this.onInputChange}
+                            onPressEnter={this.onSearch}
+                        />
+                        <Button type="primary" onClick={this.onSearch}>Search</Button>
+                    </div>
+                ),
+                filterIcon: <Icon type="smile-o" style={{color: this.state.filtered ? '#108ee9' : '#aaa'}}/>,
+                filterDropdownVisible: this.state.filterDropdownVisible,
+                onFilterDropdownVisibleChange: (visible) => {
+                    this.setState({
+                        filterDropdownVisible: visible,
+                    }, () => this.searchInput.focus());
+                },
             },
 
             {
@@ -397,7 +440,7 @@ class Clients extends React.Component {
 
                 <Table columns={columns}
                        rowKey={record => record.id}
-                       dataSource={this.props.clients.rows}
+                       dataSource={this.props.clients}
                        pagination={this.state.pagination}
                        loading={this.state.loading}
                        locale={this.state.locale}

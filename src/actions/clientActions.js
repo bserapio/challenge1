@@ -105,5 +105,14 @@ export function checkElevateClient(record) {
         )
     }
 
+}
 
+export function searchFilter(searchText) {
+
+    return function (dispatch) {
+        dispatch({
+            type: types.SEARCH_FILTER,
+            payload: {searchText}
+        })
+    }
 }
