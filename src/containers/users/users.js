@@ -1,13 +1,12 @@
-import {Table} from 'antd';
-import React from 'react';
-import { Button } from 'antd';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import {Button, Table} from "antd";
+import React from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 
-import CollectionCreateForm from '../../components/modals/createUserForm'
+import CollectionCreateForm from "../../components/modals/createUserForm";
 
-import * as userActions from '../../actions/userActions';
-import './user.css'
+import * as userActions from "../../actions/userActions";
+import "./user.css";
 const mapStateToProps = function (state) {
     return {
         auth: state.user.auth,
@@ -21,98 +20,75 @@ const mapDispatchToProps = function (dispatch) {
     };
 };
 
-
-const columns = [
+const stringOrder = (a, b) => {
     {
-        title: 'Username',
-        dataIndex: 'username',
-        width: '20%',
-        onFilter: (value, record) => record.username.indexOf(value) === 0,
-        sorter: (a, b) => {
-            var nameA = a.username.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.username.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
+        const nameA = a.username.toUpperCase();
+        const nameB = b.username.toUpperCase();
 
-            // names must be equal
+
+        if (nameA < nameB) {
+            return -1;
+        } else if (nameA > nameB) {
+            return 1;
+        } else {
             return 0;
+        }
 
-        },
+
     }
-    ,
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        onFilter: (value, record) => record.name.indexOf(value) === 0,
-        sorter: (a, b) => {
-            var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
-
-            // names must be equal
-            return 0;
-
-        },
-    },
-    {
-        title: 'Role',
-        dataIndex: 'role',
-        width: '20%',
-        onFilter: (value, record) => record.role.indexOf(value) === 0,
-        sorter: (a, b) => {
-            var nameA = a.role.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.role.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
-
-            // names must be equal
-            return 0;
-
-        },
-    },
-    {
-        title: 'Created',
-        dataIndex: 'createdAt',
-        width: '20%',
-    },
-    {
-        title: 'Modified',
-        dataIndex: 'modifiedAt',
-        filters: [
-            {text: 'Male', value: 'male'},
-            {text: 'Female', value: 'female'},
-        ],
-        width: '20%',
-    },
-
-
-
-
-];
-
-
+};
 
 class User extends React.Component {
-    state = {
-        data: [],
-        pagination: {},
-        loading: false,
-        visible: false,
-        confirmLoading: false
-    };
+
+    constructor(props, context) {
+        super(props, context);
+        this.columns = [
+            {
+                title: 'Username',
+                dataIndex: 'username',
+                onFilter: (value, record) => record.username.indexOf(value) === 0,
+                sorter: (a, b) => stringOrder(a, b),
+            }
+            ,
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                onFilter: (value, record) => record.name.indexOf(value) === 0,
+                sorter: (a, b) => stringOrder(a, b),
+            },
+            {
+                title: 'Role',
+                dataIndex: 'role',
+                onFilter: (value, record) => record.role.indexOf(value) === 0,
+                sorter: (a, b) => stringOrder(a, b),
+            },
+            {
+                title: 'Created',
+                dataIndex: 'createdAt',
+            },
+            {
+                title: 'Modified',
+                dataIndex: 'modifiedAt',
+            },
+
+
+        ];
+        this.state = {
+            data: [],
+            pagination: {},
+            loading: false,
+            visible: false,
+            confirmLoading: false,
+            userForm: {
+                username: '',
+                password: '',
+                role: 'super',
+                name: ''
+            }
+
+        };
+    }
+
     componentDidMount() {
         this.props.actions.checkAuth(this.props.auth);
         this.props.actions.getUsers();
@@ -123,11 +99,11 @@ class User extends React.Component {
     };
 
     showModal = () => {
-        this.setState({ visible: true });
-    }
+        this.setState({visible: true});
+    };
     handleCancel = () => {
-        this.setState({ visible: false });
-    }
+        this.setState({visible: false});
+    };
     handleCreate = () => {
         const form = this.form;
         this.setState({
@@ -138,49 +114,61 @@ class User extends React.Component {
             if (err) {
                 return;
             } else {
-                this.props.actions.createUser(values).then(
-                    (res)=> {
-                        this.setState({ visible: false,confirmLoading: false });
-                    },
-                    (err)=> {
+                let userForm = this.state.userForm;
+                userForm.username = values.username;
+                userForm.password = values.password;
+                userForm.name = values.name;
 
-                    }
-                )
-
+                this.setState({userForm: userForm}, this.sendForm);
+                form.resetFields();
+                this.setState({visible: false});
             }
+        })
 
-            console.log('Received values of form: ', values);
-            form.resetFields();
-            this.setState({ visible: false });
-        });
     }
     saveFormRef = (form) => {
         this.form = form;
-    }
+    };
 
+    sendForm() {
 
+        this.props.actions.createUser(this.state.userForm).then(
+            (res) => {
+                this.setState({visible: false, confirmLoading: false});
+            },
+            (err) => {
+            }
+        )
+    };
 
+    handleSelectChange = (value) => {
+        let userForm = this.state.userForm;
+        userForm.role = value;
+        this.setState({userForm: userForm});
 
+    };
 
     render() {
         return (
-           <div>
-        <Button type="primary" onClick={this.showModal} class="wrapper">Create an User</Button>
+            <div>
+                <Button type="primary" onClick={this.showModal}>Create an User</Button>
                 <CollectionCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                     confirmLoading={this.state.confirmLoading}
                     onCreate={this.handleCreate}
+                    onChange={value => this.handleSelectChange(value)}
+
                 />
 
-            <Table columns={columns}
-                   rowKey={record => record.id}
-                   dataSource={this.props.users.rows}
-                   pagination={this.state.pagination}
-                   loading={this.state.loading}
-                   onChange={this.handleTableChange}
-            />
+                <Table columns={this.columns}
+                       rowKey={record => record.id}
+                       dataSource={this.props.users.rows}
+                       pagination={this.state.pagination}
+                       loading={this.state.loading}
+                       onChange={this.handleTableChange}
+                />
             </div>
         );
 

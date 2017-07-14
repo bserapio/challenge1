@@ -1,14 +1,25 @@
-import React from 'react';
-import { Button, Modal, Form, Input, Select } from 'antd';
+import React from "react";
+import {Form, Input, Modal, Select} from "antd";
 
 const Option = Select.Option;
 
 const FormItem = Form.Item;
 
-const CollectionCreateForm = Form.create()(
-    (props) => {
-        const { visible, onCancel, onCreate, form,confirmLoading } = props;
-        const { getFieldDecorator } = form;
+
+class CreateForm extends React.Component {
+
+    constructor(props,context) {
+        super(props,context);
+
+    }
+    handleSelectChange = (value) =>  {
+
+        this.props.onChange(value)
+    }
+    render() {
+
+        const {visible, onCancel, onCreate, form, confirmLoading} = this.props;
+        const {getFieldDecorator} = form;
         return (
             <Modal
                 visible={visible}
@@ -21,28 +32,28 @@ const CollectionCreateForm = Form.create()(
                 <Form layout="vertical">
                     <FormItem label="Username">
                         {getFieldDecorator('username', {
-                            rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            rules: [{required: true, message: 'Please input the title of collection!'}],
                         })(
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem  label="Password" hasFeedback>
+                    <FormItem label="Password" hasFeedback>
                         {getFieldDecorator('password', {
                             rules: [{required: true, message: 'Please input your password!'}],
                         })(
-                            <Input type="password" />
+                            <Input type="password"/>
                         )}
                     </FormItem>
 
                     <FormItem label="Name">
                         {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Please input your name' }],
+                            rules: [{required: true, message: 'Please input your name'}],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <div>
-                        <Select  defaultValue="super" style={{ width: 120 }}>
+                        <Select defaultValue="super" style={{width: 120}} onChange={this.handleSelectChange}>
                             <Option value="guest">Guest</Option>
                             <Option value="user">User</Option>
                             <Option value="finance">Finance</Option>
@@ -60,5 +71,9 @@ const CollectionCreateForm = Form.create()(
             </Modal>
         );
     }
-);
+}
+
+const CollectionCreateForm = Form.create()(CreateForm);
+
+
 export default CollectionCreateForm;
