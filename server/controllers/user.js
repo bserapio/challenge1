@@ -55,6 +55,7 @@ exports.updateUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateInput);
     if (result.isValid()) {
+        input.updatedAt = new Date();
         db.User.findById(req.params.id).then(user => {
             if (user) {
                 db.User.update(input, {
