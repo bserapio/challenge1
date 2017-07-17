@@ -81,7 +81,7 @@ class EditableCell extends React.Component {
 
 
     render() {
-        const {value, editable, type, name} = this.props;
+        const {value, editable, type} = this.props;
         let returnObject = '';
         let returnValue = '';
         let editDate = value;
@@ -135,7 +135,6 @@ EditableCell.propTypes = {
     value: PropTypes.string.isRequired,
     editable: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
 };
 
