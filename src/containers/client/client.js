@@ -281,6 +281,12 @@ class Clients extends React.Component {
         this.props.actions.searchFilter(this.state.searchText);
 
     }
+    remove = (record) => {
+
+        this.props.actions.removeClient(record);
+
+
+    }
 
     render() {
         const columns = [
@@ -307,7 +313,12 @@ class Clients extends React.Component {
                                     </span>
                                     :
                                     <span> <a onClick={() => this.edit(record)}>Edit</a>| <Button type="primary"
-                                                                                                  onClick={() => this.showElevateModal(record)}>Elevate</Button></span>
+                                                                                                  onClick={() => this.showElevateModal(record)}>Elevate</Button>  |
+                                      <Popconfirm title="Sure to Delete?" okText="Yes" cancelText="No"
+                                                  onConfirm={  () => this.remove(record, 'cancel')}>
+                                            <a>Delete</a>
+                                        </Popconfirm>
+                                    </span>
                             }
                         </div>
                     );

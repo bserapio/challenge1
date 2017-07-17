@@ -34,6 +34,15 @@ function updateClient(data) {
 
 }
 
+
+function removeClient(data) {
+    let url = apiEndPoints.clientDetail;
+    url = url.replace(':id', data.id);
+    return axios.delete(url)
+
+
+}
+
 function createClient(data) {
     let url = apiEndPoints.clientList;
     return axios.post(url, data);
@@ -46,6 +55,15 @@ function elevateClient(data) {
 }
 
 
-const connectService = {login, getUsers, getClients, updateClient, createUser, createClient, elevateClient};
+const connectService = {
+    login,
+    getUsers,
+    getClients,
+    updateClient,
+    createUser,
+    createClient,
+    elevateClient,
+    removeClient
+};
 
 export default connectService;

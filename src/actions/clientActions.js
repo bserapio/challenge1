@@ -76,6 +76,22 @@ export function updateClient(record) {
         )
     }
 }
+
+export function removeClient(record) {
+    return function (dispatch) {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record}
+        });
+        return connectService.removeClient(record).then(
+            (res) => {
+                return dispatch(getClients());
+            }
+        )
+    }
+}
+
+
 export function createClient(record) {
     return function (dispatch) {
         dispatch({

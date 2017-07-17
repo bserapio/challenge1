@@ -58,6 +58,20 @@ exports.detailClient = function (req, res) {
     });
 };
 
+exports.removeClient = function (req, res) {
+    db.ClientDb.findById(req.params.id).then(client => {
+        db.ClientMeta.find({where: {'client_id': client.id}}).then(
+            cmeta => {
+                cmeta.destroy().then(() => {
+                    client.destroy().then(() => {
+                        res.status(204).json({message: 'Client Deleted'});
+                    });
+                });
+            });
+    });
+};
+
+
 exports.updateClient = function (req, res) {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateDbInput);
@@ -103,6 +117,5 @@ exports.elevateClient = function (req, res) {
             res.json({key: 'doudfsifdkjasvgdasjhgdasgk'});
         }
         // Here I need call request function and return the correct key
-
     });
-}
+};
