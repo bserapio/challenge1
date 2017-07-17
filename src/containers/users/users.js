@@ -207,5 +207,6 @@ User.propTypes = {
     auth: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     users: PropTypes.object,
+    checkAuth: PropTypes.func.isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(User);

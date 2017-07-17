@@ -12,7 +12,7 @@ import * as userActions from '../../actions/userActions';
 import * as clientActions from '../../actions/clientActions';
 import './client.css';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
     return {
         auth: state.user.auth,
@@ -38,12 +38,10 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        userActions: bindActionCreators(userActions, dispatch),
-        actions: bindActionCreators(clientActions, dispatch),
-    };
-};
+const mapDispatchToProps = dispatch => ({
+    userActions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(clientActions, dispatch),
+});
 const stringOrder = (a, b) => {
     {
         const nameA = a.username.toUpperCase();

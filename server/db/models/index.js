@@ -23,7 +23,7 @@ fs.readdirSync(__dirname).filter(file => (file.indexOf('.') !== 0) && (file !== 
         } catch (exp) {
 
         }
-  });
+    });
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {

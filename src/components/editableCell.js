@@ -8,6 +8,12 @@ const moment = require('moment');
 
 class EditableCell extends React.Component {
 
+    static checked(value) {
+        if (value) {
+            return 'checked';
+        }
+        return '';
+    }
 
     constructor(props, context) {
         super(props, context);
@@ -73,13 +79,6 @@ class EditableCell extends React.Component {
         this.props.onChange(value);
     }
 
-
-    checked(value) {
-        if (value) {
-            return 'checked';
-        }
-        return '';
-    }
 
     render() {
         const {value, editable, type, name} = this.props;

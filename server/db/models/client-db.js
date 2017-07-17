@@ -86,7 +86,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'client_id',
             allowNull: true,
         });
-    }
+    };
     return ClientDb;
-}
+};
 

@@ -1,30 +1,23 @@
-import React from "react";
-import {Form, Input, Modal, Select} from "antd";
+import React from 'react';
+import {Form, Input, Modal, Select} from 'antd';
 
 const Option = Select.Option;
-
 const FormItem = Form.Item;
 
 
 class CreateElevatorForm extends React.Component {
 
-    constructor(props, context) {
-        super(props, context);
 
-    }
     render() {
-        const getHtml = (res) => {
-            return {__html: res};
-        }
+        const getHtml = res => ({__html: res});
         const getModal = (modalText, getFieldDecorator) => {
-
             if (modalText) {
                 let res = '';
                 for (const prop in modalText) {
                     const url = modalText[prop];
-                    res += '<div> <a href=' + url + '">' + prop + '</a></div>';
+                    res += `<div> <a href=${url}">${prop}</a></div>`;
                 }
-                return <div dangerouslySetInnerHTML={ getHtml(res)}/>;
+                return <div dangerouslySetInnerHTML={getHtml(res)}/>;
             }
             return (
                 <Form layout="vertical">
@@ -32,15 +25,13 @@ class CreateElevatorForm extends React.Component {
                         {getFieldDecorator('password', {
                             rules: [{
                                 required: true,
-                                message: 'Please input your password!'
+                                message: 'Please input your password!',
                             }],
                         })(<Input type="password"/>)}
                     </FormItem>
                 </Form>
-            )
-
-
-        }
+            );
+        };
 
         const {visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading, modalText} = this.props;
         const {getFieldDecorator} = form;

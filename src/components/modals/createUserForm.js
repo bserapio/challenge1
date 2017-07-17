@@ -8,10 +8,7 @@ const FormItem = Form.Item;
 
 class CreateForm extends React.Component {
 
-    constructor(props,context) {
-        super(props,context);
 
-    }
     handleSelectChange = (value) =>  {
 
         this.props.onChange(value)
