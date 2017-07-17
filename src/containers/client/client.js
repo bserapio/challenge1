@@ -1,7 +1,7 @@
 import {Table, Icon, Input, Popconfirm, Button} from 'antd';
 
 import React from 'react';
-
+import './client.css'
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ClientCreateForm from "../../components/modals/createClientForm";
@@ -63,8 +63,10 @@ class Clients extends React.Component {
         super(props, context);
 
         this.state = {
+            paginationText: 'Show All',
             editedRecord: {},
             pagination: {},
+            footer: null,
             loading: false,
             visible: false,
             filterDropdownVisible: false,
@@ -75,8 +77,6 @@ class Clients extends React.Component {
             confirmElevateLoading: false,
             elevateUrl: null,
             clientRequest: {},
-            editIndex: -1,
-
             locale: {
                 filterConfirm: 'Ok',
                 filterReset: 'Reset',
@@ -101,23 +101,25 @@ class Clients extends React.Component {
         this.props.actions.getClients();
 
     }
+
+
     renderColumns(data, index, key, text, type) {
+
         if (!data) {
             return text;
-        }
-        if (this.state.editable === -1) {
+        } else if (Object.keys(data[index]).length === 0) {
+
             return text;
-        } else {
+        }
             let value;
             value = this.state.editedRecord.id === data[index].id ? this.state.editedRecord[key] : data[index][key];
-
             return (<EditableCell type={type}
                                   editable={this.state.editedRecord.id === data[index].id}
                                   value={value}
                                   name={key}
                                   onChange={value => this.handleChange(key, value)}
             />);
-        }
+
 
     }
     handleChange(key, value) {
@@ -130,6 +132,7 @@ class Clients extends React.Component {
         this.setState({editedRecord: {...record}});
 
     }
+
     editDone(record, type) {
 
         if (type === 'save') {
@@ -259,7 +262,16 @@ class Clients extends React.Component {
         )
     };
 
+    showAll = () => {
+        if (!(this.state.pagination)) {
+            this.setState({pagination: {}, paginationText: 'Show All'});
+        } else {
 
+            this.setState({pagination: false, paginationText: 'Paginate Table'});
+        }
+
+
+    }
     showElevateModal = (record) => {
         let elevatorForm = this.state.elevatorForm;
         elevatorForm.identifier = record.identifier;
@@ -293,7 +305,13 @@ class Clients extends React.Component {
             {
                 title: 'operation',
                 dataIndex: 'operation',
+                onFilter: (value, record) => record.role.indexOf(value) === 0,
                 render: (text, record, index) => {
+
+
+                    if (Object.keys(record).length === 0) {
+                        return null;
+                    }
 
                     return (
                         <div className="editable-row-operations">
@@ -353,20 +371,20 @@ class Clients extends React.Component {
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => stringOrder(a, b),
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'name', text, 'text'),
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'name', text, 'text'),
             },
             {
                 title: 'Lang',
                 dataIndex: 'lang',
                 key: 'lang',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'lang', text, 'text'),
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'lang', text, 'text'),
 
             },
             {
                 title: 'Type',
                 dataIndex: 'ClientMetum#type',
                 onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'ClientMetum#type', text, 'text'),
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'ClientMetum#type', text, 'text'),
                 filters: [
                     {
                         text: 'Demo',
@@ -396,30 +414,31 @@ class Clients extends React.Component {
                 title: 'Active',
                 dataIndex: 'active',
                 key: 'active',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'active', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'active', text, 'boolean'),
 
             },
             {
                 title: 'Manteinance',
                 dataIndex: 'maintenance',
                 key: 'maintenance',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'maintenance', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'maintenance', text, 'boolean'),
             },
             {
                 title: 'AutoUpdate',
                 dataIndex: 'autoUpdate',
                 key: 'autoUpdate',
-                render: (text, record, index) => this.renderColumns(this.props.clients.rows, index, 'autoUpdate', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'autoUpdate', text, 'boolean'),
 
             },
             {
                 title: 'expireDate',
                 dataIndex: 'expireDate',
-
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'expireDate', text, 'datetime'),
             },
             {
                 title: 'archivedAt',
                 dataIndex: 'archivedAt',
+                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'archivedAt', text, 'datetime'),
 
             },
 
@@ -428,6 +447,9 @@ class Clients extends React.Component {
         return (
             <div>
                 <Button type="primary" onClick={this.showModal}>Create an Client</Button>
+
+                <Button type="primary" onClick={this.showAll}>{this.state.paginationText}</Button>
+
                 <ClientCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}

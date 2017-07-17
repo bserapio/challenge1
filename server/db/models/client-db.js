@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             field: 'active',
             allowNull: false,
-            defaultValue: false,
+            defaultValue: true,
         },
         maintenance: {
             type: DataTypes.BOOLEAN,

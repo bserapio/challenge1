@@ -42,6 +42,7 @@ exports.addClient = function (req, res) {
         res.status(400).json(result.errors);
     }
 };
+
 exports.listClient = function (req, res) {
     db.ClientDb.findAndCountAll({
         include: [{
@@ -52,6 +53,7 @@ exports.listClient = function (req, res) {
         res.json(result);
     });
 };
+
 exports.detailClient = function (req, res) {
     db.ClientDb.findById(req.params.id).then(user => {
         res.json(user);
@@ -70,7 +72,6 @@ exports.removeClient = function (req, res) {
             });
     });
 };
-
 
 exports.updateClient = function (req, res) {
     const input = req.body;

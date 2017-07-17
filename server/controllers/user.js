@@ -21,7 +21,7 @@ exports.addUser = function (req, res) {
     }
 };
 exports.listUser = function (req, res) {
-    let limit = req.param('limit');
+    const limit = req.param('limit');
     const page = req.param('page', 1);
     let offset = limit * (page - 1);
     offset = (offset >= 0) ? offset : 0;
@@ -42,7 +42,7 @@ exports.detailUser = function (req, res) {
         include: [{
             model: db.ClientMeta,
             attributes: {},
-        }]
+        }],
     }).then(user => {
         res.json(user);
     });
