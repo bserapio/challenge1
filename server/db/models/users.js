@@ -17,6 +17,22 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             field: 'username',
             allowNull: false,
+            validate: {
+                isUnique: function (value, next) {
+                    var self = this;
+                    User.find({where: {username: value}})
+                        .then(function (user) {
+                            // reject if a different user wants to use the same email
+                            if (user && self.id !== user.id) {
+                                return next('Username already in use!');
+                            }
+                            return next();
+                        })
+                        .catch(function (err) {
+                            return next(err);
+                        });
+                }
+            }
         },
         name: {
             type: DataTypes.STRING(255),
@@ -57,10 +73,10 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
         underscored: true,
         hooks: {
-            beforeCreate: (user, options) => {
+            beforeCreate: user => {
                 user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
             },
-            beforeUpdate: (user, options) => {
+            beforeUpdate: user => {
                 user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
             },
         },

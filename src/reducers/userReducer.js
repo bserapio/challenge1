@@ -22,10 +22,11 @@ export default function userReducer(state = initialState, action) {
             };
         }
         case types.LOGIN_FAIL: {
-            const {err} = action.payload;
+            const {loginError} = action.payload;
+            console.log(loginError);
             return {
                 ...state,
-                loginError: err,
+                loginError: loginError,
             };
         }
         case types.GET_USERS_SUCCESS: {

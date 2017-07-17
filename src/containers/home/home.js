@@ -1,4 +1,4 @@
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import {Form, Icon, Input, Button, Checkbox, Alert} from 'antd';
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -7,12 +7,16 @@ import './home.css';
 
 const FormItem = Form.Item;
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return {
         actions: bindActionCreators(userActions, dispatch),
     };
 }
-
+const mapStateToProps = state => ({
+    auth: state.user.auth,
+    users: state.user.users,
+    loginError: state.user.loginError,
+});
 
 class NormalLoginForm extends React.Component {
 
@@ -36,8 +40,21 @@ class NormalLoginForm extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        let errorMessage = '';
+
+        if (this.props.loginError) {
+            errorMessage = (<Alert
+                message="Error"
+                description="Error login user"
+                type="error"
+                showIcon
+            />);
+        }
         return (
+
+
             <Form onSubmit={this.handleSubmit} className="login-form">
+                {errorMessage}
                 <FormItem>
                     {getFieldDecorator('username', {
                         rules: [{ required: true, message: 'Please input your username!' }],
@@ -73,4 +90,4 @@ class NormalLoginForm extends React.Component {
 const Home = Form.create()(NormalLoginForm);
 
 
-export default connect(null, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

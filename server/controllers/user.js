@@ -7,7 +7,7 @@ const db = require('../db/models');
 
 
 // Display detail page for a specific Author
-exports.addUser = function (req, res) {
+exports.addUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateInput);
     if (result.isValid()) {
@@ -15,12 +15,15 @@ exports.addUser = function (req, res) {
         input.modifiedAt = new Date();
         db.User.create(input).then(user => {
             res.json(user);
-        });
+            },
+            err => {
+                res.status(403).json(err);
+            });
     } else {
         res.status(400).json(result.errors);
     }
 };
-exports.listUser = function (req, res) {
+exports.listUser = (req, res) => {
     const limit = req.param('limit');
     const page = req.param('page', 1);
     let offset = limit * (page - 1);
@@ -36,7 +39,7 @@ exports.listUser = function (req, res) {
         res.json(result);
     });
 };
-exports.detailUser = function (req, res) {
+exports.detailUser = (req, res) => {
     db.User.find({
         where: {id: req.params.id},
         include: [{
@@ -47,7 +50,7 @@ exports.detailUser = function (req, res) {
         res.json(user);
     });
 };
-exports.updateUser = function (req, res) {
+exports.updateUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateInput);
     if (result.isValid()) {
@@ -69,7 +72,7 @@ exports.updateUser = function (req, res) {
         res.status(400).json(result.errors);
     }
 };
-exports.clientListUser = function (req, res) {
+exports.clientListUser = (req, res) => {
     let limit = req.param('limit', 10);
     const page = req.param('page', 1);
     let offset = limit * (page - 1);
@@ -90,7 +93,7 @@ exports.clientListUser = function (req, res) {
         res.json(result);
     });
 };
-exports.clientDetailUser = function (req, res) {
+exports.clientDetailUser = (req, res) => {
     db.ClientMeta.findOne({
         where: {
             userId: req.params.id,
@@ -108,7 +111,7 @@ exports.clientDetailUser = function (req, res) {
         res.json(result);
     });
 };
-exports.clientUpdateDetailUser = function (req, res) {
+exports.clientUpdateDetailUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateMetaDbInput);
     if (result.isValid()) {

@@ -54,7 +54,7 @@ export function createUser(data) {
         () => dispatch(getUsers()),
         loginError => {
             console.log(loginError);
-            }
+        }
     );
 }
 
