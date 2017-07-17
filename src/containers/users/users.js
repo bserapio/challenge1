@@ -37,7 +37,7 @@ const stringOrder = (a, b) => {
 
 class User extends React.Component {
     static defaultProps = {
-        users: null,
+        users: [],
     };
     constructor(props, context) {
         super(props, context);
@@ -108,6 +108,7 @@ class User extends React.Component {
         this.state = {
             data: [],
             pagination: {},
+            paginationText: 'Show All',
             loading: false,
             visible: false,
             confirmLoading: false,
@@ -177,10 +178,24 @@ class User extends React.Component {
         this.setState({userForm});
     };
 
+
+    showAll = () => {
+        if (!(this.state.pagination)) {
+            this.setState({pagination: {}, paginationText: 'Show All'});
+        } else {
+            this.setState({pagination: false, paginationText: 'Paginate Table'});
+        }
+    };
     render() {
         return (
             <div>
-                <Button type="primary" onClick={this.showModal}>Create an User</Button>
+                <Button.Group size="default">
+                    <Button type="primary" onClick={this.showModal}>Create an User</Button>
+                    <Button type="primary" onClick={this.showAll}>{this.state.paginationText}</Button>
+                </Button.Group>
+
+
+
                 <UserCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}
@@ -206,7 +221,7 @@ class User extends React.Component {
 User.propTypes = {
     auth: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    users: PropTypes.object,
+    users: PropTypes.array,
     checkAuth: PropTypes.func.isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(User);

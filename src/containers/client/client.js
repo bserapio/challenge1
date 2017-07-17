@@ -60,6 +60,7 @@ class Clients extends React.Component {
 
     static defaultProps = {
         searchFilter: null,
+        clients: []
     };
 
     constructor(props, context) {
@@ -80,11 +81,7 @@ class Clients extends React.Component {
             confirmElevateLoading: false,
             elevateUrl: null,
             clientRequest: {},
-            locale: {
-                filterConfirm: 'Ok',
-                filterReset: 'Reset',
-                emptyText: 'No Data',
-            },
+
             elevatorForm: {
                 password: '',
                 username: '',
@@ -345,7 +342,7 @@ class Clients extends React.Component {
                         <Button type="primary" onClick={this.onSearch}>Search</Button>
                     </div>
                 ),
-                filterIcon: <Icon type="smile-o" style={{color: this.state.filtered ? '#108ee9' : '#aaa'}}/>,
+                filterIcon: <Icon type="filter" style={{color: this.state.filtered ? '#108ee9' : '#aaa'}}/>,
                 filterDropdownVisible: this.state.filterDropdownVisible,
                 onFilterDropdownVisibleChange: visible => {
                     this.setState({
@@ -468,7 +465,7 @@ class Clients extends React.Component {
                     dataSource={this.props.clients}
                     pagination={this.state.pagination}
                     loading={this.state.loading}
-                    locale={this.state.locale}
+
                 />
             </div>
         );
@@ -480,6 +477,6 @@ Clients.propTypes = {
     searchFilter: PropTypes.func,
     userActions: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    clients: PropTypes.object.isRequired,
+    clients: PropTypes.array,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Clients);

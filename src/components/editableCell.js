@@ -19,46 +19,7 @@ class EditableCell extends React.Component {
         super(props, context);
 
         this.state = {
-            locale: {
-                calendar: {
-                    'lang': {
-                        'placeholder': 'Select date',
-                        'rangePlaceholder': [
-                            'Start date',
-                            'End date',
-                        ],
-                        'today': 'Today',
-                        'now': 'Now',
-                        'backToToday': 'Back to today',
-                        'ok': 'Ok',
-                        'clear': 'Clear',
-                        'month': 'Month',
-                        'year': 'Year',
-                        'timeSelect': 'Select time',
-                        'dateSelect': 'Select date',
-                        'monthSelect': 'Choose a month',
-                        'yearSelect': 'Choose a year',
-                        'decadeSelect': 'Choose a decade',
-                        'yearFormat': 'YYYY',
-                        'dateFormat': 'M/D/YYYY',
-                        'dayFormat': 'D',
-                        'dateTimeFormat': 'M/D/YYYY HH:mm:ss',
-                        'monthFormat': 'MMMM',
-                        'monthBeforeYear': true,
-                        'previousMonth': 'Previous month (PageUp)',
-                        'nextMonth': 'Next month (PageDown)',
-                        'previousYear': 'Last year (Control + left)',
-                        'nextYear': 'Next year (Control + right)',
-                        'previousDecade': 'Last decade',
-                        'nextDecade': 'Next decade',
-                        'previousCentury': 'Last century',
-                        'nextCentury': 'Next century',
-                    },
-                    'timePickerLocale': {
-                        'placeholder': 'Select time',
-                    },
-                },
-            },
+
         };
     }
 
@@ -95,7 +56,7 @@ class EditableCell extends React.Component {
         } else {
             switch (type) {
                 case 'boolean': {
-                    const checkActive = this.checked(value);
+                    const checkActive = EditableCell.checked(value);
                     returnObject = (
                         <div>
                             <input type="checkbox" onChange={e => this.handleInputChange(e)} checked={checkActive}/>
@@ -104,17 +65,22 @@ class EditableCell extends React.Component {
                 }
                 case 'datetime': {
                     if (value === null) {
-                        editDate = moment().format('YYYY-MM-DD HH:mm:ss');
+                        editDate = moment();
+                    } else {
+                        editDate = moment(value);
                     }
-                    returnObject = (<DatePicker
-                        showTime
-                        format="YYYY-MM-DD HH:mm:ss"
-                        locale={this.state.locale.calendar}
-                        placeholder="Select Time"
-                        onChange={this.onChangeDate}
-                        onOk={this.onOkDate}
-                        defaultValue={moment()}
-                    />);
+
+
+                    returnObject = (
+                        <DatePicker
+                            showTime
+                            format="YYYY-MM-DD HH:mm:ss"
+                            locale={this.state.locale}
+                            placeholder="Select Time"
+                            onChange={this.onChangeDate}
+                            onOk={this.onOkDate}
+                            defaultValue={editDate}
+                        />);
                     break;
                 }
                 default: {
