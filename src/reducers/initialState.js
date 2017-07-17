@@ -3,6 +3,6 @@ export default {
     clients: [],
     clientsMeta: [],
     auth: null,
-    loginError:null,
+    loginError: null,
     searchClient: '',
-}
+};

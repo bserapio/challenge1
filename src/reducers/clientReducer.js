@@ -4,25 +4,28 @@ import initialState from './initialState';
 
 export default function clientReducer(state = initialState, action) {
     switch (action.type) {
-        case types.GET_CLIENTS_SUCCESS:
-
+        case types.GET_CLIENTS_SUCCESS: {
             const {clients} = action.payload;
 
             return {
                 ...state,
-                clients: clients
+                clients,
             };
-            break;
+        }
 
-        case types.SEARCH_FILTER:
 
+        case types.SEARCH_FILTER: {
             const {searchText} = action.payload;
             return {
                 ...state,
-                searchText
-            }
+                searchText,
+            };
+        }
 
-        default:
+
+        default: {
             return state;
+        }
+
     }
 }

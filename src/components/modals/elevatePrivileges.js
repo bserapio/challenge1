@@ -12,29 +12,18 @@ class CreateElevatorForm extends React.Component {
         super(props, context);
 
     }
-
-
-
     render() {
-
         const getHtml = (res) => {
-
             return {__html: res};
         }
         const getModal = (modalText, getFieldDecorator) => {
 
             if (modalText) {
                 let res = '';
-                for (var prop in modalText) {
+                for (const prop in modalText) {
                     const url = modalText[prop];
-                    const text = prop;
-
-                    res += '<div> <a href=' + url + '">' + text + '</a></div>';
-
-
+                    res += '<div> <a href=' + url + '">' + prop + '</a></div>';
                 }
-
-
                 return <div dangerouslySetInnerHTML={ getHtml(res)}/>;
             }
             return (

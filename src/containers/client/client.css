@@ -13,3 +13,10 @@
 .highlight {
     color: #f50;
 }
+
+.ant-btn-group {
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

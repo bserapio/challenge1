@@ -1,25 +1,24 @@
-'use strict';
-import {Button, Table} from "antd";
-import React from "react";
-import {bindActionCreators} from "redux";
-import {connect} from "react-redux";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import UserCreateForm from "../../components/modals/createUserForm";
+import {Button, Table} from 'antd';
 
-import * as userActions from "../../actions/userActions";
-import "./user.css";
-const mapStateToProps = function (state) {
-    return {
-        auth: state.user.auth,
-        users: state.user.users
-    }
-};
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
-const mapDispatchToProps = function (dispatch) {
-    return {
-        actions: bindActionCreators(userActions, dispatch)
-    };
-};
+import UserCreateForm from '../../components/modals/createUserForm';
+
+import * as userActions from '../../actions/userActions';
+import './user.css';
+
+const mapStateToProps = state => ({
+    auth: state.user.auth,
+    users: state.user.users,
+});
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(userActions, dispatch),
+});
 
 const stringOrder = (a, b) => {
     {
@@ -31,16 +30,15 @@ const stringOrder = (a, b) => {
             return -1;
         } else if (nameA > nameB) {
             return 1;
-        } else {
-            return 0;
         }
-
-
+        return 0;
     }
 };
 
 class User extends React.Component {
-
+    static defaultProps = {
+        users: null,
+    };
     constructor(props, context) {
         super(props, context);
         this.columns = [
@@ -49,8 +47,7 @@ class User extends React.Component {
                 dataIndex: 'username',
                 onFilter: (value, record) => record.username.indexOf(value) === 0,
                 sorter: (a, b) => stringOrder(a, b),
-            }
-            ,
+            },
             {
                 title: 'Name',
                 dataIndex: 'name',
@@ -78,22 +75,22 @@ class User extends React.Component {
                     {
                         text: 'Manager',
                         value: 'manager',
-                    }
-                    , {
+                    },
+                    {
                         text: 'Sales',
                         value: 'sales',
                     }, {
                         text: 'Account manager',
                         value: 'account-manager',
-                    }
-                    , {
+                    },
+                    {
                         text: 'Admin',
                         value: 'admin',
-                    }
-                    , {
+                    },
+                    {
                         text: 'Super',
                         value: 'super',
-                    }
+                    },
 
                 ],
             },
@@ -117,14 +114,14 @@ class User extends React.Component {
             locale: {
                 filterConfirm: 'Ok',
                 filterReset: 'Reset',
-                emptyText: 'No Data'
+                emptyText: 'No Data',
             },
             userForm: {
                 username: '',
                 password: '',
                 role: 'super',
-                name: ''
-            }
+                name: '',
+            },
 
         };
     }
@@ -134,9 +131,6 @@ class User extends React.Component {
         this.props.actions.getUsers();
     }
 
-    handleTableChange = (pagination, filters, sorter) => {
-
-    };
     showModal = () => {
         this.setState({visible: true});
     };
@@ -151,38 +145,36 @@ class User extends React.Component {
         });
         form.validateFields((err, values) => {
             if (err) {
-                return;
+                console.log(err);
             } else {
-                let userForm = this.state.userForm;
+                const userForm = this.state.userForm;
                 userForm.username = values.username;
                 userForm.password = values.password;
                 userForm.name = values.name;
 
-                this.setState({userForm: userForm}, this.sendForm);
+                this.setState({userForm}, this.sendForm);
                 form.resetFields();
                 this.setState({visible: false});
             }
-        })
-
-    }
-    saveFormRef = (form) => {
+        });
+    };
+    saveFormRef = form => {
         this.form = form;
     };
-    sendForm() {
-
+    sendForm = () => {
         this.props.actions.createUser(this.state.userForm).then(
-            (res) => {
+            () => {
                 this.setState({visible: false, confirmLoading: false});
             },
-            (err) => {
+            err => {
+                console.log(err);
             }
-        )
+        );
     };
-    handleSelectChange = (value) => {
-        let userForm = this.state.userForm;
+    handleSelectChange = value => {
+        const userForm = this.state.userForm;
         userForm.role = value;
-        this.setState({userForm: userForm});
-
+        this.setState({userForm});
     };
 
     render() {
@@ -199,18 +191,21 @@ class User extends React.Component {
 
                 />
 
-                <Table columns={this.columns}
-                       rowKey={record => record.id}
-                       dataSource={this.props.users.rows}
-                       pagination={this.state.pagination}
-                       loading={this.state.loading}
-                       onChange={this.handleTableChange}
-                       locale={this.state.locale}
+                <Table
+                    columns={this.columns}
+                    rowKey={record => record.id}
+                    dataSource={this.props.users.rows}
+                    pagination={this.state.pagination}
+                    loading={this.state.loading}
+                    locale={this.state.locale}
                 />
             </div>
         );
-
     }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(User)
+User.propTypes = {
+    auth: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    users: PropTypes.object,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(User);

@@ -1,0 +1,130 @@
+{
+  "rules": {
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
+    "class-methods-use-this": "off",
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+      }
+    ],
+    "curly": [
+      "error",
+      "multi-line"
+    ],
+    "no-alert": "off",
+    "no-multi-spaces": [
+      "error",
+      {
+        "exceptions": {
+          "VariableDeclarator": true,
+          "Property": true,
+          "CallExpression": true
+        }
+      }
+    ],
+    "no-mixed-operators": "off",
+    "no-use-before-define": [
+      "error",
+      "nofunc"
+    ],
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-restricted-globals": [
+      "error",
+      "Promise"
+    ],
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "key-spacing": [
+      "error",
+      {
+        "beforeColon": false,
+        "afterColon": true,
+        "mode": "minimum"
+      }
+    ],
+    "react/jsx-indent-props": [
+      "error",
+      4
+    ],
+    "react/jsx-indent": [
+      "error",
+      4
+    ],
+    "react/prefer-es6-class": [
+      "warn",
+      "always"
+    ],
+    "react/no-multi-comp": "off",
+    "react/prefer-stateless-function": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "assignment": false,
+        "declaration": false
+      }
+    ],
+    "react/no-string-refs": "off",
+    "react/no-find-dom-node": "off",
+    "react/forbid-prop-types": "off",
+    "react/no-render-return-value": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "strict": [
+      "error",
+      "global"
+    ],
+    "max-len": "off",
+    "no-param-reassign": "off",
+    "no-plusplus": "off",
+    "new-cap": "off",
+    "quote-props": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-console": "off"
+  },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "ecmaFeatures": {
+    "jsx": true,
+    "experimentalObjectRestSpread": true
+  },
+  "stage": 0,
+  "optional": [
+    "es7.classProperties"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "globals": {
+    "__": true,
+    "B7": true,
+    "B7_CONFIG": true,
+    "V1_ROOT": true,
+    "debug": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}

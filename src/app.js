@@ -1,27 +1,24 @@
-
+import 'antd/dist/antd.css';
+import Link from 'react-router-redux-dom-link';
 import React, { Component } from 'react';
 
 import {Layout, Menu} from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as userActions from './actions/userActions';
-import Link from 'react-router-redux-dom-link';
-import 'antd/dist/antd.css';
+
+
 const { Header, Content, Footer } = Layout;
 
 
-const mapStateToProps = function (state) {
-    return {
-        auth: state.user.auth,
-        users: state.user.users
-    }
-};
+const mapStateToProps = state => ({
+    auth: state.user.auth,
+    users: state.user.users,
+});
 
-const mapDispatchToProps = function (dispatch) {
-    return {
-        actions: bindActionCreators(userActions, dispatch)
-    };
-};
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(userActions, dispatch),
+});
 class App extends Component {
 
 
@@ -43,7 +40,7 @@ class App extends Component {
                 {this.props.children}
             </Content>
             <Footer style={{ textAlign: 'center' }}>Ant Design ©2016 Created by Ant UED</Footer>
-        </Layout>)
+        </Layout>);
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

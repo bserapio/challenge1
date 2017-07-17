@@ -1,15 +1,14 @@
 const apiEndPoints = {
-    baseUrl:'http://127.0.0.1:8000/',
+    baseUrl: 'http://127.0.0.1:8000/',
     userList:     'api/user',
     userDetail:  'api/user/:id',
     userClientList:  'api/user/:id/client',
-    userClientDetail:'api/user/:id/client/:idMeta',
-    clientList:'api/client',
-    clientDetail:'api/client/:id',
+    userClientDetail: 'api/user/:id/client/:idMeta',
+    clientList: 'api/client',
+    clientDetail: 'api/client/:id',
     clientElevate: 'api/client/elevate',
-    login : 'login',
+    login: 'login',
 };
 
 export default apiEndPoints;
-
 

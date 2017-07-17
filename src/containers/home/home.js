@@ -3,43 +3,41 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as userActions from '../../actions/userActions';
+import './home.css';
 
-import './home.css'
 const FormItem = Form.Item;
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(userActions, dispatch)
+        actions: bindActionCreators(userActions, dispatch),
     };
 }
 
 
 class NormalLoginForm extends React.Component {
 
-    constructor(props,context) {
-        super(props,context);
-        this.state = {credentials: {username: '', password: ''}}
-
+    constructor(props, context) {
+        super(props, context);
+        this.state = {credentials: {username: '', password: ''}};
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.setState({credentials: values},this.sendForm);
-
+                this.setState({credentials: values}, this.sendForm);
             }
         });
     };
 
-    sendForm()  {
+    sendForm() {
         this.props.actions.loginUser(this.state.credentials);
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="login-form"  >
+            <Form onSubmit={this.handleSubmit} className="login-form">
                 <FormItem>
                     {getFieldDecorator('username', {
                         rules: [{ required: true, message: 'Please input your username!' }],
