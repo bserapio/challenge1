@@ -13,8 +13,9 @@ exports.addUser = (req, res) => {
     if (result.isValid()) {
         input.createdAt = new Date();
         input.modifiedAt = new Date();
-        db.User.create(input).then(user => {
-            res.json(user);
+        db.User.create(input).then(
+            user => {
+                res.json(user);
             },
             err => {
                 res.status(403).json(err);
