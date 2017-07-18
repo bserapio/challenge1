@@ -6,6 +6,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Table, Icon, Input, Popconfirm, Button} from 'antd';
 import ClientCreateForm from '../../components/modals/createClientForm';
+import UpdateClientForm from '../../components/modals/updateClientForm';
 import EditableCell from '../../components/editableCell';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 import * as userActions from '../../actions/userActions';
@@ -60,23 +61,28 @@ class Clients extends React.Component {
 
     static defaultProps = {
         searchFilter: null,
-        clients: []
+        clients: [],
     };
 
     constructor(props, context) {
         super(props, context);
 
         this.state = {
+            visible: {
+                elevate: false,
+                create: false,
+                update: false,
+            },
             paginationText: 'Show All',
             editedRecord: {},
             pagination: {},
             footer: null,
             loading: false,
-            visible: false,
+
             filterDropdownVisible: false,
             searchText: '',
             filtered: false,
-            visibleElevate: false,
+
             confirmLoading: false,
             confirmElevateLoading: false,
             elevateUrl: null,
@@ -111,10 +117,13 @@ class Clients extends React.Component {
         }
     };
 
-    sendForm = () => {
+    sendForm = form => {
         this.props.actions.createClient(this.state.clientForm).then(
             () => {
-                this.setState({visible: false, confirmLoading: false});
+                const visible = this.state.visible;
+                visible.create = false;
+                this.setState({visible, confirmLoading: false});
+                form.resetFields();
             },
             err => {
                 console.log(err);
@@ -122,7 +131,9 @@ class Clients extends React.Component {
         );
     };
     handleCancel = () => {
-        this.setState({visible: false, confirmLoading: false});
+        const visible = this.state.visible;
+        visible.create = false;
+        this.setState({visible, confirmLoading: false});
     };
     saveFormRef = form => {
         this.form = form;
@@ -138,10 +149,8 @@ class Clients extends React.Component {
                 const clientForm = this.state.clientForm;
                 clientForm.identifier = values.identifier;
                 clientForm.name = values.name;
+                this.setState({clientForm}, this.sendForm(form));
 
-                this.setState({clientForm}, this.sendForm);
-                form.resetFields();
-                this.setState({visible: false});
             }
         });
     };
@@ -182,7 +191,6 @@ class Clients extends React.Component {
     handleChange(key, value) {
         const editedRecord = this.state.editedRecord;
         editedRecord[key] = value;
-
         this.setState({editedRecord});
     }
 
@@ -241,7 +249,9 @@ class Clients extends React.Component {
     showElevateModal = record => {
         const elevatorForm = this.state.elevatorForm;
         elevatorForm.identifier = record.identifier;
-        this.setState({visibleElevate: true});
+        const visible = this.state.visible;
+        visible.elevate = true;
+        this.setState({visible});
     };
     handleElevateCancel = () => {
         this.setState({visibleElevate: false});
@@ -252,7 +262,9 @@ class Clients extends React.Component {
 
 
     showModal = () => {
-        this.setState({visible: true});
+        const visible = this.state.visible;
+        visible.create = true;
+        this.setState({visible});
     };
 
     showAll = () => {
@@ -440,7 +452,7 @@ class Clients extends React.Component {
 
                 <ClientCreateForm
                     ref={this.saveFormRef}
-                    visible={this.state.visible}
+                    visible={this.state.visible.create}
                     onCancel={this.handleCancel}
                     confirmLoading={this.state.confirmLoading}
                     onCreate={this.handleCreate}
@@ -451,11 +463,22 @@ class Clients extends React.Component {
 
                 <ElevatePrigilegesForm
                     ref={this.saveFormRefElevator}
-                    visible={this.state.visibleElevate}
+                    visible={this.state.visible.elevate}
                     onElevatorCancel={this.handleElevateCancel}
                     confirmElevatorLoading={this.state.confirmElevateLoading}
                     onElevatorCreate={this.handleModalCreate}
                     modalText={this.state.elevateUrl}
+                />
+
+
+                <UpdateClientForm
+                    ref={this.saveFormRefElevator}
+                    visible={this.state.visible.update}
+                    onElevatorCancel={this.handleElevateCancel}
+                    confirmElevatorLoading={this.state.confirmElevateLoading}
+                    onElevatorCreate={this.handleModalCreate}
+                    modalText={this.state.elevateUrl}
+                    row={this.state.editedRecord}
                 />
 
 

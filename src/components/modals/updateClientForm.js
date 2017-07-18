@@ -23,8 +23,8 @@ class CreateForm extends React.Component {
         return (
             <Modal
                 visible={visible}
-                title="Create a new Client"
-                okText="Create"
+                title="Udate Client"
+                okText="Update"
                 cancelText="Cancel"
                 onCancel={onCancel}
                 confirmLoading={confirmLoading}
@@ -93,6 +93,6 @@ class CreateForm extends React.Component {
     }
 }
 
-const ClientCreateForm = Form.create()(CreateForm);
+const UpdateClientForm = Form.create()(CreateForm);
 
-export default ClientCreateForm;
+export default UpdateClientForm;

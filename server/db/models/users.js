@@ -18,21 +18,19 @@ module.exports = (sequelize, DataTypes) => {
             field: 'username',
             allowNull: false,
             validate: {
-                isUnique: function (value, next) {
-                    var self = this;
+                isUnique(value, next) {
+                    const self = this;
                     User.find({where: {username: value}})
-                        .then(function (user) {
+                        .then(user => {
                             // reject if a different user wants to use the same email
                             if (user && self.id !== user.id) {
                                 return next('Username already in use!');
                             }
                             return next();
                         })
-                        .catch(function (err) {
-                            return next(err);
-                        });
-                }
-            }
+                        .catch(err => next(err));
+                },
+            },
         },
         name: {
             type: DataTypes.STRING(255),

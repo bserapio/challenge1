@@ -1,8 +1,9 @@
+'use strict';
 
-exports.login = function(req, res) {
+exports.login = (req, res) => {
     res.json({ id: req.user.id, username: req.user.username });
 };
-exports.logout = function(req, res) {
+exports.logout = (req, res) => {
     res.json({ id: req.user.id, username: req.user.username });
 };
 

@@ -2,15 +2,16 @@
 
 const t = require('tcomb-validation');
 const domain = require('../validator');
-const moment = require('moment');
 const randomstring = require('randomstring');
 const db = require('../db/models');
 
 
-exports.addClient = function (req, res) {
+exports.addClient = (req, res) => {
     const input = req.body;
     let result = t.validate(input, domain.CreateDbInput);
-    if (result.isValid()) {
+    if (!result.isValid()) {
+        res.status(400).json(result.errors);
+    } else {
         input.autoUpdate = true;
         input.dbName = `client_${input.identifier}`;
         input.dbLogin = `b7_${input.identifier}`;
@@ -18,32 +19,38 @@ exports.addClient = function (req, res) {
         if (!(input.dbPass)) {
             input.dbPass = randomstring.generate(20);
         }
-        db.ClientDb.create(input).then(clientdb => {
-            const clientMeta = {
-                clientId: clientdb.id,
-                userId: req.user.id,
-                type: input.type,
-                createdAt: new Date(),
-                modifiedAt: new Date(),
-            };
-            db.ClientMeta.create(clientMeta).then(clientmeta => {
-                if (clientmeta) {
-                    result = {
-                        client: clientdb,
-                        meta: clientmeta,
-                    };
-                    res.json(result);
-                } else {
-                    res.json(400).json({message: 'Error Creating clientMeta'});
-                }
-            });
-        });
-    } else {
-        res.status(400).json(result.errors);
+        // TODO: Here I need call API if is OK ( creating database , will create the entries)
+
+
+        db.ClientDb.create(input).then(
+            clientdb => {
+                const clientMeta = {
+                    clientId: clientdb.id,
+                    userId: req.user.id,
+                    type: input.type,
+                    createdAt: new Date(),
+                    modifiedAt: new Date(),
+                };
+                db.ClientMeta.create(clientMeta).then(clientmeta => {
+                    if (clientmeta) {
+                        result = {
+                            client: clientdb,
+                            meta: clientmeta,
+                        };
+                        res.json(result);
+                    } else {
+                        res.json(400).json({message: 'Error Creating clientMeta'});
+                    }
+                });
+            },
+            err => {
+                res.status(403).json(err);
+            }
+        );
     }
 };
 
-exports.listClient = function (req, res) {
+exports.listClient = (req, res) => {
     db.ClientDb.findAndCountAll({
         include: [{
             model: db.ClientMeta,
@@ -54,13 +61,13 @@ exports.listClient = function (req, res) {
     });
 };
 
-exports.detailClient = function (req, res) {
+exports.detailClient = (req, res) => {
     db.ClientDb.findById(req.params.id).then(user => {
         res.json(user);
     });
 };
 
-exports.removeClient = function (req, res) {
+exports.removeClient = (req, res) => {
     db.ClientDb.findById(req.params.id).then(client => {
         db.ClientMeta.find({where: {'client_id': client.id}}).then(
             cmeta => {
@@ -73,7 +80,7 @@ exports.removeClient = function (req, res) {
     });
 };
 
-exports.updateClient = function (req, res) {
+exports.updateClient = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateDbInput);
     if (result.isValid()) {
@@ -106,7 +113,7 @@ exports.updateClient = function (req, res) {
     }
 };
 
-exports.elevateClient = function (req, res) {
+exports.elevateClient = (req, res) => {
     const input = req.body;
 
     db.User.findOne({where: {'username': input.username}}).then(user => {
@@ -117,6 +124,6 @@ exports.elevateClient = function (req, res) {
         } else {
             res.json({key: 'doudfsifdkjasvgdasjhgdasgk'});
         }
-        // Here I need call request function and return the correct key
+        // TODO: Here I need call API for elevate Token
     });
 };

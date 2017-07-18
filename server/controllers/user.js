@@ -25,7 +25,7 @@ exports.addUser = (req, res) => {
     }
 };
 exports.listUser = (req, res) => {
-    const limit = req.param('limit');
+    const limit = req.param('limit', null);
     const page = req.param('page', 1);
     let offset = limit * (page - 1);
     offset = (offset >= 0) ? offset : 0;
@@ -101,14 +101,16 @@ exports.clientDetailUser = (req, res) => {
             userId: req.params.id,
             id: req.params.idMeta,
         },
-        include: [{
-            model: db.ClientDb,
-            attributes: {},
-        },
+        include: [
+            {
+                model: db.ClientDb,
+                attributes: {},
+            },
             {
                 model: req.model.User,
                 attributes: {},
-            }],
+            },
+        ],
     }).then(result => {
         res.json(result);
     });

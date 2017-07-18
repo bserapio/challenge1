@@ -18,6 +18,20 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(31),
             field: 'identifier',
             allowNull: false,
+            validate: {
+                isUnique(value, next) {
+                    const self = this;
+                    ClientDb.find({where: {identifier: value}})
+                        .then(client => {
+                            // reject if a different user wants to use the same email
+                            if (client && self.id !== client.id) {
+                                return next('Identifier already exists!');
+                            }
+                            return next();
+                        })
+                        .catch(err => next(err));
+                },
+            },
         },
         name: {
             type: DataTypes.STRING(255),
