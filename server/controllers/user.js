@@ -64,11 +64,9 @@ exports.updateUser = (req, res) => {
                     where: { id: user.id },
                     returning: true,
                     plain: true,
-                })
-                    .then(data => {
-                        res.json(data);
-                        }
-                    );
+                }).then(data => {
+                    res.json(data);
+                });
             }
         });
     } else {
