@@ -57,7 +57,9 @@ exports.updateUser = (req, res) => {
     if (result.isValid()) {
         input.updatedAt = new Date();
         db.User.findById(req.params.id).then(user => {
-            if (user) {
+            if (!user) {
+                res.status(404).json({message: 'user does not exists'});
+            } else {
                 db.User.update(input, {
                     where: { id: user.id },
                     returning: true,
@@ -65,9 +67,8 @@ exports.updateUser = (req, res) => {
                 })
                     .then(data => {
                         res.json(data);
-                    });
-            } else {
-                res.status(404).json({message: 'user does not exists'});
+                        }
+                    );
             }
         });
     } else {
