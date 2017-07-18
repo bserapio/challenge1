@@ -19,7 +19,6 @@ export function checkAuth(auth) {
                     payload: {},
                 });
             }
-
         } else {
             dispatch({
                 type: types.USER_LOGGED,
@@ -45,9 +44,9 @@ export function loginUser(credentials) {
     return dispatch => {
         connectService.login(credentials).then(
             res => {
-                localStorage.setItem('user', JSON.stringify(res.data))
+                localStorage.setItem('user', JSON.stringify(res.data));
                 dispatch(loginSuccess(res.data));
-                configureStore.history.push('/client');
+                configureStore.history.push('/clients');
             },
             loginError => {
                 dispatch(loginFail(loginError));
@@ -55,6 +54,8 @@ export function loginUser(credentials) {
         );
     };
 }
+
+
 export function createUser(data) {
     return dispatch => connectService.createUser(data).then(
         () => dispatch(getUsers()),
@@ -74,8 +75,15 @@ export function loginSuccess(auth) {
     };
 }
 export function logOutUser() {
-    return {type: types.LOG_OUT};
+    return dispatch => {
+        dispatch({type: types.LOG_OUT});
+        localStorage.removeItem('user');
+        window.location.href = '/';
+
+    };
 }
+
+
 export function getUserSuccess(users) {
     return {
         type: types.GET_USERS_SUCCESS,

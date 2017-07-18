@@ -1,4 +1,5 @@
 import apiEndPoints from './shared/endpoints';
+import * as userActions from '../actions/userActions';
 
 const axios = require('axios');
 
@@ -31,7 +32,6 @@ function updateClient(data) {
     return axios.put(url, data);
 }
 
-
 function removeClient(data) {
     let url = apiEndPoints.clientDetail;
     url = url.replace(':id', data.id);
@@ -48,6 +48,17 @@ function elevateClient(data) {
     const url = apiEndPoints.clientElevate;
     return axios.post(url, data);
 }
+
+
+axios.interceptors.response.use(response => response,
+    error => {
+        if (error.response.status === 401) {
+            userActions.logOutUser();
+            window.location.href = '/';
+
+        }
+        return error;
+    });
 
 
 const connectService = {

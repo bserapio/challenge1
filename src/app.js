@@ -29,9 +29,8 @@ class App extends Component {
                         <div className="logo"/>
                         {this.props.auth !== null &&
                         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{lineHeight: '64px'}}>
-
-                            <Menu.Item key="1"><Link to="/users" activeClassName="active">Users</Link></Menu.Item>
-                            <Menu.Item key="2"><Link to="/clients" activeClassName="active">Clients</Link></Menu.Item>
+                            <Menu.Item key="1"><Link to="/clients" activeClassName="active">Clients</Link></Menu.Item>
+                            <Menu.Item key="2"><Link to="/users" activeClassName="active">Users</Link></Menu.Item>
                             <Menu.Item key="3"><Link to="/client_meta"
                                                      activeClassName="active">Databases</Link></Menu.Item>
 
