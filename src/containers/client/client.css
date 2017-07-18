@@ -20,3 +20,38 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.ant-btn-icon-only {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.black {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+.black:hover {
+    background-color: #0e77ca !important;
+    border-color: #0e77ca !important;
+}
+
+.active {
+    background-color: #4cae4c !important;
+    border-color: #449d44 !important;
+}
+
+.inactive {
+    background-color: #d73435 !important;
+    border-color: #d73435 !important;
+}
+
+.inactive:hover {
+    background-color: #000000 !important;
+    border-color: #000000 !important;;
+}
+
+.active:hover {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}

@@ -67,6 +67,7 @@ exports.listClient = (req, res) => {
     db.ClientDb.findAndCountAll({
         include: [{
             model: db.ClientMeta,
+            include: [db.User],
             attributes: {},
         }],
     }).then(result => {
@@ -81,16 +82,28 @@ exports.detailClient = (req, res) => {
 };
 
 exports.removeClient = (req, res) => {
-    db.ClientDb.findById(req.params.id).then(client => {
-        db.ClientMeta.find({where: {'client_id': client.id}}).then(
-            cmeta => {
-                cmeta.destroy().then(() => {
-                    client.destroy().then(() => {
+    db.ClientDb.find({where: {'id': req.params.id}}).then(client => {
+            console.log(client);
+            if (client) {
+                db.ClientMeta.find({where: {'client_id': client.id}}).then(
+                    cmeta => {
+                        if (cmeta) {
+                            cmeta.destroy();
+                        }
+                    }
+                );
+                client.destroy().then(
+                    () => {
                         res.status(204).json({message: 'Client Deleted'});
-                    });
-                });
-            });
-    });
+                    }
+                );
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        }, err => {
+            res.status(400).json({err});
+        }
+    );
 };
 
 exports.updateClient = (req, res) => {

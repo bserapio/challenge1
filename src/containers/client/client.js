@@ -4,15 +4,21 @@ import PropTypes from 'prop-types';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Table, Icon, Input, Popconfirm, Button} from 'antd';
+import {Table, Icon, Input, Popconfirm, Button, Modal} from 'antd';
 import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
-import EditableCell from '../../components/editableCell';
+
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 import * as userActions from '../../actions/userActions';
 import * as clientActions from '../../actions/clientActions';
 import './client.css';
 
+const sha1 = require('sha1');
+
+const generateKey = opcode => {
+    const pub = 'dsSUDfiwzrsfdgiASUFsdf';
+    return sha1(pub + opcode);
+};
 const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
     return {
@@ -116,8 +122,6 @@ class Clients extends React.Component {
             this.setState({searchText: e.target.value});
         }
     };
-
-
     sendCreateForm = form => {
         const {actions} = this.props;
         const {visible, clientForm, formLoading} = this.state;
@@ -200,15 +204,14 @@ class Clients extends React.Component {
         this.setState({editedRecord: {...record}});
     }
 
-    editDone(record, type) {
+    editDone(record, old, type) {
         if (type === 'save') {
-            // Save the record
-            console.log(this.state.editedRecord);
 
-            if (record !== this.state.editedRecord) {
-                this.props.actions.updateClient(this.state.editedRecord).then(
+
+            if (record !== old) {
+                this.props.actions.updateClient(record).then(
                     () => {
-                        this.setState({editedRecord: {}});
+                        console.log('ok');
                     },
                     err => {
                         console.log(err);
@@ -259,12 +262,10 @@ class Clients extends React.Component {
     };
     saveFormRefElevator = form => {
         this.formElevator = form;
-        console.log(form);
     };
 
     saveFormRefUpdate = form => {
         this.formUpdate = form;
-        console.log(form);
     };
 
     showCreateModal = () => {
@@ -281,21 +282,83 @@ class Clients extends React.Component {
         }
     };
 
+    openChannelSettings = (identifier, type) => {
+        const key = generateKey(identifier);
+        let url;
+        if (type === 'ikentoo') {
+            url = `https://app.base7booking.com/ikentoo/admin/panel?key=${key}&opcode=${identifier}`;
+        } else if (type === 'channel') {
+            url = `https://app.base7booking.com/channel/admin/panel?key=${key}&opcode=${identifier}`;
+        }
+        console.log(url);
+        return window.open(url);
+    }
+    updateRecord = (record, key) => {
+        if (record[key] === true) {
+            record[key] = false;
+        } else {
+            record[key] = true;
+        }
+        this.setState({editedRecord: {...record}}, this.editDone(record, 'save'));
+    }
+
+    openModalPatch = (record, key) => {
+        let title = null;
+        const confirm = Modal.confirm;
+
+
+        if (record[key] === true) {
+            title = 'Do you want to deactivate it?';
+        } else {
+            title = 'Do you want to activate it?';
+        }
+
+        confirm({
+            title,
+            onOk() {
+                const old = {...record};
+                if (record[key] === true) {
+                    record[key] = false;
+                } else {
+                    record[key] = true;
+                }
+                this.editDone(record, old, 'save');
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
+
+
     renderColumns(data, index, key, text, type) {
+        let extraButton = null;
         if (!data) {
             return text;
         } else if (Object.keys(data[index]).length === 0) {
             return text;
         }
+        if (type === 'boolean') {
+            let element = null;
+            if (key === 'ClientMetum#newChannel') {
+                extraButton = (<Button type="primary" icon="setting" className="black"
+                                       onClick={() => this.openChannelSettings(data[index].identifier, 'channel')}/>);
+            }
+            if (key === 'ClientMetum#ikentoo') {
+                extraButton = (<Button type="primary" icon="setting" className="black"
+                                       onClick={() => this.openChannelSettings(data[index].identifier, 'ikentoo')}/>);
+            }
 
-        const value = this.state.editedRecord.id === data[index].id ? this.state.editedRecord[key] : data[index][key];
-        return (<EditableCell
-            type={type}
-            editable={this.state.editedRecord.id === data[index].id}
-            value={value}
-            name={key}
-            onChange={() => this.handleChange(key, value)}
-        />);
+            if (data[index][key] === true) {
+                element = (<Button type="primary" icon="check" className="active"
+                                   onClick={() => this.openModalPatch(data[index], key)}/>);
+            } else {
+                element = (<Button type="primary" icon="close" className="inactive"
+                                   onClick={() => this.openModalPatch(data[index], key)}/>);
+            }
+            return [element, extraButton];
+        }
+        return text;
     }
     render() {
         const {clients} = this.props;
@@ -306,14 +369,14 @@ class Clients extends React.Component {
             editedRecord,
             visible,
             formLoading,
-            elevateUrl
+            elevateUrl,
         } = this.state;
         const columns = [
             {
-                title: 'operation',
-                dataIndex: 'operation',
+                title: 'Actions',
+                dataIndex: 'actions',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
-                render: (text, record, index) => {
+                render: (text, record) => {
                     if (Object.keys(record).length === 0) {
                         return null;
                     }
@@ -322,9 +385,11 @@ class Clients extends React.Component {
                         <Button.Group size="small">
                             <Button type="primary" onClick={() => this.showModal}>Edit</Button>
                             <Button type="primary" onClick={() => this.showElevateModal(record)}>Connect</Button>
-                            <Button type="default"
-                                    onClick={() => this.showDeleteModal(record)}>{record.active ? "deactivate" : "activate"}</Button>
-                            <Button type="danger" onClick={() => this.showDeleteModal(record)}>Delete</Button>
+                            <Popconfirm placement="top" title="Do you want to delete the client?"
+                                        onConfirm={() => this.remove(record)} okText="Yes" cancelText="No">
+                                <Button type="danger">Delete</Button>
+                            </Popconfirm>
+
                         </Button.Group>
                     );
                 },
@@ -352,7 +417,6 @@ class Clients extends React.Component {
                     this.setState({filterDropdownVisible: vis}, () => this.searchInput.focus());
                 },
             },
-
             {
                 title: 'Name',
                 dataIndex: 'name',
@@ -366,6 +430,52 @@ class Clients extends React.Component {
                 key: 'lang',
                 render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text'),
 
+            },
+            {
+                title: 'Active',
+                dataIndex: 'active',
+                key: 'active',
+                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean'),
+
+            },
+            {
+                title: 'Manteinance',
+                dataIndex: 'maintenance',
+                key: 'maintenance',
+                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean'),
+            },
+            {
+                title: 'AutoUpdate',
+                dataIndex: 'autoUpdate',
+                key: 'autoUpdate',
+                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean'),
+
+            },
+            {
+                title: 'new_invoice',
+                dataIndex: 'ClientMetum#newInvoice',
+                key: 'ClientMetum#newInvoice',
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newInvoice', text, 'boolean'),
+
+            },
+            {
+                title: 'channel_manager',
+                dataIndex: 'ClientMetum#newChannel',
+                key: 'ClientMetum#newChannel',
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newChannel', text, 'boolean'),
+
+            },
+            {
+                title: 'ikentoo',
+                dataIndex: 'ClientMetum#ikentoo',
+                key: 'ClientMetum#ikentoo',
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#ikentoo', text, 'boolean'),
+
+            },
+            {
+                title: 'expireDate',
+                dataIndex: 'expireDate',
+                render: (text, record, index) => this.renderColumns(clients, index, 'expireDate', text, 'datetime'),
             },
             {
                 title: 'Type',
@@ -398,39 +508,15 @@ class Clients extends React.Component {
 
             },
             {
-                title: 'Active',
-                dataIndex: 'active',
-                key: 'active',
-                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean'),
+                title: 'user',
+                dataIndex: 'ClientMetum#User#username',
+                key: 'ClientMetum#User#username',
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#User#username', text, 'text'),
 
             },
-            {
-                title: 'Manteinance',
-                dataIndex: 'maintenance',
-                key: 'maintenance',
-                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean'),
-            },
-            {
-                title: 'AutoUpdate',
-                dataIndex: 'autoUpdate',
-                key: 'autoUpdate',
-                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean'),
-
-            },
-            {
-                title: 'expireDate',
-                dataIndex: 'expireDate',
-                render: (text, record, index) => this.renderColumns(clients, index, 'expireDate', text, 'datetime'),
-            },
-            {
-                title: 'archivedAt',
-                dataIndex: 'archivedAt',
-                render: (text, record, index) => this.renderColumns(clients, index, 'archivedAt', text, 'datetime'),
-
-            },
-
-
         ];
+
+
         return (
             <div>
 
