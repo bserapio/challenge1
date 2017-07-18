@@ -8,6 +8,7 @@ const db = require('../db/models');
 
 exports.addClient = (req, res) => {
     const input = req.body;
+    const user = (req.user) ? req.user : {id: 1};
     let result = t.validate(input, domain.CreateDbInput);
     if (!result.isValid()) {
         res.status(400).json(result.errors);
@@ -20,13 +21,25 @@ exports.addClient = (req, res) => {
             input.dbPass = randomstring.generate(20);
         }
         // TODO: Here I need call API if is OK ( creating database , will create the entries)
+        /*
+         request('URL',input).then(
+         data => {
 
+         },
+         err => {
+
+         }
+
+         ).catch(err) {
+
+         }
+         */
 
         db.ClientDb.create(input).then(
             clientdb => {
                 const clientMeta = {
                     clientId: clientdb.id,
-                    userId: req.user.id,
+                    userId: user.id,
                     type: input.type,
                     createdAt: new Date(),
                     modifiedAt: new Date(),

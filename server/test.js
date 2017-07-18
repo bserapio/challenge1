@@ -1,5 +1,8 @@
 const bcrypt = require('bcrypt-nodejs');
 
+const route
+
+
 let hash = '$2a$10$WiplgLEJtp17nTnkLT821eeIUg.FSFTnHkLtyynEgG8EThT8M6a5C';
 
 hash = hash.substring(4);

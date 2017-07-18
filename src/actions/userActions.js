@@ -10,11 +10,16 @@ export function checkAuth(auth) {
             payload: {auth},
         });
         if (!auth) {
-            configureStore.history.push('/');
-            dispatch({
-                type: types.NOT_LOGGED,
-                payload: {},
-            });
+            if (localStorage.getItem('user')) {
+                dispatch(loginSuccess(JSON.parse(localStorage.getItem('user'))));
+            } else {
+                configureStore.history.push('/');
+                dispatch({
+                    type: types.NOT_LOGGED,
+                    payload: {},
+                });
+            }
+
         } else {
             dispatch({
                 type: types.USER_LOGGED,
@@ -40,8 +45,9 @@ export function loginUser(credentials) {
     return dispatch => {
         connectService.login(credentials).then(
             res => {
+                localStorage.setItem('user', JSON.stringify(res.data))
                 dispatch(loginSuccess(res.data));
-                configureStore.history.push('/users');
+                configureStore.history.push('/client');
             },
             loginError => {
                 dispatch(loginFail(loginError));

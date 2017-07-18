@@ -1,4 +1,5 @@
 import {createStore, applyMiddleware, compose} from 'redux';
+import persistState from 'redux-sessionstorage';
 import createHistory from 'history/createBrowserHistory';
 import {routerMiddleware} from 'react-router-redux';
 import thunk from 'redux-thunk';

@@ -68,26 +68,26 @@ class Clients extends React.Component {
         super(props, context);
 
         this.state = {
+            elevateUrl: null,
             visible: {
                 elevate: false,
                 create: false,
                 update: false,
             },
+            formLoading: {
+                elevate: false,
+                create: false,
+                update: false,
+            },
+
             paginationText: 'Show All',
             editedRecord: {},
             pagination: {},
             footer: null,
             loading: false,
-
             filterDropdownVisible: false,
             searchText: '',
             filtered: false,
-
-            confirmLoading: false,
-            confirmElevateLoading: false,
-            elevateUrl: null,
-            clientRequest: {},
-
             elevatorForm: {
                 password: '',
                 username: '',
@@ -101,15 +101,15 @@ class Clients extends React.Component {
             },
         };
     }
-
-
     componentDidMount() {
-        this.props.userActions.checkAuth(this.props.auth);
-        this.props.actions.getClients();
+        const {actions, userActions, auth} = this.props;
+        userActions.checkAuth(auth);
+        actions.getClients();
     }
 
     onSearch = () => {
-        this.props.actions.searchFilter(this.state.searchText);
+        const {actions} = this.props;
+        actions.searchFilter(this.state.searchText);
     };
     onInputChange = e => {
         if (e) {
@@ -117,12 +117,15 @@ class Clients extends React.Component {
         }
     };
 
-    sendForm = form => {
-        this.props.actions.createClient(this.state.clientForm).then(
+
+    sendCreateForm = form => {
+        const {actions} = this.props;
+        const {visible, clientForm, formLoading} = this.state;
+        actions.createClient(clientForm).then(
             () => {
-                const visible = this.state.visible;
                 visible.create = false;
-                this.setState({visible, confirmLoading: false});
+                formLoading.create = false;
+                this.setState({visible, formLoading});
                 form.resetFields();
             },
             err => {
@@ -130,27 +133,27 @@ class Clients extends React.Component {
             }
         );
     };
-    handleCancel = () => {
-        const visible = this.state.visible;
+    handleCreateCancel = () => {
+        const {visible, formLoading} = this.state;
         visible.create = false;
-        this.setState({visible, confirmLoading: false});
+        formLoading.create = false;
+        this.setState({visible, formLoading});
     };
     saveFormRef = form => {
         this.form = form;
     };
     handleCreate = () => {
-        const form = this.form;
-        this.setState({confirmLoading: true});
-        form.validateFields((err, values) => {
+        const {formLoading, clientForm} = this.state;
+        formLoading.create = true;
+        this.setState({formLoading});
+        this.form.validateFields((err, values) => {
             if (err) {
-                console.log(err);
-                this.setState({confirmLoading: false});
+                formLoading.create = false;
+                this.setState({formLoading});
             } else {
-                const clientForm = this.state.clientForm;
                 clientForm.identifier = values.identifier;
                 clientForm.name = values.name;
-                this.setState({clientForm}, this.sendForm(form));
-
+                this.setState({clientForm}, this.sendCreateForm(this.form));
             }
         });
     };
@@ -164,21 +167,20 @@ class Clients extends React.Component {
         clientForm.type = value;
         this.setState({clientForm, confirmLoading: false});
     };
-    handleModalCreate = () => {
-        const form = this.formElevator;
-        this.setState({confirmModalLoading: true});
+    handleElevateCreate = () => {
+        const {elevatorForm, formLoading} = this.state;
+        formLoading.create = true;
+        this.setState({formLoading});
 
-        form.validateFields((err, values) => {
+        this.formElevator.validateFields((err, values) => {
             if (err) {
-                this.setState({confirmLoading: false});
+                formLoading.elevate = false;
+                this.setState({formLoading});
             } else {
-                const elevatorForm = this.state.elevatorForm;
                 elevatorForm.password = values.password;
                 elevatorForm.username = this.props.auth.username;
-
                 this.setState({elevatorForm}, this.sendElevatorForm);
-                form.resetFields();
-                this.setState({visible: false});
+                this.formElevator.resetFields();
             }
         });
     };
@@ -189,7 +191,7 @@ class Clients extends React.Component {
      */
 
     handleChange(key, value) {
-        const editedRecord = this.state.editedRecord;
+        const {editedRecord} = this.state;
         editedRecord[key] = value;
         this.setState({editedRecord});
     }
@@ -220,25 +222,21 @@ class Clients extends React.Component {
 
 
     remove = record => {
-        this.props.actions.removeClient(record);
+        const {actions} = this.props;
+        actions.removeClient(record);
     };
 
-
     sendElevatorForm() {
-        this.props.actions.checkElevateClient(this.state.elevatorForm).then(
+        const {actions} = this.props;
+        const {elevatorForm, formLoading} = this.state;
+        actions.checkElevateClient(elevatorForm).then(
             res => {
-                // Need to fix that
-                const key = res.payload.res.key;
-                const elevatorUrl = {
-                    app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${key}&opcode=${this.state.elevatorForm.identifier}`,
-                    beta: `https://dev.base7.io/use-token?is_backdoor=1&token=${key}&opcode=${this.state.elevatorForm.identifier}`,
-                    stage_app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${key}&opcode=${this.state.elevatorForm.identifier}`,
-                    stage_beta: `https://dev.stage.base7.io/use-token?is_backdoor=1&token=${key}&opcode=${this.state.elevatorForm.identifier}`,
-
+                const elevateUrl = {
+                    key: res.payload.res.key,
+                    identifier: elevatorForm.identifier,
                 };
-                this.setState({confirmLoading: false});
-
-                this.setState({elevateUrl: elevatorUrl});
+                formLoading.elevate = false;
+                this.setState({elevateUrl, formLoading});
             },
             err => {
                 console.log(err);
@@ -247,22 +245,30 @@ class Clients extends React.Component {
     }
 
     showElevateModal = record => {
-        const elevatorForm = this.state.elevatorForm;
+        const {elevatorForm, visible} = this.state;
         elevatorForm.identifier = record.identifier;
-        const visible = this.state.visible;
         visible.elevate = true;
-        this.setState({visible});
+        this.setState({visible, elevatorForm});
     };
+
+
     handleElevateCancel = () => {
-        this.setState({visibleElevate: false});
+        const {visible} = this.state;
+        visible.elevate = false;
+        this.setState({visible});
     };
     saveFormRefElevator = form => {
         this.formElevator = form;
+        console.log(form);
     };
 
+    saveFormRefUpdate = form => {
+        this.formUpdate = form;
+        console.log(form);
+    };
 
-    showModal = () => {
-        const visible = this.state.visible;
+    showCreateModal = () => {
+        const {visible} = this.state;
         visible.create = true;
         this.setState({visible});
     };
@@ -292,6 +298,16 @@ class Clients extends React.Component {
         />);
     }
     render() {
+        const {clients} = this.props;
+        const {searchText, filterDropdownVisible} = this.state;
+        const {
+            paginationText,
+            filtered,
+            editedRecord,
+            visible,
+            formLoading,
+            elevateUrl
+        } = this.state;
         const columns = [
             {
                 title: 'operation',
@@ -303,37 +319,13 @@ class Clients extends React.Component {
                     }
 
                     return (
-                        <div className="editable-row-operations">
-                            {
-                                this.state.editedRecord.id === record.id ?
-                                    <span>
-                                        <a onClick={() => this.editDone(record, 'save')}>Save</a>|
-                                        <Popconfirm
-                                            title="Sure to cancel?"
-                                            okText="Yes"
-                                            cancelText="No"
-                                            onConfirm={
-                                                () => this.editDone(index, 'cancel')}
-                                        >
-                                            <a>Cancel</a>
-                                        </Popconfirm>
-                                    </span>
-                                    :
-                                    <span> <a onClick={() => this.edit(record)}>Edit</a>| <Button
-                                        type="primary"
-                                        onClick={() => this.showElevateModal(record)}
-                                    >Elevate</Button>  |
-                                      <Popconfirm
-                                          title="Sure to Delete?"
-                                          okText="Yes"
-                                          cancelText="No"
-                                          onConfirm={() => this.remove(record, 'cancel')}
-                                      >
-                                          <a>Delete</a>
-                                      </Popconfirm>
-                                    </span>
-                            }
-                        </div>
+                        <Button.Group size="small">
+                            <Button type="primary" onClick={() => this.showModal}>Edit</Button>
+                            <Button type="primary" onClick={() => this.showElevateModal(record)}>Connect</Button>
+                            <Button type="default"
+                                    onClick={() => this.showDeleteModal(record)}>{record.active ? "deactivate" : "activate"}</Button>
+                            <Button type="danger" onClick={() => this.showDeleteModal(record)}>Delete</Button>
+                        </Button.Group>
                     );
                 },
             },
@@ -347,19 +339,17 @@ class Clients extends React.Component {
                                 this.searchInput = ele;
                             }}
                             placeholder="Search name"
-                            value={this.state.searchText}
+                            value={searchText}
                             onChange={this.onInputChange}
                             onPressEnter={this.onSearch}
                         />
                         <Button type="primary" onClick={this.onSearch}>Search</Button>
                     </div>
                 ),
-                filterIcon: <Icon type="filter" style={{color: this.state.filtered ? '#108ee9' : '#aaa'}}/>,
-                filterDropdownVisible: this.state.filterDropdownVisible,
-                onFilterDropdownVisibleChange: visible => {
-                    this.setState({
-                        filterDropdownVisible: visible,
-                    }, () => this.searchInput.focus());
+                filterIcon: <Icon type="filter" style={{color: filtered ? '#108ee9' : '#aaa'}}/>,
+                filterDropdownVisible,
+                onFilterDropdownVisibleChange: vis => {
+                    this.setState({filterDropdownVisible: vis}, () => this.searchInput.focus());
                 },
             },
 
@@ -368,20 +358,20 @@ class Clients extends React.Component {
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => stringOrder(a, b),
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'name', text, 'text'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text'),
             },
             {
                 title: 'Lang',
                 dataIndex: 'lang',
                 key: 'lang',
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'lang', text, 'text'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text'),
 
             },
             {
                 title: 'Type',
                 dataIndex: 'ClientMetum#type',
                 onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'ClientMetum#type', text, 'text'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#type', text, 'text'),
                 filters: [
                     {
                         text: 'Demo',
@@ -411,31 +401,31 @@ class Clients extends React.Component {
                 title: 'Active',
                 dataIndex: 'active',
                 key: 'active',
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'active', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean'),
 
             },
             {
                 title: 'Manteinance',
                 dataIndex: 'maintenance',
                 key: 'maintenance',
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'maintenance', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean'),
             },
             {
                 title: 'AutoUpdate',
                 dataIndex: 'autoUpdate',
                 key: 'autoUpdate',
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'autoUpdate', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean'),
 
             },
             {
                 title: 'expireDate',
                 dataIndex: 'expireDate',
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'expireDate', text, 'datetime'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'expireDate', text, 'datetime'),
             },
             {
                 title: 'archivedAt',
                 dataIndex: 'archivedAt',
-                render: (text, record, index) => this.renderColumns(this.props.clients, index, 'archivedAt', text, 'datetime'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'archivedAt', text, 'datetime'),
 
             },
 
@@ -445,16 +435,16 @@ class Clients extends React.Component {
             <div>
 
                 <Button.Group size="default">
-                    <Button type="primary" onClick={this.showModal}>Create an Client</Button>
-                    <Button type="primary" onClick={this.showAll}>{this.state.paginationText}</Button>
+                    <Button type="primary" onClick={this.showCreateModal}>Create an Client</Button>
+                    <Button type="primary" onClick={this.showAll}>{paginationText}</Button>
                 </Button.Group>
 
 
                 <ClientCreateForm
                     ref={this.saveFormRef}
-                    visible={this.state.visible.create}
-                    onCancel={this.handleCancel}
-                    confirmLoading={this.state.confirmLoading}
+                    visible={visible.create}
+                    onCancel={this.handleCreateCancel}
+                    confirmLoading={formLoading.create}
                     onCreate={this.handleCreate}
                     onLanguageChange={value => this.handleSelectLanguageChange(value)}
                     onTypeChange={value => this.handleSelectTypeChange(value)}
@@ -463,29 +453,29 @@ class Clients extends React.Component {
 
                 <ElevatePrigilegesForm
                     ref={this.saveFormRefElevator}
-                    visible={this.state.visible.elevate}
+                    visible={visible.elevate}
                     onElevatorCancel={this.handleElevateCancel}
-                    confirmElevatorLoading={this.state.confirmElevateLoading}
-                    onElevatorCreate={this.handleModalCreate}
-                    modalText={this.state.elevateUrl}
+                    confirmElevatorLoading={formLoading.elevate}
+                    onElevatorCreate={this.handleElevateCreate}
+                    modalText={elevateUrl}
                 />
 
 
                 <UpdateClientForm
-                    ref={this.saveFormRefElevator}
-                    visible={this.state.visible.update}
+                    ref={this.saveFormRefUpdate}
+                    visible={visible.update}
                     onElevatorCancel={this.handleElevateCancel}
-                    confirmElevatorLoading={this.state.confirmElevateLoading}
-                    onElevatorCreate={this.handleModalCreate}
+                    confirmElevatorLoading={formLoading.update}
+                    onElevatorCreate={this.handleElevateCreate}
                     modalText={this.state.elevateUrl}
-                    row={this.state.editedRecord}
+                    row={editedRecord}
                 />
 
 
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={this.props.clients}
+                    dataSource={clients}
                     pagination={this.state.pagination}
                     loading={this.state.loading}
 

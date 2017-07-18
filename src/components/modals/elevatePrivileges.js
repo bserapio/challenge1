@@ -12,8 +12,15 @@ class CreateElevatorForm extends React.Component {
         const getModal = (modalText, getFieldDecorator) => {
             if (modalText) {
                 let res = '';
-                for (const prop in modalText) {
-                    const url = modalText[prop];
+                const elevatorUrl = {
+                    app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${modalText.key}&opcode=${modalText.identifier}`,
+                    beta: `https://dev.base7.io/use-token?is_backdoor=1&token=${modalText.key}&opcode=${modalText.identifier}`,
+                    stage_app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${modalText.key}&opcode=${modalText.identifier}`,
+                    stage_beta: `https://dev.stage.base7.io/use-token?is_backdoor=1&token=${modalText.key}&opcode=${modalText.identifier}`,
+
+                };
+                for (const prop in elevatorUrl) {
+                    const url = elevatorUrl[prop];
                     res += `<div> <a href=${url}>${prop}</a></div>`;
                 }
                 return <div dangerouslySetInnerHTML={getHtml(res)}/>;

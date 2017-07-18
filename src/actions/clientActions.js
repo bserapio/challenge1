@@ -43,12 +43,17 @@ export function getClients() {
                 results.forEach((item, index) => {
                     if (Object.prototype.hasOwnProperty.call(item, 'ClientMetum')) {
                         const element = item.ClientMetum;
-                        Object.keys(element).forEach(prop => {
-                            if (element && Object.prototype.hasOwnProperty.call(element, prop)) {
-                                item[`ClientMetum#${prop}`] = element[prop];
-                            }
-                        });
-                        results[index] = item;
+                        if (!element) {
+                            console.log(item);
+                        } else {
+                            Object.keys(element).forEach(prop => {
+                                if (element && Object.prototype.hasOwnProperty.call(element, prop)) {
+                                    item[`ClientMetum#${prop}`] = element[prop];
+                                }
+                            });
+                            results[index] = item;
+                        }
+
                     }
                 });
                 res.data.rows = results;
