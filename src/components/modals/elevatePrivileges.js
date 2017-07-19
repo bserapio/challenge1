@@ -5,8 +5,6 @@ const FormItem = Form.Item;
 
 
 class CreateElevatorForm extends React.Component {
-
-
     render() {
         const getHtml = res => ({__html: res});
         const getModal = (modalText, getFieldDecorator) => {

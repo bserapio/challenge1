@@ -192,11 +192,9 @@ class Clients extends React.Component {
         this.setState({editedRecord});
     };
     handleUdateExpire = value => {
-
         const {editedRecord} = this.state;
         editedRecord.expireDate = value;
         this.setState({editedRecord});
-
     }
 
 

@@ -1,0 +1,20 @@
+module.exports = {
+    'en': 'English',
+    'de': 'Deutsch',
+    'es': 'Español',
+    'nl': 'Nederlands',
+    'sv': 'Svenska',
+    'pt': 'Portugues',
+    'it': 'Italian',
+    'ru': 'Rusian',
+    'zh': 'Chinese',
+    'sl': 'Slovenski',
+    'no': 'Norsk',
+    'nb': 'Norsk',
+    'ka': 'Georgian',
+    'ar': 'Argelian',
+    'ja': 'Japanese',
+    'el': 'Greece',
+    'tr': 'Turkey',
+};
+

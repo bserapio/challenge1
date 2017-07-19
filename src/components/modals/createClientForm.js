@@ -2,24 +2,34 @@ import React from 'react';
 import {Form, Input, Modal, Select} from 'antd';
 
 const Option = Select.Option;
-
+const langs = require('../../config/lang');
 const FormItem = Form.Item;
-
+const types = require('../../config/type');
 
 class CreateForm extends React.Component {
 
     handleSelectLanguageChange = value => {
         this.props.onLanguageChange(value);
     }
-
-
     handleSelectTypeChange = value => {
         this.props.onTypeChange(value);
     }
-
     render() {
         const {visible, onCancel, onCreate, form, confirmLoading} = this.props;
         const {getFieldDecorator} = form;
+
+        const langChildren = [];
+        Object.keys(langs).forEach(element => {
+            const value = langs[element];
+            langChildren.push(<Option value={element}>{value}</Option>);
+        });
+
+        const typeChildren = [];
+        Object.keys(types).forEach(element => {
+            const value = types[element];
+            typeChildren.push(<Option value={element}>{value}</Option>);
+        });
+
         return (
             <Modal
                 visible={visible}
@@ -47,44 +57,19 @@ class CreateForm extends React.Component {
                         )}
                     </FormItem>
 
-                    <div>
-                        <FormItem label="Language" hasFeedback>
-                            <Select defaultValue="en" onChange={this.handleSelectLanguageChange}>
-                                <Option value="en">English</Option>
-                                <Option value="fr">French</Option>
-                                <Option value="de">Deutsch</Option>
-                                <Option value="es">Español</Option>
-                                <Option value="nl">Nederlands</Option>
-                                <Option value="sv">Svenska</Option>
-                                <Option value="pt">Portugues</Option>
-                                <Option value="it">Italiano</Option>
-                                <Option value="ru">Rusian</Option>
-                                <Option value="zh">Chinese</Option>
-                                <Option value="sl">Slovenski</Option>
-                                <Option value="no">Norsk</Option>
-                                <Option value="nb">Norsk</Option>
-                                <Option value="ka">Georgian</Option>
-                                <Option value="ar">Argelian</Option>
-                                <Option value="ja">Japanese</Option>
-                                <Option value="el">Greece</Option>
-                                <Option value="tr">Turkey</Option>
 
-                            </Select>
-                        </FormItem>
+                    <FormItem label="Language" hasFeedback>
+                        <Select defaultValue="en" onChange={this.handleSelectLanguageChange}>
+                            {langChildren}
+                        </Select>
+                    </FormItem>
 
-                    </div>
+                    <FormItem label="Client Type" hasFeedback>
+                        <Select defaultValue="demo" onChange={this.handleSelectTypeChange}>
+                            {typeChildren}
+                        </Select>
+                    </FormItem>
 
-                    <div>
-                        <FormItem label="Client Type" hasFeedback>
-                            <Select defaultValue="demo" onChange={this.handleSelectTypeChange}>
-                                <Option value="demo">Demo</Option>
-                                <Option value="client">Client</Option>
-                                <Option value="dev">Dev</Option>
-                                <Option value="edu">Edu</Option>
-                                <Option value="closed">Closed</Option>
-                            </Select>
-                        </FormItem>
-                    </div>
 
                 </Form>
             </Modal>

@@ -195,7 +195,6 @@ class User extends React.Component {
                 </Button.Group>
 
 
-
                 <UserCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}
@@ -222,6 +221,6 @@ User.propTypes = {
     auth: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     users: PropTypes.array,
-    checkAuth: PropTypes.func.isRequired
+    checkAuth: PropTypes.func.isRequired,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(User);

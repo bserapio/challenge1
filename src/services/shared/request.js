@@ -1,18 +1,18 @@
-import axios     from 'axios'
-import apiEndPoints from './endpoints'
+import axios from 'axios';
+import apiEndPoints from './endpoints';
 
 
 const client = axios.create({
-    baseURL: apiEndPoints.baseUrl
+    baseURL: apiEndPoints.baseUrl,
 });
 
-const request = function(options) {
-    const Success = function(response) {
+const request = function (options) {
+    const Success = function (response) {
         console.debug('Request Successful!', response);
         return response.data;
     };
 
-    const Error = function(error) {
+    const Error = function (error) {
         console.error('Request Failed:', error.config);
 
         if (error.response) {
@@ -21,7 +21,6 @@ const request = function(options) {
             console.error('Status:',  error.response.status);
             console.error('Data:',    error.response.data);
             console.error('Headers:', error.response.headers);
-
         } else {
             // Something else happened while setting up the request
             // triggered the error

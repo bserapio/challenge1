@@ -12,6 +12,7 @@ export function checkAuth(auth) {
         if (!auth) {
             if (localStorage.getItem('user')) {
                 dispatch(loginSuccess(JSON.parse(localStorage.getItem('user'))));
+                configureStore.history.push(window.location.pathname);
             } else {
                 configureStore.history.push('/');
                 dispatch({
@@ -79,7 +80,6 @@ export function logOutUser() {
         dispatch({type: types.LOG_OUT});
         localStorage.removeItem('user');
         window.location.href = '/';
-
     };
 }
 

@@ -1,43 +1,38 @@
-
-
-import request from './shared/request'
-import apiEndPoints from './shared/endpoints'
+import request from './shared/request';
+import apiEndPoints from './shared/endpoints';
 
 function get(id) {
-
-    let url = apiEndPoints.clientDetail.replace(':id',id);
+    const url = apiEndPoints.clientDetail.replace(':id', id);
     return request({
-        url:    url,
-        method: 'GET'
+        url,
+        method: 'GET',
     });
 }
-function put(id,data) {
-
-    let url = apiEndPoints.clientDetail.replace(':id',id);
+function put(id, data) {
+    const url = apiEndPoints.clientDetail.replace(':id', id);
     return request({
-        url:    url,
+        url,
         method: 'POST',
-        data:data
+        data,
     });
 }
-function list(limit=10,page=1) {
-
+function list(limit = 10, page = 1) {
     return request({
         url: apiEndPoints.userList,
-        method:'GET',
-        data : {
-            limit: limit,
-            page: page
-        }
-    })
+        method: 'GET',
+        data: {
+            limit,
+            page,
+        },
+    });
 }
 function create(data) {
     return request({
         url: apiEndPoints.userList,
         method: 'POST',
-        data:  data
+        data,
     });
 }
-const clientService = { get, create,list,put };
+const clientService = {get, create, list, put};
 
 export default clientService;

@@ -1,6 +1,6 @@
 'use strict';
 
-const roles = require('../../config/role');
+const roles = require('../../../config/role');
 
 const bcrypt = require('bcrypt-nodejs');
 

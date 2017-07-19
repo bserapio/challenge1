@@ -17,7 +17,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
 
 
 app.use(morgan('combined', {stream: accessLogStream}));
-require('./config/passport')(passport);
+require('../config/passport')(passport);
 
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(bodyParser.urlencoded({extended: false}));

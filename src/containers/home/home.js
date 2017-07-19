@@ -7,11 +7,9 @@ import './home.css';
 
 const FormItem = Form.Item;
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actions: bindActionCreators(userActions, dispatch),
-    };
-}
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(userActions, dispatch),
+});
 const mapStateToProps = state => ({
     auth: state.user.auth,
     users: state.user.users,
@@ -27,7 +25,8 @@ class NormalLoginForm extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+        const {form} = this.props;
+        form.validateFields((err, values) => {
             if (!err) {
                 this.setState({credentials: values}, this.sendForm);
             }
@@ -35,14 +34,16 @@ class NormalLoginForm extends React.Component {
     };
 
     sendForm() {
-        this.props.actions.loginUser(this.state.credentials);
+        const {actions} = this.props;
+        actions.loginUser(this.state.credentials);
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        const {actions, loginError} = this.props;
         let errorMessage = '';
 
-        if (this.props.loginError) {
+        if (loginError) {
             errorMessage = (<Alert
                 message="Error"
                 description="Error login user"

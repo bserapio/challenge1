@@ -4,7 +4,8 @@ import {Form, Input, Modal, Select, DatePicker} from 'antd';
 
 const moment = require('moment');
 const Option = Select.Option;
-
+const langs = require('../../config/lang');
+const types = require('../../config/type');
 const FormItem = Form.Item;
 
 
@@ -20,7 +21,6 @@ class CreateForm extends React.Component {
     };
 
     handleSelectUserChange = value => {
-
         this.props.onUserUpdate(value);
     };
     handleUpdateExpire = value => {
@@ -35,8 +35,19 @@ class CreateForm extends React.Component {
             Object.keys(users.rows).forEach(element => {
                 const ele = users.rows[element];
                 children.push(<Option value={ele.id}>{ele.username}</Option>);
-            })
+            });
         }
+        const langChildren = [];
+        Object.keys(langs).forEach(element => {
+            const value = langs[element];
+            langChildren.push(<Option value={element}>{value}</Option>);
+        });
+
+        const typeChildren = [];
+        Object.keys(types).forEach(element => {
+            const value = types[element];
+            typeChildren.push(<Option value={element}>{value}</Option>);
+        });
         return (
             <Modal
                 visible={visible}
@@ -68,24 +79,7 @@ class CreateForm extends React.Component {
                     </FormItem>
                     <FormItem label="Language" hasFeedback>
                         <Select defaultValue={record.lang} onChange={this.handleSelectLanguageChange}>
-                            <Option value="en">English</Option>
-                            <Option value="fr">French</Option>
-                            <Option value="de">Deutsch</Option>
-                            <Option value="es">Español</Option>
-                            <Option value="nl">Nederlands</Option>
-                            <Option value="sv">Svenska</Option>
-                            <Option value="pt">Portugues</Option>
-                            <Option value="it">Italiano</Option>
-                            <Option value="ru">Rusian</Option>
-                            <Option value="zh">Chinese</Option>
-                            <Option value="sl">Slovenski</Option>
-                            <Option value="no">Norsk</Option>
-                            <Option value="nb">Norsk</Option>
-                            <Option value="ka">Georgian</Option>
-                            <Option value="ar">Argelian</Option>
-                            <Option value="ja">Japanese</Option>
-                            <Option value="el">Greece</Option>
-                            <Option value="tr">Turkey</Option>
+                            {langChildren}
 
                         </Select>
                     </FormItem>
@@ -93,11 +87,7 @@ class CreateForm extends React.Component {
 
                     <FormItem label="Client Type" hasFeedback>
                         <Select value={record['ClientMetum#type']} onChange={this.handleSelectTypeChange}>
-                            <Option value="demo">Demo</Option>
-                            <Option value="client">Client</Option>
-                            <Option value="dev">Dev</Option>
-                            <Option value="edu">Edu</Option>
-                            <Option value="closed">Closed</Option>
+                            {typeChildren}
                         </Select>
                     </FormItem>
 

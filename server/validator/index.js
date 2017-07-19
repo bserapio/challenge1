@@ -1,6 +1,7 @@
 const t = require('tcomb');
-const roles = require('../config/role');
-const type = require('../config/type');
+const roles = require('../../config/role');
+const type = require('../../config/type');
+const langs = require('../../config/lang');
 
 // a subtype is a pair (type, predicate)
 // where predicate is a function with signature (x) -> boolean
@@ -11,12 +12,9 @@ const Opcode = t.subtype(t.Str, s => {
     return (s.length < 13) && pattern.test(s);
 });
 
-const Language = t.subtype(t.Str, s => s.length === 2);
-
 
 const Role = t.subtype(t.Str, s => roles.hasOwnProperty(s.trim().toLowerCase()));
-
-
+const Lang = t.subtype(t.Str, s => langs.hasOwnProperty(s.trim().toLowerCase()));
 const Type = t.subtype(t.Str, s => type.hasOwnProperty(s.trim().toLowerCase()));
 
 
@@ -39,7 +37,7 @@ const CreateUpdateInput = t.struct({
 
 const CreateDbInput = t.struct({
     identifier: Opcode,
-    lang: Language,
+    lang: Lang,
     name: t.Str,
     dbPass: t.maybe(Password),
     type: Type,
@@ -56,7 +54,7 @@ const CreateUpdateMetaDbInput = t.struct({
 
 const CreateUpdateDbInput = t.struct({
     identifier: t.maybe(Opcode),
-    lang: t.maybe(Language),
+    lang: t.maybe(Lang),
     name: t.maybe(t.Str),
     dbPass: t.maybe(Password),
     type: t.maybe(Type),

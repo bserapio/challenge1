@@ -1,8 +1,7 @@
+import React from 'react';
+import {Form, Input, Modal, Select} from 'antd';
 
-import React from "react";
-import {Form, Input, Modal, Select} from "antd";
-
-const moment = require('moment');
+const roles = require('../../config/role');
 const Option = Select.Option;
 
 const FormItem = Form.Item;
@@ -10,14 +9,18 @@ const FormItem = Form.Item;
 
 class CreateForm extends React.Component {
 
-    handleSelectChange = (value) =>  {
-
-        this.props.onChange(value)
+    handleSelectChange = value => {
+        this.props.onChange(value);
     }
     render() {
-
         const {visible, onCancel, onCreate, form, confirmLoading} = this.props;
         const {getFieldDecorator} = form;
+
+        const rolesChildren = [];
+        Object.keys(roles).forEach(element => {
+            const value = roles[element];
+            rolesChildren.push(<Option value={element}>{value}</Option>);
+        });
         return (
             <Modal
                 visible={visible}
@@ -39,7 +42,7 @@ class CreateForm extends React.Component {
                     <FormItem label="Password" hasFeedback>
                         {getFieldDecorator('password', {
                             rules: [{required: true, message: 'Please input your password!'},
-                                {min: 6, message: "Password must be 6 chars"}],
+                                {min: 6, message: 'Password must be 6 chars'}],
                         })(
                             <Input type="password"/>
                         )}
@@ -54,15 +57,7 @@ class CreateForm extends React.Component {
                     </FormItem>
                     <div>
                         <Select defaultValue="super" style={{width: 120}} onChange={this.handleSelectChange}>
-                            <Option value="guest">Guest</Option>
-                            <Option value="user">User</Option>
-                            <Option value="finance">Finance</Option>
-                            <Option value="manager">Manager</Option>
-                            <Option value="sales">Sales</Option>
-                            <Option value="account-manager">Account manager</Option>
-                            <Option value="admin">Admin</Option>
-                            <Option value="super">Super</Option>
-
+                            {rolesChildren}
                         </Select>
 
                     </div>

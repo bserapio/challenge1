@@ -101,7 +101,7 @@ exports.updateClient = (req, res) => {
                     where: { id: client.id },
                     returning: true,
                     plain: true,
-                }).then((data) => {
+                }).then(data => {
                     db.ClientMeta.update(input.ClientMetum, {
                         where: {id: input.ClientMetum.id},
                     }).then(
@@ -109,7 +109,7 @@ exports.updateClient = (req, res) => {
                             res.json(meta);
                         },
                         err => {
-                            res.status(400).json(err)
+                            res.status(400).json(err);
                         }
                     )
                     ;

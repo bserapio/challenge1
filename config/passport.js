@@ -1,6 +1,6 @@
 // load all the things we need
 const LocalStrategy = require('passport-local').Strategy;
-const db = require('../db/models');
+const db = require('../server/db/models/index');
 
 const User = db.User;
 

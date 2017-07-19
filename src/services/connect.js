@@ -56,7 +56,6 @@ axios.interceptors.response.use(response => response,
         if (error.response.status === 401) {
             userActions.logOutUser();
             window.location.href = '/';
-
         }
         return error;
     });

@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as userActions from './actions/userActions';
 
-
+import history from './store/configureStore';
 const { Header, Content, Footer } = Layout;
 
 
@@ -22,17 +22,20 @@ const mapDispatchToProps = dispatch => ({
 class App extends Component {
 
     render() {
+        const CurrentPath = history.history.location.pathname;
+        const defaultKey = (CurrentPath === '/clients') ? '1' : '2'; // Is not the best way but is working
+
         return (
             <LocaleProvider locale={enUS}>
                 <Layout className="layout">
                     <Header>
                         <div className="logo"/>
                         {this.props.auth !== null &&
-                        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{lineHeight: '64px'}}>
-                            <Menu.Item key="1"><Link to="/clients" activeClassName="active">Clients</Link></Menu.Item>
-                            <Menu.Item key="2"><Link to="/users" activeClassName="active">Users</Link></Menu.Item>
-                            <Menu.Item key="3"><Link to="/client_meta"
-                                                     activeClassName="active">Databases</Link></Menu.Item>
+                        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={defaultKey}
+                              style={{lineHeight: '64px'}}>
+                            <Menu.Item key="1"><Link to="/clients">Clients</Link></Menu.Item>
+                            <Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
+                            <Menu.Item key="3"><Link to="/logout">Log out</Link></Menu.Item>
 
                         </Menu>
                 }
