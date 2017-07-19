@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Table, Icon, Input, Popconfirm, Button, Modal} from 'antd';
+import {Table, Icon, Input, Popconfirm, Button} from 'antd';
 import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
 
@@ -190,26 +190,14 @@ class Clients extends React.Component {
     };
 
 
-    /*
-     Edit Client
-     */
-
-    handleChange(key, value) {
-        const {editedRecord} = this.state;
-        editedRecord[key] = value;
-        this.setState({editedRecord});
-    }
-
     edit(record) {
         this.setState({editedRecord: {...record}});
     }
 
-    editDone(record, old, type) {
+    editDone(new_record, record, type) {
         if (type === 'save') {
-
-
-            if (record !== old) {
-                this.props.actions.updateClient(record).then(
+            if (new_record !== record) {
+                this.props.actions.updateClient(new_record).then(
                     () => {
                         console.log('ok');
                     },
@@ -292,44 +280,24 @@ class Clients extends React.Component {
         }
         console.log(url);
         return window.open(url);
-    }
+    };
     updateRecord = (record, key) => {
-        if (record[key] === true) {
-            record[key] = false;
+        const new_record = {...record};
+        console.log(new_record);
+        console.log(key);
+        const new_key = key.split('#')
+        if (new_key.length === 1) {
+            new_record[new_key[0]] = record[key] !== true;
+        } else if (( new_key.length === 2)) {
+            new_record[new_key[0]][new_key[1]] = record[key] !== true;
         } else {
-            record[key] = true;
-        }
-        this.setState({editedRecord: {...record}}, this.editDone(record, 'save'));
-    }
-
-    openModalPatch = (record, key) => {
-        let title = null;
-        const confirm = Modal.confirm;
-
-
-        if (record[key] === true) {
-            title = 'Do you want to deactivate it?';
-        } else {
-            title = 'Do you want to activate it?';
+            new_record[new_key[0]][new_key[1]][new_key[2]] = record[key] !== true;
         }
 
-        confirm({
-            title,
-            onOk() {
-                const old = {...record};
-                if (record[key] === true) {
-                    record[key] = false;
-                } else {
-                    record[key] = true;
-                }
-                this.editDone(record, old, 'save');
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
-        });
-    }
 
+        console.log(new_record);
+        this.editDone(new_record, record, 'save');
+    };
 
     renderColumns(data, index, key, text, type) {
         let extraButton = null;
@@ -341,20 +309,43 @@ class Clients extends React.Component {
         if (type === 'boolean') {
             let element = null;
             if (key === 'ClientMetum#newChannel') {
-                extraButton = (<Button type="primary" icon="setting" className="black"
-                                       onClick={() => this.openChannelSettings(data[index].identifier, 'channel')}/>);
+                extraButton = (<Button
+                    type="primary"
+                    icon="setting"
+                    className="black"
+                    onClick={() => this.openChannelSettings(data[index].identifier, 'channel')}
+                />);
             }
             if (key === 'ClientMetum#ikentoo') {
-                extraButton = (<Button type="primary" icon="setting" className="black"
-                                       onClick={() => this.openChannelSettings(data[index].identifier, 'ikentoo')}/>);
+                extraButton = (<Button
+                    type="primary"
+                    icon="setting"
+                    className="black"
+                    onClick={() => this.openChannelSettings(data[index].identifier, 'ikentoo')}
+                />);
             }
 
             if (data[index][key] === true) {
-                element = (<Button type="primary" icon="check" className="active"
-                                   onClick={() => this.openModalPatch(data[index], key)}/>);
+                element = (
+
+                    <Popconfirm
+                        placement="top"
+                        title="Do you want to deactivate it?"
+                        onConfirm={() => this.updateRecord(data[index], key)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button type="primary" icon="check" className="active"/>
+                    </Popconfirm>);
             } else {
-                element = (<Button type="primary" icon="close" className="inactive"
-                                   onClick={() => this.openModalPatch(data[index], key)}/>);
+                element = (<Popconfirm
+                    placement="top"
+                    title="Do you want to activate it?"
+                    onConfirm={() => this.updateRecord(data[index], key)}
+                    okText="Yes"
+                    cancelText="No"
+                ><Button type="primary" icon="close" className="inactive"/>
+                </Popconfirm>);
             }
             return [element, extraButton];
         }
@@ -385,8 +376,13 @@ class Clients extends React.Component {
                         <Button.Group size="small">
                             <Button type="primary" onClick={() => this.showModal}>Edit</Button>
                             <Button type="primary" onClick={() => this.showElevateModal(record)}>Connect</Button>
-                            <Popconfirm placement="top" title="Do you want to delete the client?"
-                                        onConfirm={() => this.remove(record)} okText="Yes" cancelText="No">
+                            <Popconfirm
+                                placement="top"
+                                title="Do you want to delete the client?"
+                                onConfirm={() => this.remove(record)}
+                                okText="Yes"
+                                cancelText="No"
+                            >
                                 <Button type="danger">Delete</Button>
                             </Popconfirm>
 

@@ -72,6 +72,8 @@ export function updateClient(record) {
             type: types.GET_CLIENTS_UPDATE_REQUEST,
             payload: {record},
         });
+
+
         return connectService.updateClient(record).then(
             () => dispatch(getClients())
         );

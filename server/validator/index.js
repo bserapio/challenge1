@@ -45,15 +45,6 @@ const CreateDbInput = t.struct({
     type: Type,
 });
 
-const CreateUpdateDbInput = t.struct({
-    identifier: t.maybe(Opcode),
-    lang: t.maybe(Language),
-    name: t.maybe(t.Str),
-    dbPass: t.maybe(Password),
-    type: t.maybe(Type),
-});
-
-
 const CreateUpdateMetaDbInput = t.struct({
     newInvoice: t.maybe(t.Bool),
     newChannel: t.maybe(t.Bool),
@@ -61,6 +52,15 @@ const CreateUpdateMetaDbInput = t.struct({
     ikentoo: t.maybe(t.Bool),
     seekda: t.maybe(t.Bool),
     channelManager: t.maybe(t.Bool),
+});
+
+const CreateUpdateDbInput = t.struct({
+    identifier: t.maybe(Opcode),
+    lang: t.maybe(Language),
+    name: t.maybe(t.Str),
+    dbPass: t.maybe(Password),
+    type: t.maybe(Type),
+    ClientMetum: t.maybe(CreateUpdateMetaDbInput),
 });
 
 

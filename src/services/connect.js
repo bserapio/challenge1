@@ -27,6 +27,7 @@ function getClients() {
 }
 
 function updateClient(data) {
+    console.log(data);
     let url = apiEndPoints.clientDetail;
     url = url.replace(':id', data.id);
     return axios.put(url, data);

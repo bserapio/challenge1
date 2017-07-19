@@ -110,25 +110,24 @@ exports.updateClient = (req, res) => {
     if (result.isValid()) {
         db.ClientDb.findById(req.params.id).then(client => {
             if (client) {
-                input.autoUpdate = true;
-                input.dbName = `client_${input.identifier}`;
-                input.dbLogin = `b7_${input.identifier}`;
-                input.active = true;
                 input.modifiedAt = new Date();
                 db.ClientDb.update(input, {
                     where: { id: client.id },
                     returning: true,
                     plain: true,
-                })
-                    .then(data => {
-                        /**
-                         * We put all the info that we need for the client_meta
-                         *
-                         */
-
-
-                        res.json(data);
-                    });
+                }).then((data) => {
+                    db.ClientMeta.update(input.ClientMetum, {
+                        where: {id: input.ClientMetum.id},
+                    }).then(
+                        meta => {
+                            res.json(meta);
+                        },
+                        err => {
+                            res.status(400).json(err)
+                        }
+                    )
+                    ;
+                });
             } else {
                 res.status(404).json({message: 'client does not exists'});
             }
