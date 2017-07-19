@@ -37,7 +37,7 @@ exports.addClient = (req, res) => {
                         };
                         res.json(result);
                     } else {
-                        res.json(400).json({message: 'Error Creating clientMeta'});
+                        res.json(400).json({ message: 'Error Creating clientMeta' });
                     }
                 });
             },
@@ -55,7 +55,8 @@ exports.listClient = (req, res) => {
             include: [db.User],
             attributes: {},
 
-        }],order: [ ['id', 'ASC']]
+        }],
+        order: [['id', 'ASC']],
     }).then(result => {
         res.json(result);
     });
@@ -68,26 +69,26 @@ exports.detailClient = (req, res) => {
 };
 
 exports.removeClient = (req, res) => {
-    db.ClientDb.find({where: {'id': req.params.id}}).then(client => {
-            if (client) {
-                db.ClientMeta.find({where: {'client_id': client.id}}).then(
+    db.ClientDb.find({ where: { 'id': req.params.id } }).then(client => {
+        if (client) {
+            db.ClientMeta.find({ where: { 'client_id': client.id } }).then(
                     cmeta => {
                         if (cmeta) {
                             cmeta.destroy();
                         }
                     }
                 );
-                client.destroy().then(
+            client.destroy().then(
                     () => {
-                        res.status(204).json({message: 'Client Deleted'});
+                        res.status(204).json({ message: 'Client Deleted' });
                     }
                 );
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        }, err => {
-            res.status(400).json({err});
+        } else {
+            res.status(404).json({ message: 'client does not exists' });
         }
+    }, err => {
+        res.status(400).json({ err });
+    }
     );
 };
 
@@ -104,7 +105,7 @@ exports.updateClient = (req, res) => {
                     plain: true,
                 }).then(data => {
                     db.ClientMeta.update(input.ClientMetum, {
-                        where: {id: input.ClientMetum.id},
+                        where: { id: input.ClientMetum.id },
                     }).then(
                         meta => {
                             res.json(meta);
@@ -116,7 +117,7 @@ exports.updateClient = (req, res) => {
                     ;
                 });
             } else {
-                res.status(404).json({message: 'client does not exists'});
+                res.status(404).json({ message: 'client does not exists' });
             }
         });
     } else {
@@ -127,13 +128,13 @@ exports.updateClient = (req, res) => {
 exports.elevateClient = (req, res) => {
     const input = req.body;
 
-    db.User.findOne({where: {'username': input.username}}).then(user => {
+    db.User.findOne({ where: { 'username': input.username } }).then(user => {
         if (!user) {
-            res.status(404).json({message: 'Incorrect username.'});
+            res.status(404).json({ message: 'Incorrect username.' });
         } else if (!user.validPassword(input.password)) {
-            res.status(403).json({message: 'Incorrect password.'});
+            res.status(403).json({ message: 'Incorrect password.' });
         } else {
-            res.json({key: 'doudfsifdkjasvgdasjhgdasgk'});
+            res.json({ key: 'doudfsifdkjasvgdasjhgdasgk' });
         }
         // TODO: Here I need call API for elevate Token
     });
