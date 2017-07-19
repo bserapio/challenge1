@@ -115,6 +115,8 @@ class Clients extends React.Component {
         actions.getClients();
         userActions.getUsers();
     }
+
+    // Search Filter
     onSearch = () => {
         const {actions} = this.props;
         actions.searchFilter(this.state.searchText);
@@ -124,29 +126,22 @@ class Clients extends React.Component {
             this.setState({searchText: e.target.value});
         }
     };
-    sendCreateForm = form => {
-        const {actions} = this.props;
-        const {visible, clientForm, formLoading} = this.state;
-        actions.createClient(clientForm).then(
-            () => {
-                visible.create = false;
-                formLoading.create = false;
-                this.setState({visible, formLoading});
-                form.resetFields();
-            },
-            err => {
-                console.log(err);
-            }
-        );
+
+
+    // Create User
+    showCreateModal = () => {
+        const {visible} = this.state;
+        visible.create = true;
+        this.setState({visible});
+    };
+    saveFormRef = form => {
+        this.form = form;
     };
     handleCreateCancel = () => {
         const {visible, formLoading} = this.state;
         visible.create = false;
         formLoading.create = false;
         this.setState({visible, formLoading});
-    };
-    saveFormRef = form => {
-        this.form = form;
     };
     handleCreate = () => {
         const {formLoading, clientForm} = this.state;
@@ -173,14 +168,36 @@ class Clients extends React.Component {
         clientForm.type = value;
         this.setState({clientForm, confirmLoading: false});
     };
+    sendCreateForm = form => {
+        const {actions} = this.props;
+        const {visible, clientForm, formLoading} = this.state;
+        actions.createClient(clientForm).then(
+            () => {
+                visible.create = false;
+                formLoading.create = false;
+                this.setState({visible, formLoading});
+                form.resetFields();
+            },
+            err => {
+                console.log(err);
+            }
+        );
+    };
 
-
+    // Update User
+    showUpdateModal = record => {
+        const {visible} = this.state;
+        visible.update = true;
+        this.setState({visible, editedRecord: {...record}});
+    }
+    saveFormRefUpdate = form => {
+        this.formUpdate = form;
+    };
     handleUpateUserChange = value => {
         const {editedRecord} = this.state;
         editedRecord.ClientMetum.user_id = value;
         this.setState({editedRecord});
     }
-
     handleSelectUpdateLanguageChange = value => {
         const {editedRecord} = this.state;
         editedRecord.lang = value;
@@ -195,30 +212,6 @@ class Clients extends React.Component {
         const {editedRecord} = this.state;
         editedRecord.expireDate = value;
         this.setState({editedRecord});
-    }
-
-
-    handleElevateCreate = () => {
-        const {elevatorForm, formLoading} = this.state;
-        formLoading.create = true;
-        this.setState({formLoading});
-
-        this.formElevator.validateFields((err, values) => {
-            if (err) {
-                formLoading.elevate = false;
-                this.setState({formLoading});
-            } else {
-                elevatorForm.password = values.password;
-                elevatorForm.username = this.props.auth.username;
-                this.setState({elevatorForm}, this.sendElevatorForm);
-                this.formElevator.resetFields();
-            }
-        });
-    };
-
-
-    edit(record) {
-        this.setState({editedRecord: {...record}});
     }
 
     editDone(newRecord, record, type) {
@@ -238,83 +231,6 @@ class Clients extends React.Component {
         }
     }
 
-
-    remove = record => {
-        const {actions} = this.props;
-        actions.removeClient(record);
-    };
-
-    sendElevatorForm() {
-        const {actions} = this.props;
-        const {elevatorForm, formLoading} = this.state;
-        actions.checkElevateClient(elevatorForm).then(
-            res => {
-                const elevateUrl = {
-                    key: res.payload.res.key,
-                    identifier: elevatorForm.identifier,
-                };
-                formLoading.elevate = false;
-                this.setState({elevateUrl, formLoading});
-            },
-            err => {
-                console.log(err);
-            }
-        );
-    }
-
-    showElevateModal = record => {
-        const {elevatorForm, visible} = this.state;
-        elevatorForm.identifier = record.identifier;
-        visible.elevate = true;
-        this.setState({visible, elevatorForm});
-    };
-
-
-    showUpdateModal = record => {
-        const {visible} = this.state;
-        visible.update = true;
-        this.setState({visible, editedRecord: {...record}});
-    }
-
-
-    handleElevateCancel = () => {
-        const {visible} = this.state;
-        visible.elevate = false;
-        this.setState({visible});
-    };
-    saveFormRefElevator = form => {
-        this.formElevator = form;
-    };
-
-    saveFormRefUpdate = form => {
-        this.formUpdate = form;
-    };
-
-    showCreateModal = () => {
-        const {visible} = this.state;
-        visible.create = true;
-        this.setState({visible});
-    };
-
-    showAll = () => {
-        if (!(this.state.pagination)) {
-            this.setState({pagination: {}, paginationText: 'Show All'});
-        } else {
-            this.setState({pagination: false, paginationText: 'Paginate Table'});
-        }
-    };
-
-    openChannelSettings = (identifier, type) => {
-        const key = generateKey(identifier);
-        let url;
-        if (type === 'ikentoo') {
-            url = `https://app.base7booking.com/ikentoo/admin/panel?key=${key}&opcode=${identifier}`;
-        } else if (type === 'channel') {
-            url = `https://app.base7booking.com/channel/admin/panel?key=${key}&opcode=${identifier}`;
-        }
-        console.log(url);
-        return window.open(url);
-    };
     updateRecord = (record, key) => {
         const newRecord = {...record};
         const newKey = key.split('#');
@@ -328,9 +244,8 @@ class Clients extends React.Component {
 
         this.editDone(newRecord, record, 'save');
     };
-
     handleUpdateCancel = () => {
-        const {formLoading, editedRecord, visible} = this.state;
+        const {formLoading, visible} = this.state;
         visible.update = false;
         formLoading.update = false;
         this.setState({visible, formLoading});
@@ -353,12 +268,87 @@ class Clients extends React.Component {
                         formLoading.update = false;
                         this.setState({visible, formLoading});
                     },
-                    err => {
-                        console.log(err);
+                    errReq => {
+                        console.log(errReq);
                     }
                 );
             }
         });
+    };
+
+    // Elevator
+    saveFormRefElevator = form => {
+        this.formElevator = form;
+    };
+    handleElevateCreate = () => {
+        const {elevatorForm, formLoading} = this.state;
+        formLoading.create = true;
+        this.setState({formLoading});
+
+        this.formElevator.validateFields((err, values) => {
+            if (err) {
+                formLoading.elevate = false;
+                this.setState({formLoading});
+            } else {
+                elevatorForm.password = values.password;
+                elevatorForm.username = this.props.auth.username;
+                this.setState({elevatorForm}, this.sendElevatorForm);
+                this.formElevator.resetFields();
+            }
+        });
+    };
+    sendElevatorForm() {
+        const {actions} = this.props;
+        const {elevatorForm, formLoading} = this.state;
+        actions.checkElevateClient(elevatorForm).then(
+            res => {
+                const elevateUrl = {
+                    key: res.payload.res.key,
+                    identifier: elevatorForm.identifier,
+                };
+                formLoading.elevate = false;
+                this.setState({elevateUrl, formLoading});
+            },
+            err => {
+                console.log(err);
+            }
+        );
+    }
+    showElevateModal = record => {
+        const {elevatorForm, visible} = this.state;
+        elevatorForm.identifier = record.identifier;
+        visible.elevate = true;
+        this.setState({visible, elevatorForm});
+    };
+    handleElevateCancel = () => {
+        const {visible} = this.state;
+        visible.elevate = false;
+        this.setState({visible});
+    };
+
+
+    remove = record => {
+        const {actions} = this.props;
+        actions.removeClient(record);
+    };
+
+
+    showAll = () => {
+        if (!(this.state.pagination)) {
+            this.setState({pagination: {}, paginationText: 'Show All'});
+        } else {
+            this.setState({pagination: false, paginationText: 'Paginate Table'});
+        }
+    };
+    openChannelSettings = (identifier, type) => {
+        const key = generateKey(identifier);
+        let url;
+        if (type === 'ikentoo') {
+            url = `https://app.base7booking.com/ikentoo/admin/panel?key=${key}&opcode=${identifier}`;
+        } else if (type === 'channel') {
+            url = `https://app.base7booking.com/channel/admin/panel?key=${key}&opcode=${identifier}`;
+        }
+        return window.open(url);
     };
     renderColumns(data, index, key, text, type) {
         let extraButton = null;

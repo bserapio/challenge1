@@ -40,7 +40,7 @@ class NormalLoginForm extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const {actions, loginError} = this.props;
+        const {loginError} = this.props;
         let errorMessage = '';
 
         if (loginError) {
