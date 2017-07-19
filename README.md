@@ -7,11 +7,10 @@ INSTALATION
  * Create a database **backend_db** and give owner privileges to dev user
  * You can change the name , password , and db name in server/db/config/config.json
  * If you change those values you Must change  the owner , db name and password according with config.json
- * Go to **server/db**  and type **../../node_modules/.bin/sequelize db:migrate** this will create the tables
- * After run the initial migrations run the follow command **../../node_modules/.bin/sequelize db:seed:all** 
+ * Run command **npm run migrate** to create all the migrations
+ * Run command **npm run seed** to create the super user 
  
  After these steps you'll be able to log into the panel with the follow  data
- 
  ```
  username: admin
  password: admin123
@@ -28,11 +27,22 @@ npm run start
 
 To build the project run the follow command
 
-
 ```
 npm run build
 ```
 
+To build the project run the migrations
+
+```
+npm run migrate
+```
+
+
+To build the project run the seeds
+
+```
+npm run seed
+```
 
 
 
