@@ -19,6 +19,7 @@ const generateKey = opcode => {
     const pub = 'dsSUDfiwzrsfdgiASUFsdf';
     return sha1(pub + opcode);
 };
+
 const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
     return {
@@ -44,6 +45,7 @@ const mapStateToProps = state => {
         }) : state.client.clients.rows,
     };
 };
+
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
@@ -111,8 +113,8 @@ class Clients extends React.Component {
         const {actions, userActions, auth} = this.props;
         userActions.checkAuth(auth);
         actions.getClients();
+        userActions.getUsers();
     }
-
     onSearch = () => {
         const {actions} = this.props;
         actions.searchFilter(this.state.searchText);
@@ -167,10 +169,37 @@ class Clients extends React.Component {
         this.setState({clientForm, confirmLoading: false});
     };
     handleSelectTypeChange = value => {
-        const clientForm = this.state.clientForm;
+        const {clientForm} = this.state;
         clientForm.type = value;
         this.setState({clientForm, confirmLoading: false});
     };
+
+
+    handleUpateUserChange = value => {
+        const {editedRecord} = this.state;
+        editedRecord.ClientMetum.user_id = value;
+        this.setState({editedRecord});
+    }
+
+    handleSelectUpdateLanguageChange = value => {
+        const {editedRecord} = this.state;
+        editedRecord.lang = value;
+        this.setState({editedRecord});
+    };
+    handleSelectUpdateTypeChange = value => {
+        const {editedRecord} = this.state;
+        editedRecord.type = value;
+        this.setState({editedRecord});
+    };
+    handleUdateExpire = value => {
+
+        const {editedRecord} = this.state;
+        editedRecord.expireDate = value;
+        this.setState({editedRecord});
+
+    }
+
+
     handleElevateCreate = () => {
         const {elevatorForm, formLoading} = this.state;
         formLoading.create = true;
@@ -194,10 +223,10 @@ class Clients extends React.Component {
         this.setState({editedRecord: {...record}});
     }
 
-    editDone(new_record, record, type) {
+    editDone(newRecord, record, type) {
         if (type === 'save') {
-            if (new_record !== record) {
-                this.props.actions.updateClient(new_record).then(
+            if (newRecord !== record) {
+                this.props.actions.updateClient(newRecord).then(
                     () => {
                         console.log('ok');
                     },
@@ -243,6 +272,13 @@ class Clients extends React.Component {
     };
 
 
+    showUpdateModal = record => {
+        const {visible} = this.state;
+        visible.update = true;
+        this.setState({visible, editedRecord: {...record}});
+    }
+
+
     handleElevateCancel = () => {
         const {visible} = this.state;
         visible.elevate = false;
@@ -282,23 +318,50 @@ class Clients extends React.Component {
         return window.open(url);
     };
     updateRecord = (record, key) => {
-        const new_record = {...record};
-        console.log(new_record);
-        console.log(key);
-        const new_key = key.split('#')
-        if (new_key.length === 1) {
-            new_record[new_key[0]] = record[key] !== true;
-        } else if (( new_key.length === 2)) {
-            new_record[new_key[0]][new_key[1]] = record[key] !== true;
+        const newRecord = {...record};
+        const newKey = key.split('#');
+        if (newKey.length === 1) {
+            newRecord[newKey[0]] = record[key] !== true;
+        } else if ((newKey.length === 2)) {
+            newRecord[newKey[0]][newKey[1]] = record[key] !== true;
         } else {
-            new_record[new_key[0]][new_key[1]][new_key[2]] = record[key] !== true;
+            newRecord[newKey[0]][newKey[1]][newKey[2]] = record[key] !== true;
         }
 
-
-        console.log(new_record);
-        this.editDone(new_record, record, 'save');
+        this.editDone(newRecord, record, 'save');
     };
 
+    handleUpdateCancel = () => {
+        const {formLoading, editedRecord, visible} = this.state;
+        visible.update = false;
+        formLoading.update = false;
+        this.setState({visible, formLoading});
+    };
+    handleUpdateCreate = () => {
+        const {formLoading, editedRecord, visible} = this.state;
+        formLoading.update = true;
+        this.setState({formLoading});
+
+        this.formUpdate.validateFields((err, values) => {
+            if (err) {
+                formLoading.update = false;
+                this.setState({formLoading});
+            } else {
+                editedRecord.name = values.name;
+                formLoading.update = true;
+                this.props.actions.updateClient(editedRecord).then(
+                    () => {
+                        visible.update = false;
+                        formLoading.update = false;
+                        this.setState({visible, formLoading});
+                    },
+                    err => {
+                        console.log(err);
+                    }
+                );
+            }
+        });
+    };
     renderColumns(data, index, key, text, type) {
         let extraButton = null;
         if (!data) {
@@ -374,7 +437,7 @@ class Clients extends React.Component {
 
                     return (
                         <Button.Group size="small">
-                            <Button type="primary" onClick={() => this.showModal}>Edit</Button>
+                            <Button type="primary" onClick={() => this.showUpdateModal(record)}>Edit</Button>
                             <Button type="primary" onClick={() => this.showElevateModal(record)}>Connect</Button>
                             <Popconfirm
                                 placement="top"
@@ -546,13 +609,17 @@ class Clients extends React.Component {
                 <UpdateClientForm
                     ref={this.saveFormRefUpdate}
                     visible={visible.update}
-                    onElevatorCancel={this.handleElevateCancel}
-                    confirmElevatorLoading={formLoading.update}
-                    onElevatorCreate={this.handleElevateCreate}
-                    modalText={this.state.elevateUrl}
-                    row={editedRecord}
+                    onUpdateCancel={this.handleUpdateCancel}
+                    confirmUpdateLoading={formLoading.update}
+                    onUpdateCreate={this.handleUpdateCreate}
+                    modalText={elevateUrl}
+                    record={editedRecord}
+                    onUserUpdate={this.handleUpateUserChange}
+                    users={this.props.users}
+                    onLanguageUpdateChange={value => this.handleSelectUpdateLanguageChange(value)}
+                    onTypeUpdateChange={value => this.handleSelectUpdateTypeChange(value)}
+                    OnUdateExpire={value => this.handleUdateExpire(value)}
                 />
-
 
                 <Table
                     columns={columns}

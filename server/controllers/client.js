@@ -4,7 +4,7 @@ const t = require('tcomb-validation');
 const domain = require('../validator');
 const randomstring = require('randomstring');
 const db = require('../db/models');
-
+const moment = require('moment');
 
 exports.addClient = (req, res) => {
     const input = req.body;
@@ -16,24 +16,10 @@ exports.addClient = (req, res) => {
         input.dbName = `client_${input.identifier}`;
         input.dbLogin = `b7_${input.identifier}`;
         input.active = true;
+        input.expireDate = moment().add(30, 'days').format();
         if (!(input.dbPass)) {
             input.dbPass = randomstring.generate(20);
         }
-        // TODO: Here I need call API if is OK ( creating database , will create the entries)
-        /*
-         request('URL',input).then(
-         data => {
-
-         },
-         err => {
-
-         }
-
-         ).catch(err) {
-
-         }
-         */
-
         db.ClientDb.create(input).then(
             clientdb => {
                 const clientMeta = {

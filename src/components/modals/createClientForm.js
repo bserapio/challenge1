@@ -33,7 +33,8 @@ class CreateForm extends React.Component {
                 <Form layout="vertical">
                     <FormItem label="Opcode" hasFeedback>
                         {getFieldDecorator('identifier', {
-                            rules: [{required: true, message: 'Please input the Opcode of collection!'}],
+                            rules: [{required: true, message: 'Please input the Opcode of collection!'},
+                                {max: 13, message: 'Opcode must be less than 13 chars'}],
                         })(
                             <Input />
                         )}

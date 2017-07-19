@@ -1,13 +1,14 @@
+
 import React from "react";
 import {Form, Input, Modal, Select} from "antd";
 
+const moment = require('moment');
 const Option = Select.Option;
 
 const FormItem = Form.Item;
 
 
 class CreateForm extends React.Component {
-
 
     handleSelectChange = (value) =>  {
 
@@ -30,14 +31,15 @@ class CreateForm extends React.Component {
                 <Form layout="vertical">
                     <FormItem label="Username">
                         {getFieldDecorator('username', {
-                            rules: [{required: true, message: 'Please input the title of collection!'}],
+                            rules: [{required: true, message: 'Please input the username'}],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem label="Password" hasFeedback>
                         {getFieldDecorator('password', {
-                            rules: [{required: true, message: 'Please input your password!'}],
+                            rules: [{required: true, message: 'Please input your password!'},
+                                {min: 6, message: "Password must be 6 chars"}],
                         })(
                             <Input type="password"/>
                         )}
