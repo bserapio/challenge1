@@ -51,15 +51,16 @@ function elevateClient(data) {
 }
 
 
-axios.interceptors.response.use(response => response,
-    error => {
+axios.interceptors.response.use(response => response,  err => {
+    if (err.response.status === 401) {
+        localStorage.removeItem('user');
+        window.location.href = '/';
+    }else {
 
-        if (error.response.status === 401) {
-            userActions.logOutUser();
-            window.location.href = '/';
-        }
-        return Promise.reject(error);
-    });
+        throw err;
+    }
+
+});
 
 
 const connectService = {

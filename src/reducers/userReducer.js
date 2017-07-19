@@ -4,7 +4,7 @@ import initialState from './initialState';
 export default function userReducer(state = initialState, action) {
     switch (action.type) {
         case types.LOG_IN_SUCCESS: {
-            const {auth} = action.payload;
+            const { auth } = action.payload;
             return {
                 ...state,
                 auth,
@@ -21,7 +21,7 @@ export default function userReducer(state = initialState, action) {
             };
         }
         case types.LOGIN_FAIL: {
-            const {loginError} = action.payload;
+            const { loginError } = action.payload;
 
             return {
                 ...state,
@@ -29,14 +29,15 @@ export default function userReducer(state = initialState, action) {
             };
         }
         case types.GET_USERS_SUCCESS: {
-            const {users} = action.payload;
+            const { users } = action.payload;
             return {
                 ...state,
+                createError:null,
                 users,
             };
         }
         case types.ERROR_CREATE_USER: {
-            const {createError} = action.payload;
+            const { createError } = action.payload;
             return {
                 ...state,
                 createError,

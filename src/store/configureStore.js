@@ -1,6 +1,7 @@
 import {createStore, applyMiddleware, compose} from 'redux';
 import createHistory from 'history/createBrowserHistory';
 import {routerMiddleware} from 'react-router-redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import reducers from '../reducers';
 
@@ -14,11 +15,9 @@ export const attachPathNameToAction = store => next => action => {
     next(action);
 };
 
-
-const composeEnhancers =
-    typeof window === 'object' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
+const composeEnhancers = composeWithDevTools({
+    // Specify name here, actionsBlacklist, actionsCreators and other options if needed
+});
 
 const enhancer = composeEnhancers(
     applyMiddleware(thunk, middleware, attachPathNameToAction)

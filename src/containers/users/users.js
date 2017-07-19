@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {Button, Table} from 'antd';
+import { Button, Table } from 'antd';
 
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import UserCreateForm from '../../components/modals/createUserForm';
 
@@ -113,6 +113,7 @@ class User extends React.Component {
             loading: false,
             visible: false,
             confirmLoading: false,
+            errorCreate:null,
             locale: {
                 filterConfirm: 'Ok',
                 filterReset: 'Reset',
@@ -132,30 +133,28 @@ class User extends React.Component {
         this.props.actions.checkAuth(this.props.auth);
         this.props.actions.getUsers();
     }
-
+    unloadButton() {
+        this.setState({ confirmLoading: false });
+    }
     showModal = () => {
-        this.setState({visible: true});
+        this.setState({ visible: true });
     };
     handleCancel = () => {
-        this.setState({visible: false});
+        this.setState({ visible: false });
     };
     handleCreate = () => {
-
-        this.setState({
-            ModalText: 'The modal will be closed after two seconds',
-            confirmLoading: true,
-        });
+        this.setState({ confirmLoading: true });
         this.form.validateFields((err, values) => {
-            if (err) {
-                console.log(err);
-            } else {
+            if (!err) {
                 const userForm = this.state.userForm;
                 userForm.username = values.username;
                 userForm.password = values.password;
                 userForm.name = values.name;
 
-                this.setState({userForm});
+                this.setState({ userForm });
                 this.sendForm();
+            } else {
+                this.setState({ confirmLoading: false });
             }
         });
     };
@@ -163,34 +162,43 @@ class User extends React.Component {
         this.form = form;
     };
     sendForm = () => {
-        return this.props.actions.createNewUser(this.state.userForm).then(
-            () => {
-                console.log("entro en OK");
-                this.form.resetFields();
-                this.setState({visible: false, confirmLoading: false});
+        this.props.actions.createNewUser(this.state.userForm).then(
+            data => {
+                if (data) {
+                    this.setState({visible:false})
+                    this.form.resetFields();
+                }
+
             },
-            err => {
-                return (err);
-                console.log(err);
+            error => {
+                console.log("error");
+                this.setState({errorCreate:{...error}})
             }
-        );
-    };
+
+        )
+        this.unloadButton();
+    }
+
+
+
     handleSelectChange = value => {
         const userForm = this.state.userForm;
         userForm.role = value;
-        this.setState({userForm});
+        this.setState({ userForm });
     };
 
 
     showAll = () => {
         if (!(this.state.pagination)) {
-            this.setState({pagination: {}, paginationText: 'Show All'});
+            this.setState({ pagination: {}, paginationText: 'Show All' });
         } else {
-            this.setState({pagination: false, paginationText: 'Paginate Table'});
+            this.setState({ pagination: false, paginationText: 'Paginate Table' });
         }
     };
     render() {
-        const {createError} = this.props;
+        const { visible, confirmLoading, loading, pagination } = this.state;
+
+        const { createError, users } = this.props;
         return (
             <div>
                 <Button.Group size="default">
@@ -201,10 +209,10 @@ class User extends React.Component {
 
                 <UserCreateForm
                     ref={this.saveFormRef}
-                    visible={this.state.visible}
+                    visible={visible}
                     onCancel={this.handleCancel}
-                    confirmLoading={this.state.confirmLoading}
-                    onCreate={ this.handleCreate}
+                    confirmLoading={confirmLoading}
+                    onCreate={this.handleCreate}
                     onChange={value => this.handleSelectChange(value)}
                     createError={createError}
 
@@ -213,10 +221,9 @@ class User extends React.Component {
                 <Table
                     columns={this.columns}
                     rowKey={record => record.id}
-                    dataSource={this.props.users.rows}
-                    pagination={this.state.pagination}
-                    loading={this.state.loading}
-                    locale={this.state.locale}
+                    dataSource={users.rows}
+                    pagination={pagination}
+                    loading={loading}
                 />
             </div>
         );

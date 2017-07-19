@@ -54,7 +54,8 @@ exports.listClient = (req, res) => {
             model: db.ClientMeta,
             include: [db.User],
             attributes: {},
-        }],
+
+        }],order: [ ['id', 'ASC']]
     }).then(result => {
         res.json(result);
     });
