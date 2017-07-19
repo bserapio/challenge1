@@ -1,12 +1,10 @@
 'use strict';
 
 const t = require('tcomb-validation');
-
 const domain = require('../validator');
 const db = require('../db/models');
 
 
-// Display detail page for a specific Author
 exports.addUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateInput);

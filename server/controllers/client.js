@@ -8,7 +8,6 @@ const db = require('../db/models');
 
 exports.addClient = (req, res) => {
     const input = req.body;
-    const user = (req.user) ? req.user : {id: 1};
     let result = t.validate(input, domain.CreateDbInput);
     if (!result.isValid()) {
         res.status(400).json(result.errors);
@@ -39,7 +38,7 @@ exports.addClient = (req, res) => {
             clientdb => {
                 const clientMeta = {
                     clientId: clientdb.id,
-                    userId: user.id,
+                    userId: req.user.id,
                     type: input.type,
                     createdAt: new Date(),
                     modifiedAt: new Date(),
@@ -83,7 +82,6 @@ exports.detailClient = (req, res) => {
 
 exports.removeClient = (req, res) => {
     db.ClientDb.find({where: {'id': req.params.id}}).then(client => {
-            console.log(client);
             if (client) {
                 db.ClientMeta.find({where: {'client_id': client.id}}).then(
                     cmeta => {
@@ -116,6 +114,7 @@ exports.updateClient = (req, res) => {
                 input.dbName = `client_${input.identifier}`;
                 input.dbLogin = `b7_${input.identifier}`;
                 input.active = true;
+                input.modifiedAt = new Date();
                 db.ClientDb.update(input, {
                     where: { id: client.id },
                     returning: true,
@@ -146,7 +145,7 @@ exports.elevateClient = (req, res) => {
         if (!user) {
             res.status(404).json({message: 'Incorrect username.'});
         } else if (!user.validPassword(input.password)) {
-            res.status(404).json({message: 'Incorrect password.'});
+            res.status(403).json({message: 'Incorrect password.'});
         } else {
             res.json({key: 'doudfsifdkjasvgdasjhgdasgk'});
         }
