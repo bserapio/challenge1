@@ -53,11 +53,12 @@ function elevateClient(data) {
 
 axios.interceptors.response.use(response => response,
     error => {
+
         if (error.response.status === 401) {
             userActions.logOutUser();
             window.location.href = '/';
         }
-        return error;
+        return Promise.reject(error);
     });
 
 

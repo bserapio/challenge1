@@ -14,6 +14,7 @@ import './user.css';
 const mapStateToProps = state => ({
     auth: state.user.auth,
     users: state.user.users,
+    createError: state.user.createError,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -139,12 +140,12 @@ class User extends React.Component {
         this.setState({visible: false});
     };
     handleCreate = () => {
-        const form = this.form;
+
         this.setState({
             ModalText: 'The modal will be closed after two seconds',
             confirmLoading: true,
         });
-        form.validateFields((err, values) => {
+        this.form.validateFields((err, values) => {
             if (err) {
                 console.log(err);
             } else {
@@ -153,9 +154,8 @@ class User extends React.Component {
                 userForm.password = values.password;
                 userForm.name = values.name;
 
-                this.setState({userForm}, this.sendForm);
-                form.resetFields();
-                this.setState({visible: false});
+                this.setState({userForm});
+                this.sendForm();
             }
         });
     };
@@ -163,11 +163,14 @@ class User extends React.Component {
         this.form = form;
     };
     sendForm = () => {
-        this.props.actions.createUser(this.state.userForm).then(
+        return this.props.actions.createNewUser(this.state.userForm).then(
             () => {
+                console.log("entro en OK");
+                this.form.resetFields();
                 this.setState({visible: false, confirmLoading: false});
             },
             err => {
+                return (err);
                 console.log(err);
             }
         );
@@ -187,6 +190,7 @@ class User extends React.Component {
         }
     };
     render() {
+        const {createError} = this.props;
         return (
             <div>
                 <Button.Group size="default">
@@ -200,8 +204,9 @@ class User extends React.Component {
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                     confirmLoading={this.state.confirmLoading}
-                    onCreate={this.handleCreate}
+                    onCreate={ this.handleCreate}
                     onChange={value => this.handleSelectChange(value)}
+                    createError={createError}
 
                 />
 

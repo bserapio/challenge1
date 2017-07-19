@@ -56,14 +56,34 @@ export function loginUser(credentials) {
     };
 }
 
+export function dispatchErrorCreating(createError) {
+    return {
+        type: types.ERROR_CREATE_USER,
+        payload: {createError},
+    };
+}
 
-export function createUser(data) {
-    return dispatch => connectService.createUser(data).then(
-        () => dispatch(getUsers()),
-        loginError => {
-            console.log(loginError);
-        }
-    );
+export function dispatchCreating() {
+    return {
+        type: types.CREATE_USER,
+        payload: {},
+    };
+}
+
+
+export function createNewUser(data) {
+    return dispatch => {
+        dispatch(dispatchCreating);
+        connectService.createUser(data).then(
+            (res) => {
+                dispatch(getUsers());
+            },
+            (err) => {
+                dispatch(dispatchErrorCreating(err));
+                return Promise.reject(err);
+            }
+        );
+    }
 }
 
 

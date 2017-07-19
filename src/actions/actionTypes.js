@@ -6,6 +6,9 @@ export const GET_USERS_SUCCESS = 'dashboard/user/GET_USERS_SUCCESS';
 export const GET_USERS_REQUEST = 'dashboard/user/GET_USERS_REQUEST';
 export const NOT_LOGGED = 'dashboard/user/NOT_LOGGED';
 export const USER_LOGGED = 'dashboard/user/USER_LOGGED';
+export const CREATE_USER = 'dashboard/user/CREATE_USER';
+export const ERROR_CREATE_USER = 'dashboard/user/ERROR_CREATE_USER';
+
 
 export const GET_CLIENTS_SUCCESS = 'dashboard/client/GET_CLIENT_SUCCESS';
 export const GET_CLIENTS_REQUEST = 'dashboard/client/GET_CLIENT_REQUEST';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, Modal, Select} from 'antd';
+import {Form, Input, Modal, Select, Alert} from 'antd';
 
 const roles = require('../../config/role');
 const Option = Select.Option;
@@ -13,7 +13,7 @@ class CreateForm extends React.Component {
         this.props.onChange(value);
     }
     render() {
-        const {visible, onCancel, onCreate, form, confirmLoading} = this.props;
+        const {visible, onCancel, onCreate, form, confirmLoading, createError} = this.props;
         const {getFieldDecorator} = form;
 
         const rolesChildren = [];
@@ -21,6 +21,18 @@ class CreateForm extends React.Component {
             const value = roles[element];
             rolesChildren.push(<Option value={element}>{value}</Option>);
         });
+
+        let errorMessage = null;
+        if (createError) {
+            errorMessage = (<Alert
+                message="Error"
+                description="Error  Creating Users. `${createError}`"
+                type="error"
+                showIcon
+            />);
+        }
+
+
         return (
             <Modal
                 visible={visible}
@@ -32,6 +44,7 @@ class CreateForm extends React.Component {
                 onOk={onCreate}
             >
                 <Form layout="vertical">
+                    {errorMessage}
                     <FormItem label="Username">
                         {getFieldDecorator('username', {
                             rules: [{required: true, message: 'Please input the username'}],

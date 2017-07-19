@@ -35,6 +35,15 @@ export default function userReducer(state = initialState, action) {
                 users,
             };
         }
+        case types.ERROR_CREATE_USER: {
+            const {createError} = action.payload;
+            return {
+                ...state,
+                createError,
+            };
+        }
+
+
         default: {
             return state;
         }

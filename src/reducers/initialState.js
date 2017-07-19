@@ -4,5 +4,6 @@ export default {
     clientsMeta: [],
     auth: null,
     loginError: null,
+    createError: null,
     searchClient: '',
 };
