@@ -26,11 +26,11 @@ module.exports = {
                     'type': 'VARCHAR(255)',
                     'allowNull': false,
                 },
-                'createdAt': {
+                'created_at': {
                     'type': 'TIMESTAMP WITH TIME ZONE',
                     'allowNull': false,
                 },
-                'modifiedAt': {
+                'modified_at': {
                     'type': 'TIMESTAMP WITH TIME ZONE',
                     'allowNull': false,
                 },

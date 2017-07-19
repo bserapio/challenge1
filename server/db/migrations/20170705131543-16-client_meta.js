@@ -10,11 +10,11 @@ module.exports = {
                     'primaryKey': true,
                     'autoIncrement': true,
                 },
-                'clientId': {
+                'client_id': {
                     'type': 'INTEGER',
                     'allowNull': false,
                 },
-                'userId': {
+                'user_id': {
                     'type': 'INTEGER',
                     'allowNull': false,
                 },
@@ -22,12 +22,12 @@ module.exports = {
                     'type': 'VARCHAR(255)',
                     'allowNull': false,
                 },
-                'newInvoice': {
+                'new_invoice': {
                     'type': 'BOOLEAN',
                     'allowNull': false,
                     'defaultValue': true,
                 },
-                'newChannel': {
+                'new_channel': {
                     'type': 'BOOLEAN',
                     'allowNull': false,
                     'defaultValue': true,
@@ -47,20 +47,20 @@ module.exports = {
                     'allowNull': false,
                     'defaultValue': false,
                 },
-                'channelManager': {
+                'channel_manager': {
                     'type': 'BOOLEAN',
                     'allowNull': false,
                     'defaultValue': false,
                 },
-                'createdAt': {
+                'created_at': {
                     'type': 'TIMESTAMP WITH TIME ZONE',
                     'allowNull': false,
                 },
-                'modifiedAt': {
+                'modified_at': {
                     'type': 'TIMESTAMP WITH TIME ZONE',
                     'allowNull': false,
                 },
-                'lastLogin': {
+                'last_login': {
                     'type': 'TIMESTAMP WITH TIME ZONE',
                     'allowNull': true,
                 },

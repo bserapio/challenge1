@@ -1,3 +1,41 @@
+INSTALATION
+===========
+
+ * Git clone the repo 
+ * Enter into the report and type **npm install**
+ * Create user **dev** in postgresql with password **12345**
+ * Create a database **backend_db** and give owner privileges to dev user
+ * You can change the name , password , and db name in server/db/config/config.json
+ * If you change those values you Must change  the owner , db name and password according with config.json
+ * Go to **server/db**  and type **../../node_modules/.bin/sequelize db:migrate** this will create the tables
+ * After run the initial migrations run the follow command **../../node_modules/.bin/sequelize db:seed:all** 
+ 
+ After these steps you'll be able to log into the panel with the follow  data
+ 
+ ```
+ username: admin
+ password: admin123
+ ```
+ 
+ 
+COMMANDS
+========
+
+To start a devel server go to proyect root folder and type
+```
+npm run start
+```
+
+To build the project run the follow command
+
+
+```
+npm run build
+```
+
+
+
+
 SERVER SIDE
 ===============
 

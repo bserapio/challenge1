@@ -10,7 +10,7 @@ module.exports = {
                     'primaryKey': true,
                     'autoIncrement': true,
                 },
-                'clientId': {
+                'client_id': {
                     'type': 'INTEGER',
                     'allowNull': true,
                 },
@@ -26,15 +26,15 @@ module.exports = {
                     'type': 'VARCHAR(2)',
                     'allowNull': true,
                 },
-                'dbName': {
+                'db_name': {
                     'type': 'VARCHAR(31)',
                     'allowNull': false,
                 },
-                'dbLogin': {
+                'db_login': {
                     'type': 'VARCHAR(31)',
                     'allowNull': false,
                 },
-                'dbPass': {
+                'db_pass': {
                     'type': 'VARCHAR(31)',
                     'allowNull': false,
                 },
@@ -48,15 +48,15 @@ module.exports = {
                     'allowNull': false,
                     'defaultValue': false,
                 },
-                'autoUpdate': {
+                'auto_update': {
                     'type': 'BOOLEAN',
                     'allowNull': true,
                 },
-                'expireDate': {
+                'expire_date': {
                     'type': 'DATE',
                     'allowNull': true,
                 },
-                'archivedAt': {
+                'archived_at': {
                     'type': 'TIMESTAMP WITH TIME ZONE',
                     'allowNull': true,
                 },
