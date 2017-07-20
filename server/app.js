@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
+const acl = require('./acl/acl_middleware');
 
 const app = express();
 // create a write stream (in append mode)
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.all('/api/*', acl.isAuthenticated);
 app.use('/api/client', client);
 app.use('/api/user', user);
 app.use('/', index);

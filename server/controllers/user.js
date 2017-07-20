@@ -32,9 +32,11 @@ exports.listUser = (req, res) => {
             model: db.ClientMeta,
             attributes: {},
         }],
+            order: [['id', 'ASC']],
         limit,
         offset,
-    }).then(result => {
+        }
+    ).then(result => {
         res.json(result);
     });
 };
@@ -82,6 +84,7 @@ exports.clientListUser = (req, res) => {
         where: {
             userId: req.user.id,
         },
+        order: [['id', 'ASC']],
         include: [{
             model: req.model.ClientDb,
             attributes: {},

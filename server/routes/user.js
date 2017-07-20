@@ -1,15 +1,22 @@
+'use strict';
+
 const userController = require('../controllers/user');
-const middleware = require('../middleware');
+const acl = require('../acl/acl_middleware');
+
 module.exports = function (passport, express) {
-    const router = express.Router();
-    router.put('/:id/client/:idMeta', middleware.isAuthenticated, userController.clientUpdateDetailUser);
-    router.get('/:id/client/:idMeta', middleware.isAuthenticated, userController.clientDetailUser);
-    router.get('/:id/client', middleware.isAuthenticated, userController.clientListUser);
-    router.get('/:id', middleware.isAuthenticated, userController.detailUser);
-    router.put('/:id', middleware.isAuthenticated, userController.updateUser);
-    router.post('/', userController.addUser);
-    router.get('/', middleware.isAuthenticated, userController.listUser);
+    const app = express();
+    app.route('/:id/client/:idMeta')
+        .put(userController.clientUpdateDetailUser)
+        .get(userController.clientDetailUser);
+    app.route('/:id/client')
+        .get(userController.clientListUser);
+    app.route('/:id')
+        .put(userController.updateUser)
+        .get(userController.detailUser);
+    app.route('/')
+        .post(acl.isAdmin, userController.addUser)
+        .get(acl.isAdmin, userController.listUser);
 
 
-    return router;
+    return app;
 };

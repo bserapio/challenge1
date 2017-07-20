@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
                     const self = this;
                     ClientDb.find({where: {identifier: value}})
                         .then(client => {
-                            // reject if a different user wants to use the same email
                             if (client && self.id !== client.id) {
                                 return next('Identifier already exists!');
                             }
@@ -91,10 +90,10 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
         underscored: true,
         hooks: {
-            afterCreate: (client, options) => client.set('clientId', client.get('id')).save().then(self => self),
+
         },
     });
-    ClientDb.associate = function (models) {
+    ClientDb.associate = models => {
         ClientDb.hasOne(models.ClientMeta, {
             onDelete: 'CASCADE',
             foreignKey: 'client_id',

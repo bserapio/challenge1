@@ -1,7 +1,7 @@
 const t = require('tcomb');
-const roles = require('../../config/role');
-const type = require('../../config/type');
-const langs = require('../../config/lang');
+const roles = require('../../src/config/role');
+const type = require('../../src/config/type');
+const langs = require('../../src/config/lang');
 
 // a subtype is a pair (type, predicate)
 // where predicate is a function with signature (x) -> boolean

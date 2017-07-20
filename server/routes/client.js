@@ -1,12 +1,19 @@
+'use strict';
+
 const clientController = require('../controllers/client');
-const middleware = require('../middleware');
+
+
 module.exports = function (passport, express) {
-    const router = express.Router();
-    router.get('/:id', middleware.isAuthenticated, clientController.detailClient);
-    router.put('/:id', middleware.isAuthenticated, clientController.updateClient);
-    router.delete('/:id', middleware.isAuthenticated, clientController.removeClient);
-    router.post('/elevate', middleware.isAuthenticated, clientController.elevateClient);
-    router.post('/', middleware.isAuthenticated, clientController.addClient);
-    router.get('/', middleware.isAuthenticated, clientController.listClient);
-    return router;
+    const app = express();
+    app.route('/:id')
+        .get(clientController.detailClient)
+        .put(clientController.updateClient)
+        .delete(clientController.removeClient);
+    app.route('/')
+        .post(clientController.addClient)
+        .get(clientController.listClient);
+    app.route('/elevate')
+        .post(clientController.elevateClient);
+
+    return app;
 };

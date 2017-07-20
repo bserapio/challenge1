@@ -84,9 +84,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
 
-    ClientMeta.associate = function (models) {
-        // Using additional options like CASCADE etc for demonstration
-        // Can also simply do Task.belongsTo(models.User);
+    ClientMeta.associate = models => {
         ClientMeta.belongsTo(models.User, {
             onDelete: 'CASCADE',
             foreignKey: 'user_id',

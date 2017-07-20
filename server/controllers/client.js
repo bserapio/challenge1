@@ -55,6 +55,8 @@ exports.listClient = (req, res) => {
             include: [db.User],
             attributes: {},
         }],
+        order: [['id', 'ASC']]
+
     }).then(result => {
         res.json(result);
     });
