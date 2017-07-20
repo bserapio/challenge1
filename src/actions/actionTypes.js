@@ -3,6 +3,7 @@ export const LOG_OUT = 'dashboard/user/LOG_OUT';
 export const LOGIN_FAIL = 'dashboard/user/LOGIN_FAIL';
 export const CHECK_LOGIN = 'dashboard/user/CHECK_LOGIN';
 export const GET_USERS_SUCCESS = 'dashboard/user/GET_USERS_SUCCESS';
+export const GET_USERS_ERROR = 'dashboard/user/GET_USERS_SUCCESS';
 export const GET_USERS_REQUEST = 'dashboard/user/GET_USERS_REQUEST';
 export const NOT_LOGGED = 'dashboard/user/NOT_LOGGED';
 export const USER_LOGGED = 'dashboard/user/USER_LOGGED';

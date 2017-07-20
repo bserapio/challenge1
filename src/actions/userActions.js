@@ -7,7 +7,7 @@ export function checkAuth(auth) {
     return dispatch => {
         dispatch({
             type: types.CHECK_LOGIN,
-            payload: {auth},
+            payload: { auth },
         });
         if (!auth) {
             if (localStorage.getItem('user')) {
@@ -23,7 +23,7 @@ export function checkAuth(auth) {
         } else {
             dispatch({
                 type: types.USER_LOGGED,
-                payload: {auth},
+                payload: { auth },
             });
         }
     };
@@ -37,7 +37,7 @@ export function getUsers() {
 
         return connectService.getUsers().then(
             res => dispatch(getUserSuccess(res.data)),
-            loginError => dispatch(loginFail(loginError))
+            err => dispatch(loginFail(err))
         );
     };
 }
@@ -50,7 +50,7 @@ export function loginUser(credentials) {
                 configureStore.history.push('/clients');
             },
             loginError => {
-                dispatch(loginFail(loginError));
+                dispatch(userError(loginError));
             }
         );
     };
@@ -59,7 +59,7 @@ export function loginUser(credentials) {
 export function dispatchErrorCreating(createError) {
     return {
         type: types.ERROR_CREATE_USER,
-        payload: {createError},
+        payload: { createError },
     };
 }
 
@@ -74,16 +74,19 @@ export function dispatchCreating() {
 export function createNewUser(data) {
     return dispatch => {
         dispatch(dispatchCreating);
-        connectService.createUser(data).then(
-            (res) => {
+        return connectService.createUser(data).then(
+            res => {
                 dispatch(getUsers());
+                return res;
             },
-            (err) => {
-                dispatch(dispatchErrorCreating(err));
-                return Promise.reject(err);
+            err => {
+                dispatch(dispatchErrorCreating(err.response));
+                throw err;
             }
-        );
-    }
+        ).catch(error => {
+            dispatch(dispatchErrorCreating(error.response));
+        })
+    };
 }
 
 
@@ -92,12 +95,12 @@ export function createNewUser(data) {
 export function loginSuccess(auth) {
     return {
         type: types.LOG_IN_SUCCESS,
-        payload: {auth},
+        payload: { auth },
     };
 }
 export function logOutUser() {
     return dispatch => {
-        dispatch({type: types.LOG_OUT});
+        dispatch({ type: types.LOG_OUT });
         localStorage.removeItem('user');
         window.location.href = '/';
     };
@@ -107,10 +110,14 @@ export function logOutUser() {
 export function getUserSuccess(users) {
     return {
         type: types.GET_USERS_SUCCESS,
-        payload: {users},
+        payload: { users },
     };
 }
 
 export function loginFail(loginError) {
-    return {type: types.LOGIN_FAIL, payload: {loginError}};
+    return { type: types.LOGIN_FAIL, payload: { loginError } };
+}
+
+export function userError(loginError) {
+    return { type: types.GET_USERS_ERROR, payload: { loginError } };
 }

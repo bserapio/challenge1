@@ -24,9 +24,12 @@ class CreateForm extends React.Component {
 
         let errorMessage = null;
         if (createError) {
+            console.log(createError);
+            const message = createError.data.errors[0].message
+
             errorMessage = (<Alert
                 message="Error"
-                description="Error  Creating Users. `${createError}`"
+                description={message}
                 type="error"
                 showIcon
             />);
