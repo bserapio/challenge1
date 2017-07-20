@@ -29,7 +29,9 @@ class CreateForm extends React.Component {
             const value = types[element];
             typeChildren.push(<Option value={element}>{value}</Option>);
         });
-
+        if (!visible) {
+            return null;
+        }
         return (
             <Modal
                 visible={visible}

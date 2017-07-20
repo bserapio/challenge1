@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 isUnique(value, next) {
                     const self = this;
-                    ClientDb.find({where: {identifier: value}})
+                    ClientDb.find({ where: { identifier: value } })
                         .then(client => {
                             if (client && self.id !== client.id) {
                                 return next('Identifier already exists!');

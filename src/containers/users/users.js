@@ -11,6 +11,8 @@ import UserCreateForm from '../../components/modals/createUserForm';
 import * as userActions from '../../actions/userActions';
 import './user.css';
 
+const utils = require('../../utils/');
+
 const mapStateToProps = state => ({
     auth: state.user.auth,
     users: state.user.users,
@@ -21,20 +23,6 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(userActions, dispatch),
 });
 
-const stringOrder = (a, b) => {
-    {
-        const nameA = a.username.toUpperCase();
-        const nameB = b.username.toUpperCase();
-
-
-        if (nameA < nameB) {
-            return -1;
-        } else if (nameA > nameB) {
-            return 1;
-        }
-        return 0;
-    }
-};
 
 class User extends React.Component {
     static defaultProps = {
@@ -47,19 +35,19 @@ class User extends React.Component {
                 title: 'Username',
                 dataIndex: 'username',
                 onFilter: (value, record) => record.username.indexOf(value) === 0,
-                sorter: (a, b) => stringOrder(a, b),
+                sorter: (a, b) => utils.stringOrder(a, b),
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 onFilter: (value, record) => record.name.indexOf(value) === 0,
-                sorter: (a, b) => stringOrder(a, b),
+                sorter: (a, b) => utils.stringOrder(a, b),
             },
             {
                 title: 'Role',
                 dataIndex: 'role',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
-                sorter: (a, b) => stringOrder(a, b),
+                sorter: (a, b) => utils.stringOrder(a, b),
                 filters: [
                     {
                         text: 'Guest',
@@ -113,7 +101,7 @@ class User extends React.Component {
             loading: false,
             visible: false,
             confirmLoading: false,
-            errorCreate:null,
+            errorCreate: null,
             locale: {
                 filterConfirm: 'Ok',
                 filterReset: 'Reset',
@@ -165,20 +153,18 @@ class User extends React.Component {
         this.props.actions.createNewUser(this.state.userForm).then(
             data => {
                 if (data) {
-                    this.setState({visible:false})
+                    this.setState({ visible: false });
                     this.form.resetFields();
                 }
-
             },
             error => {
-                console.log("error");
-                this.setState({errorCreate:{...error}})
+                console.log('error');
+                this.setState({ errorCreate: { ...error } });
             }
 
-        )
+        );
         this.unloadButton();
     }
-
 
 
     handleSelectChange = value => {

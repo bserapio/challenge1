@@ -23,7 +23,7 @@ class App extends Component {
 
     render() {
         const CurrentPath = history.history.location.pathname;
-        const defaultKey = (CurrentPath === '/users') ? '2' : '1'; // Is not the best way but is working
+        const defaultKey = (CurrentPath === '/users') ? ['2'] : ['1']; // Is not the best way but is working
 
         return (
             <LocaleProvider locale={enUS}>

@@ -1,40 +1,74 @@
 
 import React from 'react';
-import {Form, Input, Modal, Select, DatePicker} from 'antd';
+import { Form, Input, Modal, Select, DatePicker } from 'antd';
 
 const moment = require('moment');
+
 const Option = Select.Option;
 const langs = require('../../config/lang');
 const types = require('../../config/type');
+
 const FormItem = Form.Item;
 
 
 class CreateForm extends React.Component {
 
+
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+            record: null,
+            users: null,
+        };
+
+
+    }
+
+    componentDidMount() {
+        const { record, users } = this.props;
+        console.log(users);
+        this.setState({ record, users });
+    }
+
     handleSelectLanguageChange = value => {
-        this.props.onLanguageUpdateChange(value);
+        const { record }  = this.state;
+        record.lang = value;
+        this.setState({ record });
+        this.props.changeRecord(record);
     };
 
-
     handleSelectTypeChange = value => {
-        this.props.onTypeUpdateChange(value);
+        const { record }  = this.state;
+        record.type = value;
+        this.setState({ record });
+        this.props.changeRecord(record);
     };
 
     handleSelectUserChange = value => {
-        this.props.onUserUpdate(value);
+        const { record }  = this.state;
+        record.ClientMetum.user_id = value;
+        this.setState({ record });
+        this.props.changeRecord(record);
     };
+
+
     handleUpdateExpire = value => {
-        this.props.OnUdateExpire(value.format('YYYY-MM-DD'));
+        const { record }  = this.state;
+        record.ClientMetum.expireDate = value.format('YYYY-MM-DD');
+        this.setState({ record });
+        this.props.changeRecord(record);
     }
 
     render() {
-        const {visible, onUpdateCancel, onUpdateCreate, form, confirmLoading, record, users} = this.props;
-        const {getFieldDecorator} = form;
+        const { visible, onUpdateCancel, onUpdateCreate, form, confirmLoading,users,record } = this.props;
+        const { getFieldDecorator } = form;
         const children = [];
+
         if (users.rows) {
             Object.keys(users.rows).forEach(element => {
                 const ele = users.rows[element];
-                children.push(<Option value={ele.id}>{ele.username}</Option>);
+                const id = String(ele.id);
+                children.push(<Option value={id}>{ele.username}</Option>);
             });
         }
         const langChildren = [];
@@ -48,7 +82,12 @@ class CreateForm extends React.Component {
             const value = types[element];
             typeChildren.push(<Option value={element}>{value}</Option>);
         });
+
+        if (!visible) {
+            return null;
+        }
         return (
+
             <Modal
                 visible={visible}
                 title="Udate Client"
@@ -63,7 +102,7 @@ class CreateForm extends React.Component {
                     <FormItem label="Hotel Name" hasFeedback>
                         {getFieldDecorator('name', {
                             initialValue: record.name,
-                            rules: [{required: true, message: 'Please input your Name!'}],
+                            rules: [{ required: true, message: 'Please input your Name!' }],
                         })(
                             <Input />
                         )}

@@ -2,9 +2,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {Table, Icon, Input, Popconfirm, Button} from 'antd';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Table, Icon, Input, Popconfirm, Button } from 'antd';
 import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
 
@@ -14,6 +14,8 @@ import * as clientActions from '../../actions/clientActions';
 import './client.css';
 
 const sha1 = require('sha1');
+const utils = require('../../utils/');
+
 
 const generateKey = opcode => {
     const pub = 'dsSUDfiwzrsfdgiASUFsdf';
@@ -51,18 +53,6 @@ const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
     actions: bindActionCreators(clientActions, dispatch),
 });
-const stringOrder = (a, b) => {
-    {
-        const nameA = a.username.toUpperCase();
-        const nameB = b.username.toUpperCase();
-        if (nameA < nameB) {
-            return -1;
-        } else if (nameA > nameB) {
-            return 1;
-        }
-        return 0;
-    }
-};
 
 class Clients extends React.Component {
 
@@ -70,6 +60,7 @@ class Clients extends React.Component {
     static defaultProps = {
         searchFilter: null,
         clients: [],
+        auth: null,
     };
 
     constructor(props, context) {
@@ -110,7 +101,7 @@ class Clients extends React.Component {
         };
     }
     componentDidMount() {
-        const {actions, userActions, auth} = this.props;
+        const { actions, userActions, auth } = this.props;
         userActions.checkAuth(auth);
         actions.getClients();
         userActions.getUsers();
@@ -118,64 +109,64 @@ class Clients extends React.Component {
 
     // Search Filter
     onSearch = () => {
-        const {actions} = this.props;
+        const { actions } = this.props;
         actions.searchFilter(this.state.searchText);
     };
     onInputChange = e => {
         if (e) {
-            this.setState({searchText: e.target.value});
+            this.setState({ searchText: e.target.value });
         }
     };
 
 
     // Create User
     showCreateModal = () => {
-        const {visible} = this.state;
+        const { visible } = this.state;
         visible.create = true;
-        this.setState({visible});
+        this.setState({ visible });
     };
     saveFormRef = form => {
         this.form = form;
     };
     handleCreateCancel = () => {
-        const {visible, formLoading} = this.state;
+        const { visible, formLoading } = this.state;
         visible.create = false;
         formLoading.create = false;
-        this.setState({visible, formLoading});
+        this.setState({ visible, formLoading });
     };
     handleCreate = () => {
-        const {formLoading, clientForm} = this.state;
+        const { formLoading, clientForm } = this.state;
         formLoading.create = true;
-        this.setState({formLoading});
+        this.setState({ formLoading });
         this.form.validateFields((err, values) => {
             if (err) {
                 formLoading.create = false;
-                this.setState({formLoading});
+                this.setState({ formLoading });
             } else {
                 clientForm.identifier = values.identifier;
                 clientForm.name = values.name;
-                this.setState({clientForm}, this.sendCreateForm(this.form));
+                this.setState({ clientForm }, this.sendCreateForm(this.form));
             }
         });
     };
     handleSelectLanguageChange = value => {
         const clientForm = this.state.clientForm;
         clientForm.lang = value;
-        this.setState({clientForm, confirmLoading: false});
+        this.setState({ clientForm, confirmLoading: false });
     };
     handleSelectTypeChange = value => {
-        const {clientForm} = this.state;
+        const { clientForm } = this.state;
         clientForm.type = value;
-        this.setState({clientForm, confirmLoading: false});
+        this.setState({ clientForm, confirmLoading: false });
     };
     sendCreateForm = form => {
-        const {actions} = this.props;
-        const {visible, clientForm, formLoading} = this.state;
+        const { actions } = this.props;
+        const { visible, clientForm, formLoading } = this.state;
         actions.createClient(clientForm).then(
             () => {
                 visible.create = false;
                 formLoading.create = false;
-                this.setState({visible, formLoading});
+                this.setState({ visible, formLoading });
                 form.resetFields();
             },
             err => {
@@ -186,32 +177,15 @@ class Clients extends React.Component {
 
     // Update User
     showUpdateModal = record => {
-        const {visible} = this.state;
+        const { visible } = this.state;
         visible.update = true;
-        this.setState({visible, editedRecord: {...record}});
+        this.setState({ visible, editedRecord: { ...record } });
     }
     saveFormRefUpdate = form => {
         this.formUpdate = form;
     };
-    handleUpateUserChange = value => {
-        const {editedRecord} = this.state;
-        editedRecord.ClientMetum.user_id = value;
-        this.setState({editedRecord});
-    }
-    handleSelectUpdateLanguageChange = value => {
-        const {editedRecord} = this.state;
-        editedRecord.lang = value;
-        this.setState({editedRecord});
-    };
-    handleSelectUpdateTypeChange = value => {
-        const {editedRecord} = this.state;
-        editedRecord.type = value;
-        this.setState({editedRecord});
-    };
-    handleUdateExpire = value => {
-        const {editedRecord} = this.state;
-        editedRecord.expireDate = value;
-        this.setState({editedRecord});
+    changeRecord = record => {
+        this.setState({ editedRecord: record });
     }
 
     editDone(newRecord, record, type) {
@@ -227,12 +201,12 @@ class Clients extends React.Component {
                 );
             }
         } else {
-            this.setState({editedRecord: {}});
+            this.setState({ editedRecord: {} });
         }
     }
 
     updateRecord = (record, key) => {
-        const newRecord = {...record};
+        const newRecord = { ...record };
         const newKey = key.split('#');
         if (newKey.length === 1) {
             newRecord[newKey[0]] = record[key] !== true;
@@ -245,20 +219,20 @@ class Clients extends React.Component {
         this.editDone(newRecord, record, 'save');
     };
     handleUpdateCancel = () => {
-        const {formLoading, visible} = this.state;
+        const { formLoading, visible } = this.state;
         visible.update = false;
         formLoading.update = false;
-        this.setState({visible, formLoading});
+        this.setState({ visible, formLoading });
     };
     handleUpdateCreate = () => {
-        const {formLoading, editedRecord, visible} = this.state;
+        const { formLoading, editedRecord, visible } = this.state;
         formLoading.update = true;
-        this.setState({formLoading});
+        this.setState({ formLoading });
 
         this.formUpdate.validateFields((err, values) => {
             if (err) {
                 formLoading.update = false;
-                this.setState({formLoading});
+                this.setState({ formLoading });
             } else {
                 editedRecord.name = values.name;
                 formLoading.update = true;
@@ -266,7 +240,7 @@ class Clients extends React.Component {
                     () => {
                         visible.update = false;
                         formLoading.update = false;
-                        this.setState({visible, formLoading});
+                        this.setState({ visible, formLoading });
                     },
                     errReq => {
                         console.log(errReq);
@@ -281,25 +255,25 @@ class Clients extends React.Component {
         this.formElevator = form;
     };
     handleElevateCreate = () => {
-        const {elevatorForm, formLoading} = this.state;
+        const { elevatorForm, formLoading } = this.state;
         formLoading.create = true;
-        this.setState({formLoading});
+        this.setState({ formLoading });
 
         this.formElevator.validateFields((err, values) => {
             if (err) {
                 formLoading.elevate = false;
-                this.setState({formLoading});
+                this.setState({ formLoading });
             } else {
                 elevatorForm.password = values.password;
                 elevatorForm.username = this.props.auth.username;
-                this.setState({elevatorForm}, this.sendElevatorForm);
+                this.setState({ elevatorForm }, this.sendElevatorForm);
                 this.formElevator.resetFields();
             }
         });
     };
     sendElevatorForm() {
-        const {actions} = this.props;
-        const {elevatorForm, formLoading} = this.state;
+        const { actions } = this.props;
+        const { elevatorForm, formLoading } = this.state;
         actions.checkElevateClient(elevatorForm).then(
             res => {
                 const elevateUrl = {
@@ -307,7 +281,7 @@ class Clients extends React.Component {
                     identifier: elevatorForm.identifier,
                 };
                 formLoading.elevate = false;
-                this.setState({elevateUrl, formLoading});
+                this.setState({ elevateUrl, formLoading });
             },
             err => {
                 console.log(err);
@@ -315,29 +289,29 @@ class Clients extends React.Component {
         );
     }
     showElevateModal = record => {
-        const {elevatorForm, visible} = this.state;
+        const { elevatorForm, visible } = this.state;
         elevatorForm.identifier = record.identifier;
         visible.elevate = true;
-        this.setState({visible, elevatorForm});
+        this.setState({ visible, elevatorForm });
     };
     handleElevateCancel = () => {
-        const {visible} = this.state;
+        const { visible } = this.state;
         visible.elevate = false;
-        this.setState({visible});
+        this.setState({ visible });
     };
 
 
     remove = record => {
-        const {actions} = this.props;
+        const { actions } = this.props;
         actions.removeClient(record);
     };
 
 
     showAll = () => {
         if (!(this.state.pagination)) {
-            this.setState({pagination: {}, paginationText: 'Show All'});
+            this.setState({ pagination: {}, paginationText: 'Show All' });
         } else {
-            this.setState({pagination: false, paginationText: 'Paginate Table'});
+            this.setState({ pagination: false, paginationText: 'Paginate Table' });
         }
     };
     openChannelSettings = (identifier, type) => {
@@ -386,7 +360,7 @@ class Clients extends React.Component {
                         okText="Yes"
                         cancelText="No"
                     >
-                        <Button type="primary" icon="check" className="active"/>
+                        <Button type="primary" icon="check" className="active" />
                     </Popconfirm>);
             } else {
                 element = (<Popconfirm
@@ -395,7 +369,7 @@ class Clients extends React.Component {
                     onConfirm={() => this.updateRecord(data[index], key)}
                     okText="Yes"
                     cancelText="No"
-                ><Button type="primary" icon="close" className="inactive"/>
+                ><Button type="primary" icon="close" className="inactive" />
                 </Popconfirm>);
             }
             return [element, extraButton];
@@ -403,8 +377,8 @@ class Clients extends React.Component {
         return text;
     }
     render() {
-        const {clients} = this.props;
-        const {searchText, filterDropdownVisible} = this.state;
+        const { clients } = this.props;
+        const { searchText, filterDropdownVisible } = this.state;
         const {
             paginationText,
             filtered,
@@ -458,17 +432,17 @@ class Clients extends React.Component {
                         <Button type="primary" onClick={this.onSearch}>Search</Button>
                     </div>
                 ),
-                filterIcon: <Icon type="filter" style={{color: filtered ? '#108ee9' : '#aaa'}}/>,
+                filterIcon: <Icon type="filter" style={{ color: filtered ? '#108ee9' : '#aaa' }} />,
                 filterDropdownVisible,
                 onFilterDropdownVisibleChange: vis => {
-                    this.setState({filterDropdownVisible: vis}, () => this.searchInput.focus());
+                    this.setState({ filterDropdownVisible: vis }, () => this.searchInput.focus());
                 },
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
-                sorter: (a, b) => stringOrder(a, b),
+                sorter: (a, b) => utils.stringOrder(a, b),
                 render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text'),
             },
             {
@@ -563,7 +537,7 @@ class Clients extends React.Component {
             },
         ];
 
-
+        console.log(clients);
         return (
             <div>
 
@@ -602,11 +576,8 @@ class Clients extends React.Component {
                     onUpdateCreate={this.handleUpdateCreate}
                     modalText={elevateUrl}
                     record={editedRecord}
-                    onUserUpdate={this.handleUpateUserChange}
                     users={this.props.users}
-                    onLanguageUpdateChange={value => this.handleSelectUpdateLanguageChange(value)}
-                    onTypeUpdateChange={value => this.handleSelectUpdateTypeChange(value)}
-                    OnUdateExpire={value => this.handleUdateExpire(value)}
+                    changeRecord={record => this.changeRecord(record)}
                 />
 
                 <Table
@@ -623,7 +594,7 @@ class Clients extends React.Component {
 }
 
 Clients.propTypes = {
-    auth: PropTypes.object.isRequired,
+    auth: PropTypes.object,
     searchFilter: PropTypes.func,
     userActions: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
