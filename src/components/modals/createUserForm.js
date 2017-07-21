@@ -14,6 +14,10 @@ class CreateForm extends React.Component {
     }
     render() {
         const {visible, onCancel, onCreate, form, confirmLoading, createError} = this.props;
+        if (!visible) {
+            return null;
+        }
+
         const {getFieldDecorator} = form;
 
         const rolesChildren = [];

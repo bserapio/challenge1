@@ -6,6 +6,10 @@ const FormItem = Form.Item;
 
 class CreateElevatorForm extends React.Component {
     render() {
+        const {visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading, modalText} = this.props;
+        if (!visible) {
+            return null;
+        }
         const getHtml = res => ({__html: res});
         const getModal = (modalText, getFieldDecorator) => {
             if (modalText) {
@@ -37,7 +41,7 @@ class CreateElevatorForm extends React.Component {
             );
         };
 
-        const {visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading, modalText} = this.props;
+
         const {getFieldDecorator} = form;
         return (
             <Modal

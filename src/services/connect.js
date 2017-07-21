@@ -52,14 +52,26 @@ function elevateClient(data) {
 
 
 axios.interceptors.response.use(response => response,  err => {
-    if (err.response.status === 401) {
-        localStorage.removeItem('user');
-        window.location.href = '/';
-    }else {
+    switch (err.response.status) {
 
-        throw err;
+        case 401: {
+            localStorage.removeItem('user');
+            window.location.href = '/';
+            break;
+        }
+        case 403: {
+            // Forbiden
+            throw err;
+        }
+        case 405: {
+            // Method Not Allow
+            throw err;
+        }
+
+        default: {
+            throw err;
+        }
     }
-
 });
 
 

@@ -4,7 +4,6 @@ const urls = require('./acl_routes');
 const groups = require('./acl_groups');
 
 exports.isAuthenticated = (req, res, next) => {
-
     if (req.path === '/') {
         return next();
     }
@@ -14,7 +13,7 @@ exports.isAuthenticated = (req, res, next) => {
             return next();
         }
     } catch (Excep) {
-        res.status(401).json({message: "You're not allow"});
+        res.status(401).json({message: "Not logged user"});
     }
 };
 
@@ -24,8 +23,12 @@ exports.isAdmin = (req, res, next) => {
         if (groups.adminGroups.indexOf(req.user.role) === -1) {
             throw err;
         }
+        if (req.method === 'DELETE' && (groups.adminGroups.indexOf(req.user.role) === -1)) {
+            res.status(405).json({message: 'Method not allow'});
+        }
+
         return next();
     } catch (err) {
-        res.status(403).json({message: "You're not allow"});
+        res.status(403).json({message: 'You are  not allow'});
     }
 };

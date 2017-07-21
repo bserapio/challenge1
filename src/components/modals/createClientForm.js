@@ -16,6 +16,10 @@ class CreateForm extends React.Component {
     }
     render() {
         const {visible, onCancel, onCreate, form, confirmLoading} = this.props;
+        if (!visible) {
+            return null;
+        }
+
         const {getFieldDecorator} = form;
 
         const langChildren = [];
@@ -29,9 +33,7 @@ class CreateForm extends React.Component {
             const value = types[element];
             typeChildren.push(<Option value={element}>{value}</Option>);
         });
-        if (!visible) {
-            return null;
-        }
+
         return (
             <Modal
                 visible={visible}

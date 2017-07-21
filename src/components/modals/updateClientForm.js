@@ -34,21 +34,21 @@ class CreateForm extends React.Component {
         const { record }  = this.state;
         record.lang = value;
         this.setState({ record });
-        this.props.changeRecord(record);
+        this.props.changeUpdateRecord(record);
     };
 
     handleSelectTypeChange = value => {
         const { record }  = this.state;
         record.type = value;
         this.setState({ record });
-        this.props.changeRecord(record);
+        this.props.changeUpdateRecord(record);
     };
 
     handleSelectUserChange = value => {
         const { record }  = this.state;
         record.ClientMetum.user_id = value;
         this.setState({ record });
-        this.props.changeRecord(record);
+        this.props.changeUpdateRecord(record);
     };
 
 
@@ -56,11 +56,15 @@ class CreateForm extends React.Component {
         const { record }  = this.state;
         record.ClientMetum.expireDate = value.format('YYYY-MM-DD');
         this.setState({ record });
-        this.props.changeRecord(record);
+        this.props.changeUpdateRecord(record);
     }
 
     render() {
         const { visible, onUpdateCancel, onUpdateCreate, form, confirmLoading,users,record } = this.props;
+        if (!visible) {
+            return null;
+        }
+
         const { getFieldDecorator } = form;
         const children = [];
 
@@ -83,9 +87,7 @@ class CreateForm extends React.Component {
             typeChildren.push(<Option value={element}>{value}</Option>);
         });
 
-        if (!visible) {
-            return null;
-        }
+
         return (
 
             <Modal

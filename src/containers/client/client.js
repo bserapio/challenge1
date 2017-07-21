@@ -184,7 +184,7 @@ class Clients extends React.Component {
     saveFormRefUpdate = form => {
         this.formUpdate = form;
     };
-    changeRecord = record => {
+    changeUpdateRecord = record => {
         this.setState({ editedRecord: record });
     }
 
@@ -449,6 +449,8 @@ class Clients extends React.Component {
                 title: 'Lang',
                 dataIndex: 'lang',
                 key: 'lang',
+                filters: utils.langFilter,
+                onFilter: (value, record) => record['lang'].indexOf(value) === 0,
                 render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text'),
 
             },
@@ -503,29 +505,7 @@ class Clients extends React.Component {
                 dataIndex: 'ClientMetum#type',
                 onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
                 render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#type', text, 'text'),
-                filters: [
-                    {
-                        text: 'Demo',
-                        value: 'demo',
-                    },
-                    {
-                        text: 'Client',
-                        value: 'client',
-                    },
-                    {
-                        text: 'Dev',
-                        value: 'dev',
-                    },
-                    {
-                        text: 'Edu',
-                        value: 'edu',
-                    },
-                    {
-                        text: 'Closed',
-                        value: 'closed',
-                    },
-
-                ],
+                filters: utils.typeFilter,
 
             },
             {
@@ -537,7 +517,6 @@ class Clients extends React.Component {
             },
         ];
 
-        console.log(clients);
         return (
             <div>
 
@@ -577,7 +556,7 @@ class Clients extends React.Component {
                     modalText={elevateUrl}
                     record={editedRecord}
                     users={this.props.users}
-                    changeRecord={record => this.changeRecord(record)}
+                    changeUpdateRecord={record => this.changeUpdateRecord(record)}
                 />
 
                 <Table
