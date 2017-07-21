@@ -11,6 +11,7 @@ import UpdateClientForm from '../../components/modals/updateClientForm';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 import * as userActions from '../../actions/userActions';
 import * as clientActions from '../../actions/clientActions';
+import * as apiActions from '../../actions/apiActions';
 import './client.css';
 
 const sha1 = require('sha1');
@@ -24,8 +25,9 @@ const generateKey = opcode => {
 
 const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
+    console.log(state);
     return {
-        auth: state.user.auth,
+        auth: state.api.auth,
         users: state.user.users,
         clients: (state.client.searchText !== '' && state.client.searchText) ? state.client.clients.rows.map(record => {
             const match = record.identifier.match(reg);
@@ -52,6 +54,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userActions, dispatch),
     actions: bindActionCreators(clientActions, dispatch),
+    apiActions: bindActionCreators(apiActions, dispatch),
 });
 
 class Clients extends React.Component {
@@ -65,7 +68,8 @@ class Clients extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-
+        const {apiActions, actions, userActions, auth} = this.props;
+        apiActions.checkAuth()
         this.state = {
             elevateUrl: null,
             visible: {
@@ -101,10 +105,14 @@ class Clients extends React.Component {
         };
     }
     componentDidMount() {
-        const { actions, userActions, auth } = this.props;
-        userActions.checkAuth(auth);
+        console.log(this.props);
+        const {apiActions, actions, userActions, auth} = this.props;
+        apiActions.checkAuth()
         actions.getClients();
-        userActions.getUsers();
+        userActions.getUsers(auth.role);
+
+
+
     }
 
     // Search Filter

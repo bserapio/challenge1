@@ -8,7 +8,9 @@ import {connect} from 'react-redux';
 import * as userActions from './actions/userActions';
 import * as apiActions from './actions/apiActions';
 import history from './store/configureStore';
-const { Header, Content, Footer } = Layout;
+import './app.css';
+
+const {Header, Content} = Layout;
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(userActions, dispatch),
@@ -16,7 +18,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-    auth: state.user.auth,
+    auth: state.api.auth,
     users: state.user.users,
     apiError: state.api.apiError,
 });
@@ -28,6 +30,7 @@ class App extends Component {
         const {apiError, auth, children} = this.props;
         const CurrentPath = history.history.location.pathname;
         const defaultKey = (CurrentPath === '/users') ? ['2'] : ['1']; // Is not the best way but is working
+        let username = null;
         let visibleNotification = null;
         if (apiError === null) {
             visibleNotification = null;
@@ -38,15 +41,21 @@ class App extends Component {
                 description: message,
             }));
         }
+        if (auth) {
+            username = (<span className="username">Hello {auth.username}</span>)
+        } else {
+            username = null
+        }
         return (
             <LocaleProvider locale={enUS}>
 
                 <Layout className="layout">
 
-
                     <Header>
                         <div className="logo"/>
                         {auth !== null &&
+
+
                         <Menu
                             theme="dark"
                             mode="horizontal"
@@ -56,12 +65,13 @@ class App extends Component {
                             <Menu.Item key="1"><Link to="/clients">Clients</Link></Menu.Item>
                             <Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
                             <Menu.Item key="3"><Link to="/logout">Log out</Link></Menu.Item>
-                            <span> Welcome {auth.username}</span>
+
                         </Menu>
 
                         }
                     </Header>
                     <Content style={{padding: '0 50px'}}>
+                        {username}
                         {visibleNotification}
                         {children}
                     </Content>

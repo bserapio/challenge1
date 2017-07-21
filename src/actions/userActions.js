@@ -1,35 +1,14 @@
 import * as types from './actionTypes';
 import connectService from '../services/connect';
-import configureStore from '../store/configureStore';
 
 
-export function checkAuth(auth) {
+export function getUsers(role) {
     return dispatch => {
-        dispatch({
-            type: types.CHECK_LOGIN,
-            payload: { auth },
-        });
-        if (!auth) {
-            if (localStorage.getItem('user')) {
-                dispatch(loginSuccess(JSON.parse(localStorage.getItem('user'))));
-                configureStore.history.push(window.location.pathname);
-            } else {
-                configureStore.history.push('/');
-                dispatch({
-                    type: types.NOT_LOGGED,
-                    payload: {},
-                });
-            }
-        } else {
-            dispatch({
-                type: types.USER_LOGGED,
-                payload: { auth },
-            });
+
+        if (role === 'user') {
+            return null;
         }
-    };
-}
-export function getUsers() {
-    return dispatch => {
+
         dispatch({
             type: types.GET_USERS_REQUEST,
             payload: {},
@@ -37,32 +16,15 @@ export function getUsers() {
 
         return connectService.getUsers().then(
             res => {
-                dispatch(getUserSuccess(res.data))
+                dispatch(getUserSuccess(res.data));
             },
             err => {
-                dispatch(loginFail(err))
+                dispatch(loginFail(err));
             }
         );
     };
 }
-export function loginUser(credentials) {
-    return dispatch => {
-        dispatch({
-            type: types.LOGIN_REQUEST,
-            payload: {},
-        });
-        connectService.login(credentials).then(
-            res => {
-                localStorage.setItem('user', JSON.stringify(res.data));
-                dispatch(loginSuccess(res.data));
-                configureStore.history.push('/clients');
-            },
-            loginError => {
-                dispatch(userError(loginError));
-            }
-        );
-    };
-}
+
 
 export function dispatchErrorCreating(createError) {
     return {
@@ -98,14 +60,7 @@ export function createNewUser(data) {
 }
 
 
-// ACTIONS CALLS
 
-export function loginSuccess(auth) {
-    return {
-        type: types.LOG_IN_SUCCESS,
-        payload: { auth },
-    };
-}
 export function logOutUser() {
     return dispatch => {
         dispatch({ type: types.LOG_OUT });
@@ -125,13 +80,7 @@ export function getUserSuccess(users) {
 export function loginFail(loginError) {
     return {
         type: types.LOGIN_FAIL,
-        payload: {loginError}
+        payload: {loginError},
     };
 }
 
-export function userError(loginError) {
-    return {
-        type: types.GET_USERS_ERROR,
-        payload: {loginError}
-    };
-}

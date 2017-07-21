@@ -19,6 +19,7 @@ function createUser(data) {
 }
 
 function getUsers() {
+
     const url = apiEndPoints.userList;
     return axios.get(url);
 }
@@ -52,11 +53,6 @@ function elevateClient(data) {
     return axios.post(url, data);
 }
 
-function cleanRequest() {
-
-}
-
-
 axios.interceptors.response.use(response => {
         store.dispatch(apiActions.okResponse());
         return response;
@@ -68,18 +64,15 @@ axios.interceptors.response.use(response => {
             localStorage.removeItem('user');
             store.dispatch(apiActions.error401());
             throw err;
-            break;
         }
         case 403: {
             store.dispatch(apiActions.error403());
             throw err;
-            break;
         }
         case 405: {
             console.log('error 405');
             store.dispatch(apiActions.error405());
             throw err;
-            break;
         }
 
         default: {

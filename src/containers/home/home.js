@@ -3,15 +3,17 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as userActions from '../../actions/userActions';
+import * as apiActions from '../../actions/apiActions';
 import './home.css';
 
 const FormItem = Form.Item;
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(userActions, dispatch),
+    apiActions: bindActionCreators(apiActions, dispatch),
 });
 const mapStateToProps = state => ({
-    auth: state.user.auth,
+    auth: state.api.auth,
     users: state.user.users,
     loginError: state.user.loginError,
 });
@@ -34,8 +36,9 @@ class NormalLoginForm extends React.Component {
     };
 
     sendForm() {
-        const {actions} = this.props;
-        actions.loginUser(this.state.credentials);
+        const {apiActions} = this.props;
+        const {credentials} = this.state;
+        apiActions.loginUser(credentials);
     }
 
     render() {

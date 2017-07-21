@@ -3,8 +3,25 @@ import initialState from './initialState';
 
 export default function apiReducer(state = initialState, action) {
     switch (action.type) {
-        case types.OK_RESPONSE: {
 
+        case types.LOG_IN_SUCCESS: {
+            const auth = action.payload;
+            return {
+                ...state,
+                auth,
+                apiError: null,
+                loginError: null,
+            };
+        }
+
+        case types.CHECK_LOGIN: {
+            return {
+                ...state,
+                apiError: null,
+                loginError: null,
+            };
+        }
+        case types.OK_RESPONSE: {
             return {
                 ...state,
                 apiError: null,
