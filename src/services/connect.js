@@ -1,5 +1,4 @@
 import apiEndPoints from './shared/endpoints';
-import * as userActions from '../actions/userActions';
 
 const axios = require('axios');
 
