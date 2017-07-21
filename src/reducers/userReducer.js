@@ -3,11 +3,21 @@ import initialState from './initialState';
 
 export default function userReducer(state = initialState, action) {
     switch (action.type) {
+
+        case types.CHECK_LOGIN: {
+            return {
+                ...state,
+                apiError: null,
+                loginError: null,
+            };
+        }
         case types.LOG_IN_SUCCESS: {
             const { auth } = action.payload;
+
             return {
                 ...state,
                 auth,
+                apiError: null,
                 loginError: null,
             };
         }
@@ -16,6 +26,7 @@ export default function userReducer(state = initialState, action) {
                 ...state,
                 auth: null,
                 loginError: null,
+                apiError: null,
                 users: [],
 
             };
@@ -32,7 +43,8 @@ export default function userReducer(state = initialState, action) {
             const { users } = action.payload;
             return {
                 ...state,
-                createError:null,
+                createError: null,
+                apiError: null,
                 users,
             };
         }

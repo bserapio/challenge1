@@ -1,5 +1,6 @@
 const types = require('../config/type');
 const langs = require('../config/lang');
+const roles = require('../config/role');
 
 const stringOrder = (a, b) => {
     {
@@ -32,10 +33,18 @@ Object.keys(langs).forEach(element => {
     langFilter.push(x);
 });
 
-
+const rolesFilter = [];
+Object.keys(roles).forEach(element => {
+    const x = {
+        value: element,
+        text: roles[element],
+    };
+    rolesFilter.push(x);
+});
 
 module.exports = {
     stringOrder,
     typeFilter,
     langFilter,
+    rolesFilter
 };

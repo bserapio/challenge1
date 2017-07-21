@@ -4,10 +4,10 @@ import {Provider} from 'react-redux';
 import configureStore from './store/configureStore';
 import Routes from './routes';
 
-const store = configureStore.configureStore();
+
 
 ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={configureStore.store}>
         <Routes />
     </Provider>,
     document.getElementById('root')

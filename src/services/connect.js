@@ -1,7 +1,10 @@
 import apiEndPoints from './shared/endpoints';
+import * as apiActions from '../actions/apiActions';
+import configureStore from '../store/configureStore';
 
 const axios = require('axios');
 
+const store = configureStore.store;
 function login(data) {
     const url = apiEndPoints.login;
     return axios.post(url, {
@@ -49,22 +52,34 @@ function elevateClient(data) {
     return axios.post(url, data);
 }
 
+function cleanRequest() {
 
-axios.interceptors.response.use(response => response,  err => {
+}
+
+
+axios.interceptors.response.use(response => {
+        store.dispatch(apiActions.okResponse());
+        return response;
+    }
+    , err => {
     switch (err.response.status) {
 
         case 401: {
             localStorage.removeItem('user');
-            window.location.href = '/';
+            store.dispatch(apiActions.error401());
+            throw err;
             break;
         }
         case 403: {
-            // Forbiden
+            store.dispatch(apiActions.error403());
             throw err;
+            break;
         }
         case 405: {
-            // Method Not Allow
+            console.log('error 405');
+            store.dispatch(apiActions.error405());
             throw err;
+            break;
         }
 
         default: {

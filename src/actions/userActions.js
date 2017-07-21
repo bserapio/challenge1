@@ -36,13 +36,21 @@ export function getUsers() {
         });
 
         return connectService.getUsers().then(
-            res => dispatch(getUserSuccess(res.data)),
-            err => dispatch(loginFail(err))
+            res => {
+                dispatch(getUserSuccess(res.data))
+            },
+            err => {
+                dispatch(loginFail(err))
+            }
         );
     };
 }
 export function loginUser(credentials) {
     return dispatch => {
+        dispatch({
+            type: types.LOGIN_REQUEST,
+            payload: {},
+        });
         connectService.login(credentials).then(
             res => {
                 localStorage.setItem('user', JSON.stringify(res.data));
@@ -85,7 +93,7 @@ export function createNewUser(data) {
             }
         ).catch(error => {
             dispatch(dispatchErrorCreating(error.response));
-        })
+        });
     };
 }
 
@@ -115,9 +123,15 @@ export function getUserSuccess(users) {
 }
 
 export function loginFail(loginError) {
-    return { type: types.LOGIN_FAIL, payload: { loginError } };
+    return {
+        type: types.LOGIN_FAIL,
+        payload: {loginError}
+    };
 }
 
 export function userError(loginError) {
-    return { type: types.GET_USERS_ERROR, payload: { loginError } };
+    return {
+        type: types.GET_USERS_ERROR,
+        payload: {loginError}
+    };
 }

@@ -10,10 +10,14 @@ exports.isAuthenticated = (req, res, next) => {
 
     try {
         if (req.user.id) {
+            console.log(req.method);
+            if (req.method === 'DELETE' && (groups.adminGroups.indexOf(req.user.role) === -1)) {
+                return res.status(405).json({message: 'Method not allow'});
+            }
             return next();
         }
     } catch (Excep) {
-        res.status(401).json({message: "Not logged user"});
+        res.status(401).json({message: 'Not logged user'});
     }
 };
 
@@ -22,9 +26,6 @@ exports.isAdmin = (req, res, next) => {
     try {
         if (groups.adminGroups.indexOf(req.user.role) === -1) {
             throw err;
-        }
-        if (req.method === 'DELETE' && (groups.adminGroups.indexOf(req.user.role) === -1)) {
-            res.status(405).json({message: 'Method not allow'});
         }
 
         return next();

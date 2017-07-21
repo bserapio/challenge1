@@ -6,4 +6,6 @@ export default {
     loginError: null,
     createError: null,
     searchClient: '',
+    apiError: null,
+
 };

@@ -48,40 +48,7 @@ class User extends React.Component {
                 dataIndex: 'role',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => utils.stringOrder(a, b),
-                filters: [
-                    {
-                        text: 'Guest',
-                        value: 'Guest',
-                    },
-                    {
-                        text: 'User',
-                        value: 'user',
-                    },
-                    {
-                        text: 'Finance',
-                        value: 'finance',
-                    },
-                    {
-                        text: 'Manager',
-                        value: 'manager',
-                    },
-                    {
-                        text: 'Sales',
-                        value: 'sales',
-                    }, {
-                        text: 'Account manager',
-                        value: 'account-manager',
-                    },
-                    {
-                        text: 'Admin',
-                        value: 'admin',
-                    },
-                    {
-                        text: 'Super',
-                        value: 'super',
-                    },
-
-                ],
+                filters: utils.rolesFilter,
             },
             {
                 title: 'Created',
@@ -102,11 +69,7 @@ class User extends React.Component {
             visible: false,
             confirmLoading: false,
             errorCreate: null,
-            locale: {
-                filterConfirm: 'Ok',
-                filterReset: 'Reset',
-                emptyText: 'No Data',
-            },
+
             userForm: {
                 username: '',
                 password: '',
@@ -158,7 +121,6 @@ class User extends React.Component {
                 }
             },
             error => {
-                console.log('error');
                 this.setState({ errorCreate: { ...error } });
             }
 

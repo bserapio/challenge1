@@ -1,3 +1,5 @@
+export const LOGIN_REQUEST = 'dashboard/user/LOGIN_REQUEST';
+
 export const LOG_IN_SUCCESS = 'dashboard/user/LOG_IN_SUCCESS';
 export const LOG_OUT = 'dashboard/user/LOG_OUT';
 export const LOGIN_FAIL = 'dashboard/user/LOGIN_FAIL';
@@ -24,3 +26,8 @@ export const GET_CLIENTS_CREATION_REQUEST = 'dashboard/client/GET_CLIENTS_CREATI
 export const GET_CLIENTS_ELEVATOR_REQUEST = 'dashboard/client/GET_CLIENTS_ELEVATOR_REQUEST';
 export const GET_CLIENTS_ELEVATOR_SUCCESS = 'dashboard/client/GET_CLIENTS_ELEVATOR_SUCCESS';
 export const SEARCH_FILTER = 'dashboard/client/SEARCH_FILTER';
+
+export const OK_RESPONSE = 'dashboard/OK_RESPONSE';
+export const ERROR_401 = 'dashboard/ERROR_401';
+export const ERROR_403 = 'dashboard/ERROR_403';
+export const ERROR_405 = 'dashboard/ERROR_405';
