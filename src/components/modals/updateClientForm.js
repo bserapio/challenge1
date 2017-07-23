@@ -17,50 +17,64 @@ class CreateForm extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            record: null,
-            users: null,
+            record: {},
+            users: [],
         };
 
-
+    }
+    componentWillReceiveProps(nextProps) {
+        const { users, record} = nextProps;
+        this.setState({record,users});
     }
 
     componentDidMount() {
-        const { record, users } = this.props;
-        console.log(users);
-        this.setState({ record, users });
+
+
     }
 
     handleSelectLanguageChange = value => {
-        const { record }  = this.state;
+        const { record } = this.state;
         record.lang = value;
         this.setState({ record });
+        console.log(this.state.record);
         this.props.changeUpdateRecord(record);
     };
 
     handleSelectTypeChange = value => {
-        const { record }  = this.state;
+        const { record } = this.state;
         record.type = value;
         this.setState({ record });
+        console.log(this.state.record);
         this.props.changeUpdateRecord(record);
     };
 
     handleSelectUserChange = value => {
-        const { record }  = this.state;
+        const { record } = this.state;
         record.ClientMetum.user_id = value;
         this.setState({ record });
+        console.log(this.state.record);
         this.props.changeUpdateRecord(record);
     };
 
 
     handleUpdateExpire = value => {
-        const { record }  = this.state;
+        const { record } = this.state;
         record.ClientMetum.expireDate = value.format('YYYY-MM-DD');
         this.setState({ record });
         this.props.changeUpdateRecord(record);
     }
 
+
     render() {
-        const { visible, onUpdateCancel, onUpdateCreate, form, confirmLoading,users,record } = this.props;
+        const {
+            visible,
+            onUpdateCancel,
+            onUpdateCreate,
+            form,
+            confirmLoading,users
+        } = this.props;
+
+        const {record} = this.state;
         if (!visible) {
             return null;
         }
@@ -127,13 +141,13 @@ class CreateForm extends React.Component {
 
 
                     <FormItem label="Client Type" hasFeedback>
-                        <Select value={record['ClientMetum#type']} onChange={this.handleSelectTypeChange}>
+                        <Select defaultValue={record['ClientMetum#type']} onChange={this.handleSelectTypeChange}>
                             {typeChildren}
                         </Select>
                     </FormItem>
 
                     <FormItem label="Owner" hasFeedback>
-                        <Select defaultValue={record['ClientMetum#user_id']} onChange={this.handleSelectUserChange}>
+                        <Select defaultValue={String(record['ClientMetum#user_id'])} onChange={this.handleSelectUserChange}>
                             {children}
                         </Select>
                     </FormItem>

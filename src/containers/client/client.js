@@ -7,11 +7,9 @@ import { connect } from 'react-redux';
 import { Table, Icon, Input, Popconfirm, Button } from 'antd';
 import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
-
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
-import * as userActions from '../../actions/userActions';
-import * as clientActions from '../../actions/clientActions';
-import * as apiActions from '../../actions/apiActions';
+
+import * as appActions from '../../actions/appActions';
 import './client.css';
 
 const sha1 = require('sha1');
@@ -23,13 +21,20 @@ const generateKey = opcode => {
     return sha1(pub + opcode);
 };
 
+const mapDispatchToProps = dispatch => ({
+
+    actions: bindActionCreators(appActions, dispatch),
+
+});
+
 const mapStateToProps = state => {
-    const reg = new RegExp(state.client.searchText, 'gi');
-    console.log(state);
+    const reg = new RegExp(state.app.searchText, 'gi');
+
+
     return {
-        auth: state.api.auth,
-        users: state.user.users,
-        clients: (state.client.searchText !== '' && state.client.searchText) ? state.client.clients.rows.map(record => {
+        auth: state.app.auth,
+        users: state.app.users,
+        clients: (state.app.searchText !== '' && state.app.searchText) ? state.app.clients.rows.map(record => {
             const match = record.identifier.match(reg);
             if (!match) {
                 return {};
@@ -46,32 +51,17 @@ const mapStateToProps = state => {
                     </span>
                 ),
             };
-        }) : state.client.clients.rows,
+        }) : state.app.clients.rows,
     };
 };
 
 
-const mapDispatchToProps = dispatch => ({
-    userActions: bindActionCreators(userActions, dispatch),
-    actions: bindActionCreators(clientActions, dispatch),
-    apiActions: bindActionCreators(apiActions, dispatch),
-});
-
 class Clients extends React.Component {
 
 
-    static defaultProps = {
-        searchFilter: null,
-        clients: [],
-        auth: null,
-    };
-
     constructor(props, context) {
         super(props, context);
-        const {apiActions, actions, userActions, auth} = this.props;
-        apiActions.checkAuth()
         this.state = {
-            elevateUrl: null,
             visible: {
                 elevate: false,
                 create: false,
@@ -82,15 +72,6 @@ class Clients extends React.Component {
                 create: false,
                 update: false,
             },
-
-            paginationText: 'Show All',
-            editedRecord: {},
-            pagination: {},
-            footer: null,
-            loading: false,
-            filterDropdownVisible: false,
-            searchText: '',
-            filtered: false,
             elevatorForm: {
                 password: '',
                 username: '',
@@ -102,17 +83,24 @@ class Clients extends React.Component {
                 lang: 'en',
                 type: 'demo',
             },
+            paginationText: 'Show All',
+            editedRecord: {},
+            pagination: {},
+            elevateUrl: null,
+            footer: null,
+            loading: false,
+            filterDropdownVisible: false,
+            searchText: '',
+            filtered: false,
         };
     }
     componentDidMount() {
-        console.log(this.props);
-        const {apiActions, actions, userActions, auth} = this.props;
-        apiActions.checkAuth()
-        actions.getClients();
-        userActions.getUsers(auth.role);
+        const auth = utils.checkAuth();
 
-
-
+        if (auth) {
+            this.props.actions.getUsers(auth.role);
+            this.props.actions.getClientAction();
+        }
     }
 
     // Search Filter
@@ -158,7 +146,7 @@ class Clients extends React.Component {
         });
     };
     handleSelectLanguageChange = value => {
-        const clientForm = this.state.clientForm;
+        const {clientForm} = this.state;
         clientForm.lang = value;
         this.setState({ clientForm, confirmLoading: false });
     };
@@ -185,21 +173,25 @@ class Clients extends React.Component {
 
     // Update User
     showUpdateModal = record => {
-        const { visible } = this.state;
+        console.log(record);
+        let { visible, editedRecord } = this.state;
         visible.update = true;
-        this.setState({ visible, editedRecord: { ...record } });
+        editedRecord = { ...record };
+        this.setState({ visible,editedRecord });
     }
     saveFormRefUpdate = form => {
         this.formUpdate = form;
     };
     changeUpdateRecord = record => {
-        this.setState({ editedRecord: record });
+        let { editedRecord } = this.state;
+        editedRecord = { ...record };
+        this.setState({ editedRecord });
     }
 
     editDone(newRecord, record, type) {
         if (type === 'save') {
             if (newRecord !== record) {
-                this.props.actions.updateClient(newRecord).then(
+                this.props.actions.getClientAction(newRecord).then(
                     () => {
                         console.log('ok');
                     },
@@ -284,8 +276,9 @@ class Clients extends React.Component {
         const { elevatorForm, formLoading } = this.state;
         actions.checkElevateClient(elevatorForm).then(
             res => {
+
                 const elevateUrl = {
-                    key: res.payload.res.key,
+                    key: res.key,
                     identifier: elevatorForm.identifier,
                 };
                 formLoading.elevate = false;
@@ -386,8 +379,7 @@ class Clients extends React.Component {
     }
     render() {
         const { clients } = this.props;
-        const { searchText, filterDropdownVisible } = this.state;
-        const {
+        const { searchText, filterDropdownVisible,
             paginationText,
             filtered,
             editedRecord,
@@ -395,6 +387,8 @@ class Clients extends React.Component {
             formLoading,
             elevateUrl,
         } = this.state;
+
+
         const columns = [
             {
                 title: 'Actions',
@@ -458,7 +452,7 @@ class Clients extends React.Component {
                 dataIndex: 'lang',
                 key: 'lang',
                 filters: utils.langFilter,
-                onFilter: (value, record) => record['lang'].indexOf(value) === 0,
+                onFilter: (value, record) => record.lang.indexOf(value) === 0,
                 render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text'),
 
             },
@@ -580,11 +574,5 @@ class Clients extends React.Component {
     }
 }
 
-Clients.propTypes = {
-    auth: PropTypes.object,
-    searchFilter: PropTypes.func,
-    userActions: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired,
-    clients: PropTypes.array,
-};
+
 export default connect(mapStateToProps, mapDispatchToProps)(Clients);

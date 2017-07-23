@@ -15,6 +15,15 @@ const stringOrder = (a, b) => {
     }
 };
 
+const checkAuth = () => {
+    let auth = localStorage.getItem('user');
+    if (auth) {
+        auth = JSON.parse(auth);
+        console.log(auth)
+        return auth;
+    }
+    return null;
+};
 
 const typeFilter = [];
 Object.keys(types).forEach(element => {
@@ -44,7 +53,8 @@ Object.keys(roles).forEach(element => {
 
 module.exports = {
     stringOrder,
+    checkAuth,
     typeFilter,
     langFilter,
-    rolesFilter
+    rolesFilter,
 };

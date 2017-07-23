@@ -1,49 +1,52 @@
-import {Form, Icon, Input, Button, Checkbox, Alert} from 'antd';
+import { Form, Icon, Input, Button, Checkbox, Alert } from 'antd';
 import React from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import * as userActions from '../../actions/userActions';
-import * as apiActions from '../../actions/apiActions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as appActions from '../../actions/appActions';
 import './home.css';
 
 const FormItem = Form.Item;
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(userActions, dispatch),
-    apiActions: bindActionCreators(apiActions, dispatch),
+    actions: bindActionCreators(appActions, dispatch),
 });
 const mapStateToProps = state => ({
-    auth: state.api.auth,
-    users: state.user.users,
-    loginError: state.user.loginError,
+    auth: state.app.auth,
+    users: state.app.users,
+    loginError: state.app.loginError,
 });
 
 class NormalLoginForm extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {credentials: {username: '', password: ''}};
+        this.state = {
+            credentials: {
+                username: '',
+                password: '',
+            },
+        };
     }
 
     handleSubmit = e => {
         e.preventDefault();
-        const {form} = this.props;
+        const { form } = this.props;
         form.validateFields((err, values) => {
             if (!err) {
-                this.setState({credentials: values}, this.sendForm);
+                this.setState({ credentials: values }, this.sendForm);
             }
         });
     };
 
     sendForm() {
-        const {apiActions} = this.props;
-        const {credentials} = this.state;
-        apiActions.loginUser(credentials);
+        const { actions } = this.props;
+        const { credentials } = this.state;
+        actions.loginUser(credentials);
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
-        const {loginError} = this.props;
+        const { loginError, form } = this.props;
+        const { getFieldDecorator } = form;
         let errorMessage = '';
 
         if (loginError) {

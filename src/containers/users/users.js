@@ -8,19 +8,19 @@ import { connect } from 'react-redux';
 
 import UserCreateForm from '../../components/modals/createUserForm';
 
-import * as userActions from '../../actions/userActions';
+import * as appActions from '../../actions/appActions';
 import './user.css';
 
 const utils = require('../../utils/');
 
 const mapStateToProps = state => ({
-    auth: state.user.auth,
-    users: state.user.users,
-    createError: state.user.createError,
+    auth: state.app.auth,
+    users: state.app.users,
+    createError: state.app.createError,
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(appActions, dispatch),
 });
 
 

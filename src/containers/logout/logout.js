@@ -1,16 +1,16 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as userActions from '../../actions/userActions';
+import * as appActions from '../../actions/appActions';
 
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(userActions, dispatch),
+    actions: bindActionCreators(appActions, dispatch),
 });
 const mapStateToProps = state => ({
-    auth: state.user.auth,
-    users: state.user.users,
-    loginError: state.user.loginError,
+    auth: state.app.auth,
+    users: state.app.users,
+    loginError: state.app.loginError,
 });
 
 
