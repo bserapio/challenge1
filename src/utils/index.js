@@ -2,6 +2,13 @@ const types = require('../config/type');
 const langs = require('../config/lang');
 const roles = require('../config/role');
 
+const sha1 = require('sha1');
+
+const generateKey = opcode => {
+    const pub = 'dsSUDfiwzrsfdgiASUFsdf';
+    return sha1(pub + opcode);
+};
+
 const stringOrder = (a, b) => {
     {
         const nameA = a.username.toUpperCase();
@@ -53,6 +60,7 @@ Object.keys(roles).forEach(element => {
 module.exports = {
     stringOrder,
     checkAuth,
+    generateKey,
     typeFilter,
     langFilter,
     rolesFilter,

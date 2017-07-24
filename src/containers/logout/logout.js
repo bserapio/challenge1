@@ -17,7 +17,8 @@ const mapStateToProps = state => ({
 class Logout extends React.Component {
 
     componentWillMount() {
-        this.props.actions.logOutUser();
+        const {actions} = this.props;
+        actions.logOutUser();
     }
 
     render() {

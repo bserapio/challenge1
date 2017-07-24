@@ -132,7 +132,7 @@ const connectService = {
     updateAutoUpdateClient,
     updateInvoiceClient,
     updateChannelClient,
-    updateIkentooClient
+    updateIkentooClient,
 };
 
 export default connectService;

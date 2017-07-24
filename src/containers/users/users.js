@@ -79,8 +79,9 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        this.props.actions.checkAuth(this.props.auth);
-        this.props.actions.getUsers();
+        const {actions, auth} = this.props;
+        actions.checkAuth(auth);
+        actions.getUsers();
     }
     unloadButton() {
         this.setState({ confirmLoading: false });
@@ -111,7 +112,9 @@ class User extends React.Component {
         this.form = form;
     };
     sendForm = () => {
-        this.props.actions.createNewUser(this.state.userForm).then(
+        const {actions, auth} = this.props;
+        const {userForm} = this.state;
+        actions.createNewUser(userForm).then(
             data => {
                 if (data) {
                     this.setState({ visible: false });
@@ -128,7 +131,7 @@ class User extends React.Component {
 
 
     handleSelectChange = value => {
-        const userForm = this.state.userForm;
+        const {userForm} = this.state;
         userForm.role = value;
         this.setState({ userForm });
     };
@@ -142,14 +145,14 @@ class User extends React.Component {
         }
     };
     render() {
-        const { visible, confirmLoading, loading, pagination } = this.state;
+        const {visible, confirmLoading, loading, pagination, paginationText} = this.state;
 
         const { createError, users } = this.props;
         return (
             <div>
                 <Button.Group size="default">
                     <Button type="primary" onClick={this.showModal}>Create an User</Button>
-                    <Button type="primary" onClick={this.showAll}>{this.state.paginationText}</Button>
+                    <Button type="primary" onClick={this.showAll}>{paginationText}</Button>
                 </Button.Group>
 
 

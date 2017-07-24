@@ -12,15 +12,10 @@ import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 import * as appActions from '../../actions/appActions';
 import './client.css';
 
-const sha1 = require('sha1');
+
 const utils = require('../../utils/');
 const acl = require('../../config/acl_groups');
 
-
-const generateKey = opcode => {
-    const pub = 'dsSUDfiwzrsfdgiASUFsdf';
-    return sha1(pub + opcode);
-};
 
 const mapDispatchToProps = dispatch => ({
 
@@ -278,6 +273,7 @@ class Clients extends React.Component {
     };
     handleUpdateCreate = () => {
         const { formLoading, editedRecord, visible } = this.state;
+        const {actions} = this.props;
         formLoading.update = true;
         this.setState({ formLoading });
 
@@ -288,7 +284,7 @@ class Clients extends React.Component {
             } else {
                 editedRecord.name = values.name;
                 formLoading.update = true;
-                this.props.actions.updateClient(editedRecord).then(
+                actions.updateClient(editedRecord).then(
                     () => {
                         visible.update = false;
                         formLoading.update = false;
@@ -370,7 +366,7 @@ class Clients extends React.Component {
         }
     };
     openChannelSettings = (identifier, type) => {
-        const key = generateKey(identifier);
+        const key = utils.generateKey(identifier);
         let url;
         if (type === 'ikentoo') {
             url = `https://app.base7booking.com/ikentoo/admin/panel?key=${key}&opcode=${identifier}`;
@@ -380,7 +376,7 @@ class Clients extends React.Component {
         return window.open(url);
     };
 
-    renderColumns(data, index, key, text, type, acl) {
+    renderColumns(data, index, key, text, type, aclObject) {
         const {auth} = this.props;
 
         let extraButton = null;
@@ -392,7 +388,7 @@ class Clients extends React.Component {
         if (type === 'boolean') {
             let element = null;
             if (key === 'ClientMetum#newChannel') {
-                if (acl.indexOf(auth.role) !== -1) {
+                if (aclObject.indexOf(auth.role) !== -1) {
                     extraButton = (<Button
                         type="primary"
                         icon="setting"
@@ -403,7 +399,7 @@ class Clients extends React.Component {
                 }
             }
             if (key === 'ClientMetum#ikentoo') {
-                if (acl.indexOf(auth.role) !== -1) {
+                if (aclObject.indexOf(auth.role) !== -1) {
                     extraButton = (<Button
                         type="primary"
                         icon="setting"
@@ -415,7 +411,7 @@ class Clients extends React.Component {
             }
 
             if (data[index][key] === true) {
-                if (acl.indexOf(auth.role) === -1) {
+                if (aclObject.indexOf(auth.role) === -1) {
                     element = (<Icon type="check"/>);
                 } else {
                     element = (
@@ -431,7 +427,7 @@ class Clients extends React.Component {
                             <Button type="primary" icon="check" className="active"/>
                         </Popconfirm>);
                 }
-            } else if (acl.indexOf(auth.role) === -1) {
+            } else if (aclObject.indexOf(auth.role) === -1) {
                 element = (<Icon type="close"/>);
             } else {
                 element = (<Popconfirm

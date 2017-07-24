@@ -8,6 +8,7 @@ import Clients from '../containers/client/client';
 import Logout from '../containers/logout/logout';
 import configureStore from '../store/configureStore';
 import App from '../app';
+
 export default() => (
     <App>
 

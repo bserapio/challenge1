@@ -9,19 +9,15 @@ const history = createHistory();
 const middleware = routerMiddleware(history);
 
 
-// /write middleware
 export const attachPathNameToAction = store => next => action => {
     action.pathname = store.getState().router.pathname;
     next(action);
 };
 
-const composeEnhancers = composeWithDevTools({
-    // Specify name here, actionsBlacklist, actionsCreators and other options if needed
-});
+const composeEnhancers = composeWithDevTools({});
 
 const enhancer = composeEnhancers(
     applyMiddleware(thunk, middleware, attachPathNameToAction)
-    // other store enhancers if any
 );
 
 const configureStore = () => createStore(
@@ -33,6 +29,4 @@ const store = configureStore();
 export default {
     history,
     store,
-
-
 };

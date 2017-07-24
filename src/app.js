@@ -35,15 +35,15 @@ class App extends Component {
             visibleNotification = null;
         } else {
             const message = apiError.message;
-            visibleNotification = (notification['error']({
+            visibleNotification = (notification.error({
                 message: 'ERROR',
                 description: message,
             }));
         }
         if (auth) {
-            username = (<span className="username">Hello {auth.username}</span>)
+            username = (<span className="username">Hello {auth.username}</span>);
         } else {
-            username = null
+            username = null;
         }
         return (
             <LocaleProvider locale={enUS}>

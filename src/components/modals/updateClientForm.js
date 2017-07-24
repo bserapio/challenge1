@@ -20,11 +20,10 @@ class CreateForm extends React.Component {
             record: {},
             users: [],
         };
-
     }
     componentWillReceiveProps(nextProps) {
-        const { users, record} = nextProps;
-        this.setState({record,users});
+        const {users, record} = nextProps;
+        this.setState({record, users});
     }
 
     componentDidMount() {
@@ -34,35 +33,36 @@ class CreateForm extends React.Component {
 
     handleSelectLanguageChange = value => {
         const { record } = this.state;
+        const {changeUpdateRecord} = this.props;
         record.lang = value;
         this.setState({ record });
-        console.log(this.state.record);
-        this.props.changeUpdateRecord(record);
+        changeUpdateRecord(record);
     };
 
     handleSelectTypeChange = value => {
+        const {changeUpdateRecord} = this.props;
         const { record } = this.state;
         record.type = value;
         this.setState({ record });
-        console.log(this.state.record);
-        this.props.changeUpdateRecord(record);
+        changeUpdateRecord(record);
     };
 
     handleSelectUserChange = value => {
         const { record } = this.state;
+        const {changeUpdateRecord} = this.props;
         record.ClientMetum.user_id = value;
         this.setState({ record });
-        console.log(this.state.record);
-        this.props.changeUpdateRecord(record);
+        changeUpdateRecord(record);
     };
 
 
     handleUpdateExpire = value => {
         const { record } = this.state;
+        const {changeUpdateRecord} = this.props;
         record.ClientMetum.expireDate = value.format('YYYY-MM-DD');
         this.setState({ record });
-        this.props.changeUpdateRecord(record);
-    }
+        changeUpdateRecord(record);
+    };
 
 
     render() {
@@ -71,7 +71,7 @@ class CreateForm extends React.Component {
             onUpdateCancel,
             onUpdateCreate,
             form,
-            confirmLoading,users
+            confirmLoading, users,
         } = this.props;
 
         const {record} = this.state;

@@ -5,6 +5,6 @@ const adminUrl = ['/api/users'];
 
 module.exports = {
     guestUrl,
-    adminUrl
+    adminUrl,
 
 };

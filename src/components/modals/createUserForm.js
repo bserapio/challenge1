@@ -2,6 +2,7 @@ import React from 'react';
 import {Form, Input, Modal, Select, Alert} from 'antd';
 
 const roles = require('../../config/role');
+
 const Option = Select.Option;
 
 const FormItem = Form.Item;
@@ -29,7 +30,7 @@ class CreateForm extends React.Component {
         let errorMessage = null;
         if (createError) {
             console.log(createError);
-            const message = createError.data.errors[0].message
+            const message = createError.data.errors[0].message;
 
             errorMessage = (<Alert
                 message="Error"
