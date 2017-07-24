@@ -196,6 +196,54 @@ export function updateClient(record) {
     };
 }
 
+export function updateActiveClient(record) {
+    return dispatch => {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record},
+        });
+
+
+        return connectService.updateActiveClient(record).then(
+            () => dispatch(getClientAction())
+        );
+    };
+}
+
+export function updateManteinanceClient(record) {
+    return dispatch => {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record},
+        });
+
+
+        return connectService.updateManteinanceClient(record).then(
+            () => dispatch(getClientAction())
+        );
+    };
+
+
+}
+
+export function updateAutoUpdateClient(record) {
+    return dispatch => {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record},
+        });
+
+
+        return connectService.updateAutoUpdateClient(record).then(
+            () => dispatch(getClientAction())
+        );
+    };
+
+
+}
+
+
+
 export function removeClient(record) {
     return dispatch => {
         dispatch({

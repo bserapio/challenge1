@@ -6,6 +6,12 @@ const apiEndPoints = {
     userClientDetail: 'api/user/:id/client/:idMeta',
     clientList: 'api/client',
     clientDetail: 'api/client/:id',
+    clientDetailActivate: 'api/client/:id/activate',
+    clientDetailManteinance: 'api/client/:id/manteinance',
+    clientDetailAuto: 'api/client/:id/autoUpdate',
+    clientDetailInvoice: 'api/client/:id/invoice',
+    clientDetailChannel: 'api/client/:id/channel',
+    clientDetailIkentoo: 'api/client/:id/ikentoo',
     clientElevate: 'api/client/elevate',
     login: 'login',
 };

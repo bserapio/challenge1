@@ -29,11 +29,31 @@ function getClients() {
 }
 
 function updateClient(data) {
-    console.log(data);
     let url = apiEndPoints.clientDetail;
     url = url.replace(':id', data.id);
     return axios.put(url, data);
 }
+
+function updateActiveClient(data) {
+    let url = apiEndPoints.clientDetailActivate;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data);
+}
+
+function updateManteinanceClient(data) {
+    let url = apiEndPoints.clientDetailManteinance;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data);
+}
+
+function updateAutoUpdateClient(data) {
+    let url = apiEndPoints.clientDetailAuto;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data);
+}
+
+
+
 
 function removeClient(data) {
     let url = apiEndPoints.clientDetail;
@@ -90,6 +110,9 @@ const connectService = {
     createClient,
     elevateClient,
     removeClient,
+    updateActiveClient,
+    updateManteinanceClient,
+    updateAutoUpdateClient
 };
 
 export default connectService;

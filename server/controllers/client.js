@@ -6,6 +6,7 @@ const randomstring = require('randomstring');
 const db = require('../db/models');
 const moment = require('moment');
 
+
 exports.addClient = (req, res) => {
     const input = req.body;
     let result = t.validate(input, domain.CreateDbInput);
@@ -92,19 +93,178 @@ exports.removeClient = (req, res) => {
     );
 };
 
-exports.updateClient = (req, res) => {
+
+exports.activateClient = (req, res) => {
     const input = req.body;
+    let element;
     const result = t.validate(input, domain.CreateUpdateDbInput);
     if (result.isValid()) {
         db.ClientDb.findById(req.params.id).then(client => {
             if (client) {
-                input.modifiedAt = new Date();
-                db.ClientDb.update(input, {
+                element = {};
+                element.active = input.active;
+                db.ClientDb.update(element, {
                     where: { id: client.id },
                     returning: true,
                     plain: true,
                 }).then(data => {
-                    db.ClientMeta.update(input.ClientMetum, {
+                    res.json(data);
+                });
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        });
+    } else {
+        res.status(400).json(result.errors);
+    }
+};
+
+exports.manteinanceClient = (req, res) => {
+    const input = req.body;
+    let element;
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        db.ClientDb.findById(req.params.id).then(client => {
+            if (client) {
+                element = {};
+                element.maintenance = input.maintenance;
+                db.ClientDb.update(element, {
+                    where: {id: client.id},
+                    returning: true,
+                    plain: true,
+                }).then(data => {
+                    res.json(data);
+                });
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        });
+    } else {
+        res.status(400).json(result.errors);
+    }
+};
+
+exports.autoUpdateClient = (req, res) => {
+    const input = req.body;
+    let element;
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        db.ClientDb.findById(req.params.id).then(client => {
+            if (client) {
+                element = {};
+                element.autoUpdate = input.autoUpdate;
+                db.ClientDb.update(element, {
+                    where: {id: client.id},
+                    returning: true,
+                    plain: true,
+                }).then(data => {
+                    res.json(data);
+                });
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        });
+    } else {
+        res.status(400).json(result.errors);
+    }
+};
+
+exports.newInvoiceClient = (req, res) => {
+    const input = req.body;
+    let element;
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        db.ClientMeta.find({where: {client_id: req.params.id}}).then(meta => {
+            if (meta) {
+                element = {};
+                element.newInvoice = input.ClientMetum.newInvoice;
+                db.ClientMeta.update(element, {
+                    where: {id: client.id},
+                    returning: true,
+                    plain: true,
+                }).then(data => {
+                    res.json(data);
+                });
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        });
+    } else {
+        res.status(400).json(result.errors);
+    }
+};
+
+exports.channelClient = (req, res) => {
+    const input = req.body;
+    let element;
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        db.ClientMeta.find({where: {client_id: req.params.id}}).then(meta => {
+            if (meta) {
+                element = {};
+                element.newChannel = input.ClientMetum.newChannel;
+                db.ClientMeta.update(element, {
+                    where: {id: client.id},
+                    returning: true,
+                    plain: true,
+                }).then(data => {
+                    res.json(data);
+                });
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        });
+    } else {
+        res.status(400).json(result.errors);
+    }
+};
+
+
+exports.ikentooClient = (req, res) => {
+    const input = req.body;
+    let element;
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        db.ClientMeta.find({where: {client_id: req.params.id}}).then(meta => {
+            if (meta) {
+                element = {};
+                element.ikentoo = input.ClientMetum.ikentoo;
+                db.ClientMeta.update(element, {
+                    where: {id: client.id},
+                    returning: true,
+                    plain: true,
+                }).then(data => {
+                    res.json(data);
+                });
+            } else {
+                res.status(404).json({message: 'client does not exists'});
+            }
+        });
+    } else {
+        res.status(400).json(result.errors);
+    }
+};
+
+exports.updateClient = (req, res) => {
+    const input = req.body;
+    let element;
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        db.ClientDb.findById(req.params.id).then(client => {
+            if (client) {
+                element = {};
+                element.name = input.name;
+                element.lang = input.lang;
+                element.expireDate = input.expireDate;
+                element.modifiedAt = new Date();
+                db.ClientDb.update(element, {
+                    where: {id: client.id},
+                    returning: true,
+                    plain: true,
+                }).then(() => {
+                    element = {};
+                    element.user_id = input.ClientMetum.user_id;
+                    db.ClientMeta.update(element, {
                         where: { id: input.ClientMetum.id },
                     }).then(
                         meta => {
@@ -125,6 +285,7 @@ exports.updateClient = (req, res) => {
     }
 };
 
+
 exports.elevateClient = (req, res) => {
     const input = req.body;
 
@@ -139,3 +300,4 @@ exports.elevateClient = (req, res) => {
         // TODO: Here I need call API for elevate Token
     });
 };
+

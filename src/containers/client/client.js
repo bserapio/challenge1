@@ -187,17 +187,31 @@ class Clients extends React.Component {
         this.setState({ editedRecord });
     }
 
-    editDone(newRecord, record, type) {
+    editDone(newRecord, record, key, type) {
         if (type === 'save') {
             if (newRecord !== record) {
-                this.props.actions.updateClient(newRecord).then(
-                    () => {
-                        console.log('ok');
-                    },
-                    err => {
-                        console.log(err);
+                console.log(key);
+                switch (key) {
+
+
+                    case 'active': {
+                        this.props.actions.updateActiveClient(newRecord).then(data => data, error => error);
+
+                        break;
                     }
-                );
+                    case 'maintenance': {
+                        this.props.actions.updateManteinanceClient(newRecord).then(data => data, error => error);
+                        break;
+                    }
+                    case 'autoUpdate': {
+
+                        this.props.actions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
+                        break;
+                    }
+                    default: {
+                        this.props.actions.updateClient(newRecord).then(data => data, error => error);
+                    }
+                }
             }
         } else {
             this.setState({ editedRecord: {} });
@@ -216,7 +230,7 @@ class Clients extends React.Component {
         }
 
 
-        this.editDone(newRecord, record, 'save');
+        this.editDone(newRecord, record, key, 'save');
     };
     handleUpdateCancel = () => {
         const { formLoading, visible } = this.state;
