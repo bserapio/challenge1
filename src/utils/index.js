@@ -19,7 +19,6 @@ const checkAuth = () => {
     let auth = localStorage.getItem('user');
     if (auth) {
         auth = JSON.parse(auth);
-        console.log(auth)
         return auth;
     }
     return null;

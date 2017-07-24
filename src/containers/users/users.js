@@ -25,9 +25,7 @@ const mapDispatchToProps = dispatch => ({
 
 
 class User extends React.Component {
-    static defaultProps = {
-        users: [],
-    };
+
     constructor(props, context) {
         super(props, context);
         this.columns = [
@@ -177,10 +175,5 @@ class User extends React.Component {
         );
     }
 }
-User.propTypes = {
-    auth: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired,
-    users: PropTypes.array,
-    checkAuth: PropTypes.func.isRequired,
-};
+
 export default connect(mapStateToProps, mapDispatchToProps)(User);

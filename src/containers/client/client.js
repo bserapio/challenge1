@@ -57,6 +57,7 @@ const mapStateToProps = state => {
                     ),
                 };
             }
+            return null;
         });
         clients = clients.filter(removeUndefined);
     } else {

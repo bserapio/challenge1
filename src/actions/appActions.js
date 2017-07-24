@@ -85,7 +85,6 @@ export function loginUser(credentials) {
         return connectService.login(credentials).then(
             res => {
                 const auth = res.data;
-                console.log(JSON.stringify(res.data));
                 localStorage.setItem('user', JSON.stringify(res.data));
                 configureStore.history.push('/clients');
                 return dispatch(
