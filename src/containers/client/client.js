@@ -119,6 +119,12 @@ class Clients extends React.Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+
+
+    }
+
+
     // Search Filter
     onSearch = () => {
         const { actions } = this.props;
@@ -390,6 +396,7 @@ class Clients extends React.Component {
                         type="primary"
                         icon="setting"
                         className="black"
+                        key="newChannel"
                         onClick={() => this.openChannelSettings(data[index].identifier, 'channel')}
                     />);
                 }
@@ -400,6 +407,7 @@ class Clients extends React.Component {
                         type="primary"
                         icon="setting"
                         className="black"
+                        key="ikentoo"
                         onClick={() => this.openChannelSettings(data[index].identifier, 'ikentoo')}
                     />);
                 }
@@ -417,6 +425,7 @@ class Clients extends React.Component {
                             onConfirm={() => this.updateRecord(data[index], key)}
                             okText="Yes"
                             cancelText="No"
+                            key="deletePopup"
                         >
                             <Button type="primary" icon="check" className="active"/>
                         </Popconfirm>);
@@ -430,6 +439,7 @@ class Clients extends React.Component {
                     onConfirm={() => this.updateRecord(data[index], key)}
                     okText="Yes"
                     cancelText="No"
+                    key="popConfirm"
                 ><Button type="primary" icon="close" className="inactive" />
                 </Popconfirm>);
             }
@@ -439,7 +449,9 @@ class Clients extends React.Component {
         return text;
     }
     render() {
-        const { clients } = this.props;
+        const {clients, auth} = this.props;
+
+
         const { searchText, filterDropdownVisible,
             paginationText,
             filtered,
@@ -462,7 +474,10 @@ class Clients extends React.Component {
                     return (
                         <Button.Group size="small">
                             <Button type="primary" onClick={() => this.showUpdateModal(record)}>Edit</Button>
+                            {acl.managerGroups.indexOf(auth.role) !== -1 &&
                             <Button type="primary" onClick={() => this.showElevateModal(record)}>Connect</Button>
+                            }
+                            {acl.adminGroups.indexOf(auth.role) !== -1 &&
                             <Popconfirm
                                 placement="top"
                                 title="Do you want to delete the client?"
@@ -472,7 +487,7 @@ class Clients extends React.Component {
                             >
                                 <Button type="danger">Delete</Button>
                             </Popconfirm>
-
+                            }
                         </Button.Group>
                     );
                 },
