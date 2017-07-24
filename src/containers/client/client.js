@@ -27,31 +27,47 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
+
+const removeUndefined = value => {
+
+    if (value) {
+        return true;
+    }
+    return false;
+};
+
+
 const mapStateToProps = state => {
     const reg = new RegExp(state.app.searchText, 'gi');
+    let clients;
+    if (state.app.searchText !== '' && state.app.searchText) {
+        clients = state.app.clients.rows.map(record => {
+            const match = record.identifier.match(reg);
+            if (match) {
+                return {
+                    ...record,
+                    identifier: (
+                        <span>
+                            {
+                                record.identifier.split(reg).map((text, i) => (
+                                    i > 0 ? [<span className="highlight">{match[0]}</span>, text] : text
+                                ))
+                            }
+                        </span>
+                    ),
+                };
+            }
+        });
+        clients = clients.filter(removeUndefined);
+    } else {
+        clients = state.app.clients.rows;
+    }
 
 
     return {
         auth: state.app.auth,
         users: state.app.users,
-        clients: (state.app.searchText !== '' && state.app.searchText) ? state.app.clients.rows.map(record => {
-            const match = record.identifier.match(reg);
-            if (!match) {
-                return {};
-            }
-            return {
-                ...record,
-                identifier: (
-                    <span>
-                        {
-                  record.identifier.split(reg).map((text, i) => (
-                  i > 0 ? [<span className="highlight">{match[0]}</span>, text] : text
-                  ))
-              }
-                    </span>
-                ),
-            };
-        }) : state.app.clients.rows,
+        clients,
     };
 };
 
@@ -418,7 +434,6 @@ class Clients extends React.Component {
             formLoading,
             elevateUrl,
         } = this.state;
-
 
         const columns = [
             {

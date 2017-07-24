@@ -158,6 +158,7 @@ export function getClientAction() {
                                     }
                                 }
                             });
+                            item.key = item.id;
                             results[index] = item;
                         }
                     }
