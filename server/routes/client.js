@@ -1,7 +1,7 @@
 'use strict';
 
 const clientController = require('../controllers/client');
-
+const acl = require('../acl/acl_middleware');
 
 module.exports = function (passport, express) {
     const app = express();
@@ -13,7 +13,7 @@ module.exports = function (passport, express) {
         .post(clientController.addClient)
         .get(clientController.listClient);
     app.route('/elevate')
-        .post(clientController.elevateClient);
+        .post(acl.isManager, clientController.elevateClient);
 
     return app;
 };
