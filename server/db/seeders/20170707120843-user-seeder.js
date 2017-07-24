@@ -7,6 +7,7 @@ module.exports = {
         return queryInterface.bulkInsert(
             { tableName: 'users', schema: 'public' },
             [{
+                id: 1,
                 name: 'super',
                 password: bcrypt.hashSync('admin123'),
                 role: 'super',
@@ -15,6 +16,7 @@ module.exports = {
                 modified_at: new Date(),
             },
             {
+                id: 2,
                 name: 'admin',
                 password: bcrypt.hashSync('admin123'),
                 role: 'admin',
@@ -23,6 +25,7 @@ module.exports = {
                 modified_at: new Date(),
             },
             {
+                id: 3,
                 name: 'user',
                 password: bcrypt.hashSync('admin123'),
                 role: 'user',
@@ -31,6 +34,7 @@ module.exports = {
                 modified_at: new Date(),
             },
             {
+                id: 4,
                 name: 'finance',
                 password: bcrypt.hashSync('admin123'),
                 role: 'finance',
@@ -39,6 +43,7 @@ module.exports = {
                 modified_at: new Date(),
             },
             {
+                id: 5,
                 name: 'manager',
                 password: bcrypt.hashSync('admin123'),
                 role: 'manager',
@@ -47,6 +52,7 @@ module.exports = {
                 modified_at: new Date(),
             },
             {
+                id: 6,
                 name: 'sales',
                 password: bcrypt.hashSync('admin123'),
                 role: 'sales',
@@ -55,10 +61,11 @@ module.exports = {
                 modified_at: new Date(),
             },
             {
+                id: 7,
                 name: 'account-manager',
                 password: bcrypt.hashSync('admin123'),
                 role: 'account-manager',
-                username: 'amanager',
+                username: 'account_manager',
                 created_at: new Date(),
                 modified_at: new Date(),
             },
