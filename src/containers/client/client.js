@@ -14,6 +14,7 @@ import './client.css';
 
 const sha1 = require('sha1');
 const utils = require('../../utils/');
+const acl = require('../../config/acl_groups');
 
 
 const generateKey = opcode => {
@@ -29,7 +30,6 @@ const mapDispatchToProps = dispatch => ({
 
 
 const removeUndefined = value => {
-
     if (value) {
         return true;
     }
@@ -372,7 +372,10 @@ class Clients extends React.Component {
         }
         return window.open(url);
     };
-    renderColumns(data, index, key, text, type) {
+
+    renderColumns(data, index, key, text, type, acl) {
+        const {auth} = this.props;
+
         let extraButton = null;
         if (!data) {
             return text;
@@ -382,34 +385,44 @@ class Clients extends React.Component {
         if (type === 'boolean') {
             let element = null;
             if (key === 'ClientMetum#newChannel') {
-                extraButton = (<Button
-                    type="primary"
-                    icon="setting"
-                    className="black"
-                    onClick={() => this.openChannelSettings(data[index].identifier, 'channel')}
-                />);
+                if (acl.indexOf(auth.role) !== -1) {
+                    extraButton = (<Button
+                        type="primary"
+                        icon="setting"
+                        className="black"
+                        onClick={() => this.openChannelSettings(data[index].identifier, 'channel')}
+                    />);
+                }
             }
             if (key === 'ClientMetum#ikentoo') {
-                extraButton = (<Button
-                    type="primary"
-                    icon="setting"
-                    className="black"
-                    onClick={() => this.openChannelSettings(data[index].identifier, 'ikentoo')}
-                />);
+                if (acl.indexOf(auth.role) !== -1) {
+                    extraButton = (<Button
+                        type="primary"
+                        icon="setting"
+                        className="black"
+                        onClick={() => this.openChannelSettings(data[index].identifier, 'ikentoo')}
+                    />);
+                }
             }
 
             if (data[index][key] === true) {
-                element = (
+                if (acl.indexOf(auth.role) === -1) {
+                    element = (<Icon type="check"/>);
+                } else {
+                    element = (
 
-                    <Popconfirm
-                        placement="top"
-                        title="Do you want to deactivate it?"
-                        onConfirm={() => this.updateRecord(data[index], key)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button type="primary" icon="check" className="active" />
-                    </Popconfirm>);
+                        <Popconfirm
+                            placement="top"
+                            title="Do you want to deactivate it?"
+                            onConfirm={() => this.updateRecord(data[index], key)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button type="primary" icon="check" className="active"/>
+                        </Popconfirm>);
+                }
+            } else if (acl.indexOf(auth.role) === -1) {
+                element = (<Icon type="close"/>);
             } else {
                 element = (<Popconfirm
                     placement="top"
@@ -420,6 +433,7 @@ class Clients extends React.Component {
                 ><Button type="primary" icon="close" className="inactive" />
                 </Popconfirm>);
             }
+
             return [element, extraButton];
         }
         return text;
@@ -491,7 +505,7 @@ class Clients extends React.Component {
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => utils.stringOrder(a, b),
-                render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text', acl.userGroups),
             },
             {
                 title: 'Lang',
@@ -499,48 +513,48 @@ class Clients extends React.Component {
                 key: 'lang',
                 filters: utils.langFilter,
                 onFilter: (value, record) => record.lang.indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text', acl.userGroups),
 
             },
             {
                 title: 'Active',
                 dataIndex: 'active',
                 key: 'active',
-                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean', acl.userGroups),
 
             },
             {
                 title: 'Manteinance',
                 dataIndex: 'maintenance',
                 key: 'maintenance',
-                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean', acl.userGroups),
             },
             {
                 title: 'AutoUpdate',
                 dataIndex: 'autoUpdate',
                 key: 'autoUpdate',
-                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean', acl.managerGroups),
 
             },
             {
                 title: 'new_invoice',
                 dataIndex: 'ClientMetum#newInvoice',
                 key: 'ClientMetum#newInvoice',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newInvoice', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newInvoice', text, 'boolean', acl.managerGroups),
 
             },
             {
                 title: 'channel_manager',
                 dataIndex: 'ClientMetum#newChannel',
                 key: 'ClientMetum#newChannel',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newChannel', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newChannel', text, 'boolean', acl.managerGroups),
 
             },
             {
                 title: 'ikentoo',
                 dataIndex: 'ClientMetum#ikentoo',
                 key: 'ClientMetum#ikentoo',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#ikentoo', text, 'boolean'),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#ikentoo', text, 'boolean', acl.managerGroups),
 
             },
             {

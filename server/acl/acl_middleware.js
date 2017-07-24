@@ -1,7 +1,6 @@
 'use strict';
 
-const urls = require('./acl_routes');
-const groups = require('./acl_groups');
+const groups = require('../../src/config/acl_groups');
 
 exports.isAuthenticated = (req, res, next) => {
     if (req.path === '/') {
