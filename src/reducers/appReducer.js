@@ -5,13 +5,6 @@ export default function appReducer(state = initialState, action) {
     switch (action.type) {
         case types.GET_CLIENTS_SUCCESS: {
             const { clients } = action.payload;
-
-            console.log({
-                ...state,
-                clients,
-                apiError: null,
-            });
-
             return {
                 ...state,
                 clients,

@@ -179,7 +179,7 @@ exports.newInvoiceClient = (req, res) => {
                 element = {};
                 element.newInvoice = input.ClientMetum.newInvoice;
                 db.ClientMeta.update(element, {
-                    where: {id: client.id},
+                    where: {id: meta.id},
                     returning: true,
                     plain: true,
                 }).then(data => {
@@ -204,7 +204,7 @@ exports.channelClient = (req, res) => {
                 element = {};
                 element.newChannel = input.ClientMetum.newChannel;
                 db.ClientMeta.update(element, {
-                    where: {id: client.id},
+                    where: {id: meta.id},
                     returning: true,
                     plain: true,
                 }).then(data => {
@@ -230,7 +230,7 @@ exports.ikentooClient = (req, res) => {
                 element = {};
                 element.ikentoo = input.ClientMetum.ikentoo;
                 db.ClientMeta.update(element, {
-                    where: {id: client.id},
+                    where: {id: meta.id},
                     returning: true,
                     plain: true,
                 }).then(data => {

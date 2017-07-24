@@ -11,13 +11,13 @@ module.exports = function (passport, express) {
     app.route('/:id/manteinance')
         .put(clientController.manteinanceClient);
     app.route('/:id/autoUpdate')
-        .put(clientController.autoUpdateClient);
+        .put(acl.isManager, clientController.autoUpdateClient);
     app.route('/:id/invoice')
-        .put(clientController.newInvoiceClient);
+        .put(acl.isManager, clientController.newInvoiceClient);
     app.route('/:id/channel')
-        .put(clientController.channelClient);
+        .put(acl.isManager, clientController.channelClient);
     app.route('/:id/ikentoo')
-        .put(clientController.ikentooClient);
+        .put(acl.isManager, clientController.ikentooClient);
     app.route('/:id')
         .get(clientController.detailClient)
         .put(clientController.updateClient)

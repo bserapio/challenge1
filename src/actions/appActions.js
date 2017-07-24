@@ -238,9 +238,57 @@ export function updateAutoUpdateClient(record) {
             () => dispatch(getClientAction())
         );
     };
+}
+
+
+export function updateInvoiceClient(record) {
+    return dispatch => {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record},
+        });
+
+
+        return connectService.updateInvoiceClient(record).then(
+            () => dispatch(getClientAction())
+        );
+    };
 
 
 }
+
+export function updateChannelClient(record) {
+    return dispatch => {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record},
+        });
+
+
+        return connectService.updateChannelClient(record).then(
+            () => dispatch(getClientAction())
+        );
+    };
+
+
+}
+
+export function updateIkentooClient(record) {
+    return dispatch => {
+        dispatch({
+            type: types.GET_CLIENTS_UPDATE_REQUEST,
+            payload: {record},
+        });
+
+
+        return connectService.updateIkentooClient(record).then(
+            () => dispatch(getClientAction())
+        );
+    };
+
+
+}
+
 
 
 

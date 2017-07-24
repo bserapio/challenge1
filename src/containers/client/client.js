@@ -188,28 +188,43 @@ class Clients extends React.Component {
     }
 
     editDone(newRecord, record, key, type) {
+        const {actions} = this.props;
         if (type === 'save') {
             if (newRecord !== record) {
-                console.log(key);
                 switch (key) {
 
 
                     case 'active': {
-                        this.props.actions.updateActiveClient(newRecord).then(data => data, error => error);
+                        actions.updateActiveClient(newRecord).then(data => data, error => error);
 
                         break;
                     }
                     case 'maintenance': {
-                        this.props.actions.updateManteinanceClient(newRecord).then(data => data, error => error);
+                        actions.updateManteinanceClient(newRecord).then(data => data, error => error);
                         break;
                     }
                     case 'autoUpdate': {
-
-                        this.props.actions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
+                        actions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
                         break;
                     }
+
+                    case 'ClientMetum#newInvoice': {
+                        actions.updateInvoiceClient(newRecord).then(data => data, error => error);
+                        break;
+                    }
+                    case 'ClientMetum#newChannel': {
+                        actions.updateChannelClient(newRecord).then(data => data, error => error);
+                        break;
+                    }
+
+
+                    case 'ClientMetum#ikentoo': {
+                        actions.updateIkentooClient(newRecord).then(data => data, error => error);
+                        break;
+                    }
+
                     default: {
-                        this.props.actions.updateClient(newRecord).then(data => data, error => error);
+                        actions.updateClient(newRecord).then(data => data, error => error);
                     }
                 }
             }

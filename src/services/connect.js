@@ -52,7 +52,24 @@ function updateAutoUpdateClient(data) {
     return axios.put(url, data);
 }
 
+function updateInvoiceClient(data) {
+    let url = apiEndPoints.clientDetailInvoice;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data);
+}
 
+
+function updateChannelClient(data) {
+    let url = apiEndPoints.clientDetailChannel;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data);
+}
+
+function updateIkentooClient(data) {
+    let url = apiEndPoints.clientDetailIkentoo;
+    url = url.replace(':id', data.id);
+    return axios.put(url, data);
+}
 
 
 function removeClient(data) {
@@ -112,7 +129,10 @@ const connectService = {
     removeClient,
     updateActiveClient,
     updateManteinanceClient,
-    updateAutoUpdateClient
+    updateAutoUpdateClient,
+    updateInvoiceClient,
+    updateChannelClient,
+    updateIkentooClient
 };
 
 export default connectService;
