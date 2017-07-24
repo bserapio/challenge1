@@ -14,7 +14,7 @@ module.exports = {
                 lang: 'en',
                 db_name: 'client_hotel1',
                 db_login: 'b7_hotel1',
-                db_pass: 'test',
+                db_pass: 'test123',
                 expire_date: moment().add(30, 'days').format(),
             },
                 {
@@ -24,7 +24,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_hotel2',
                     db_login: 'b7_hotel2',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
                 {
@@ -34,7 +34,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_hotel3',
                     db_login: 'b7_hotel3',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
                 {
@@ -44,7 +44,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_hotel4',
                     db_login: 'b7_hotel4',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
                 {
@@ -54,7 +54,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_hotel5',
                     db_login: 'b7_hotel1',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
                 {
@@ -64,7 +64,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_hotel6',
                     db_login: 'b7_hotel6',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
                 {
@@ -74,7 +74,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_hotel7',
                     db_login: 'b7_hotel7',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -85,7 +85,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer8',
                     db_login: 'b7_summer8',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -96,7 +96,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer9',
                     db_login: 'b7_summer9',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -107,7 +107,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer10',
                     db_login: 'b7_summer10',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -118,7 +118,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer11',
                     db_login: 'b7_summer11',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -129,7 +129,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer12',
                     db_login: 'b7_summer12',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -140,7 +140,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer13',
                     db_login: 'b7_summer13',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -151,7 +151,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer14',
                     db_login: 'b7_summer14',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -162,7 +162,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer15',
                     db_login: 'b7_summer15',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -173,7 +173,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer16',
                     db_login: 'b7_summer16',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -184,7 +184,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer17',
                     db_login: 'b7_summer17',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -195,7 +195,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer18',
                     db_login: 'b7_summer18',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
@@ -206,7 +206,7 @@ module.exports = {
                     lang: 'en',
                     db_name: 'client_summer19',
                     db_login: 'b7_summer19',
-                    db_pass: 'test',
+                    db_pass: 'test123',
                     expire_date: moment().add(30, 'days').format(),
                 },
 
