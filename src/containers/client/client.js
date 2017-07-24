@@ -146,7 +146,7 @@ class Clients extends React.Component {
         });
     };
     handleSelectLanguageChange = value => {
-        const {clientForm} = this.state;
+        const { clientForm } = this.state;
         clientForm.lang = value;
         this.setState({ clientForm, confirmLoading: false });
     };
@@ -173,11 +173,10 @@ class Clients extends React.Component {
 
     // Update User
     showUpdateModal = record => {
-        console.log(record);
         let { visible, editedRecord } = this.state;
         visible.update = true;
         editedRecord = { ...record };
-        this.setState({ visible,editedRecord });
+        this.setState({ visible, editedRecord });
     }
     saveFormRefUpdate = form => {
         this.formUpdate = form;
@@ -191,7 +190,7 @@ class Clients extends React.Component {
     editDone(newRecord, record, type) {
         if (type === 'save') {
             if (newRecord !== record) {
-                this.props.actions.getClientAction(newRecord).then(
+                this.props.actions.updateClient(newRecord).then(
                     () => {
                         console.log('ok');
                     },
@@ -215,6 +214,7 @@ class Clients extends React.Component {
         } else {
             newRecord[newKey[0]][newKey[1]][newKey[2]] = record[key] !== true;
         }
+
 
         this.editDone(newRecord, record, 'save');
     };
@@ -257,6 +257,7 @@ class Clients extends React.Component {
     handleElevateCreate = () => {
         const { elevatorForm, formLoading } = this.state;
         formLoading.create = true;
+
         this.setState({ formLoading });
 
         this.formElevator.validateFields((err, values) => {
@@ -276,7 +277,6 @@ class Clients extends React.Component {
         const { elevatorForm, formLoading } = this.state;
         actions.checkElevateClient(elevatorForm).then(
             res => {
-
                 const elevateUrl = {
                     key: res.key,
                     identifier: elevatorForm.identifier,
@@ -291,9 +291,11 @@ class Clients extends React.Component {
     }
     showElevateModal = record => {
         const { elevatorForm, visible } = this.state;
+        // let { elevateUrl } = this.state;
         elevatorForm.identifier = record.identifier;
         visible.elevate = true;
-        this.setState({ visible, elevatorForm });
+        const elevateUrl = null;
+        this.setState({ visible, elevatorForm, elevateUrl });
     };
     handleElevateCancel = () => {
         const { visible } = this.state;
