@@ -231,6 +231,15 @@ export function checkElevateClient(record) {
     };
 }
 
+export function searchFilter(searchText) {
+    return dispatch => {
+        dispatch({
+            type: SEARCH_FILTER,
+            payload: {searchText},
+        });
+    };
+}
+
 
 const initialState = {
     clients: [],

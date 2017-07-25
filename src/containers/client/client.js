@@ -9,7 +9,8 @@ import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
-import * as appActions from '../../ducks/modules/user';
+import * as userActions from '../../ducks/modules/user';
+import * as clientActions from '../../ducks/modules/client';
 import './client.css';
 
 
@@ -19,7 +20,8 @@ const acl = require('../../config/acl_groups');
 
 const mapDispatchToProps = dispatch => ({
 
-    actions: bindActionCreators(appActions, dispatch),
+    userActions: bindActionCreators(userActions, dispatch),
+    clientActions: bindActionCreators(clientActions, dispatch),
 
 });
 
@@ -33,10 +35,10 @@ const removeUndefined = value => {
 
 
 const mapStateToProps = state => {
-    const reg = new RegExp(state.app.searchText, 'gi');
+    const reg = new RegExp(state.client.searchText, 'gi');
     let clients;
-    if (state.app.searchText !== '' && state.app.searchText) {
-        clients = state.app.clients.rows.map(record => {
+    if (state.client.searchText !== '' && state.client.searchText) {
+        clients = state.client.clients.rows.map(record => {
             const match = record.identifier.match(reg);
             if (match) {
                 return {
@@ -56,13 +58,13 @@ const mapStateToProps = state => {
         });
         clients = clients.filter(removeUndefined);
     } else {
-        clients = state.app.clients.rows;
+        clients = state.client.clients.rows;
     }
 
 
     return {
-        auth: state.app.auth,
-        users: state.app.users,
+        auth: state.auth.auth,
+        users: state.user.users,
         clients,
     };
 };
@@ -108,10 +110,11 @@ class Clients extends React.Component {
     }
     componentDidMount() {
         const auth = utils.checkAuth();
+        const {userActions, clientActions} = this.props;
 
         if (auth) {
-            this.props.actions.getUsers(auth.role);
-            this.props.actions.getClientAction();
+            userActions.getUsers(auth.role);
+            clientActions.getClientAction();
         }
     }
 
@@ -123,8 +126,8 @@ class Clients extends React.Component {
 
     // Search Filter
     onSearch = () => {
-        const { actions } = this.props;
-        actions.searchFilter(this.state.searchText);
+        const {clientActions} = this.props;
+        clientActions.searchFilter(this.state.searchText);
     };
     onInputChange = e => {
         if (e) {

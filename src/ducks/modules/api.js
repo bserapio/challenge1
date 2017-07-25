@@ -10,13 +10,7 @@ export const ERROR_405 = `${{DEFAULT_PATH}}/ERROR_405`;
 
 
 export function okResponse(response) {
-    return dispatch => {
-        dispatch({
-            type: OK_RESPONSE,
-            payload: {},
-        });
-        return response;
-    };
+    return response;
 }
 
 export function error401() {

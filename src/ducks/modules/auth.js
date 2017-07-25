@@ -41,21 +41,27 @@ export function loginUser(credentials) {
             type: LOGIN_REQUEST,
             payload: {},
         });
+        console.log(credentials);
         return connectService.login(credentials).then(
-            res => {
+            (res) => {
                 const auth = res.data;
+                console.log("Entro aqui");
                 localStorage.setItem('user', JSON.stringify(res.data));
                 configureStore.history.push('/clients');
-                return dispatch(
-                    {
+
+                dispatch({
                         type: LOG_IN_SUCCESS,
-                        payload: {auth},
+                    payload: {auth},
                     });
             },
-            loginError => dispatch({
-                type: LOGIN_FAIL,
-                payload: {loginError},
-            })
+            (loginError) => {
+                console.log("Entro en error");
+                console.log(loginError);
+                dispatch({
+                    type: LOGIN_FAIL,
+                    payload: {loginError},
+                });
+            }
         );
     };
 }

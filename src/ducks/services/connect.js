@@ -94,7 +94,6 @@ function elevateClient(data) {
 }
 
 axios.interceptors.response.use(response => {
-        store.dispatch(apiActions.okResponse());
     return response;
 }
     , err => {
