@@ -9,7 +9,7 @@ import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
-import * as appActions from '../../actions/appActions';
+import * as appActions from '../../ducks/modules/user';
 import './client.css';
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as appActions from '../../actions/appActions';
+import * as appActions from '../../ducks/modules/user';
 
 
 const mapDispatchToProps = dispatch => ({

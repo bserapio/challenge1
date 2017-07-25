@@ -1,10 +1,14 @@
 import apiEndPoints from './shared/endpoints';
-import * as appActions from '../actions/appActions';
-import configureStore from '../store/configureStore';
+
+import * as apiActions from '../modules/api';
+
+import configureStore from '../configureStore';
 
 const axios = require('axios');
 
-const store = configureStore.store;
+const store = configureStore;
+
+
 function login(data) {
     const url = apiEndPoints.login;
     return axios.post(url, {
@@ -90,7 +94,7 @@ function elevateClient(data) {
 }
 
 axios.interceptors.response.use(response => {
-    store.dispatch(appActions.okResponse());
+        store.dispatch(apiActions.okResponse());
     return response;
 }
     , err => {
@@ -98,16 +102,16 @@ axios.interceptors.response.use(response => {
 
         case 401: {
             localStorage.removeItem('user');
-            store.dispatch(appActions.error401());
+            store.dispatch(apiActions.error401());
             throw err;
         }
         case 403: {
-            store.dispatch(appActions.error403());
+            store.dispatch(apiActions.error403());
             throw err;
         }
         case 405: {
             console.log('error 405');
-            store.dispatch(appActions.error405());
+            store.dispatch(apiActions.error405());
             throw err;
         }
 

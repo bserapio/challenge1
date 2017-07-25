@@ -6,8 +6,8 @@ import Home from '../containers/home/home';
 import Users from '../containers/users/users';
 import Clients from '../containers/client/client';
 import Logout from '../containers/logout/logout';
-import configureStore from '../store/configureStore';
-import App from '../app';
+import configureStore from '../ducks/configureStore';
+import App from '../layouts/app';
 
 export default() => (
     <App>

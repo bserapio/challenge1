@@ -9,6 +9,7 @@ const moment = require('moment');
 
 exports.addClient = (req, res) => {
     const input = req.body;
+    console.log(req.params);
     let result = t.validate(input, domain.CreateDbInput);
     if (!result.isValid()) {
         res.status(400).json(result.errors);

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import UserCreateForm from '../../components/modals/createUserForm';
 
-import * as appActions from '../../actions/appActions';
+import * as appActions from '../../ducks/modules/user';
 import './user.css';
 
 const utils = require('../../utils/');

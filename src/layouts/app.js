@@ -6,20 +6,20 @@ import {Layout, Menu, LocaleProvider, notification} from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import * as appActions from './actions/appActions';
-import history from './store/configureStore';
+
+import history from '../ducks/configureStore';
 import './app.css';
 
 const {Header, Content} = Layout;
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(appActions, dispatch),
+
 });
 
 const mapStateToProps = state => ({
-    auth: state.app.auth,
-    users: state.app.users,
-    apiError: state.app.apiError,
+    auth: state.auth.auth,
+    users: state.user.users,
+    apiError: state.api.apiError,
 });
 
 

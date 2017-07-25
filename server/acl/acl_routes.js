@@ -1,7 +1,7 @@
 'use strict';
 
 const guestUrl = ['/login', '/'];
-const adminUrl = ['/api/users'];
+const adminUrl = ['/services/users'];
 
 module.exports = {
     guestUrl,

@@ -1,7 +1,7 @@
 // server/app.js
 
 'use strict';
-
+const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
@@ -13,6 +13,8 @@ const fs = require('fs');
 const acl = require('./acl/acl_middleware');
 
 const app = express();
+app.use(cors());
+app.options('*', cors());
 // create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
 
@@ -35,15 +37,10 @@ const index = require('./routes/index')(passport, express);
 const user = require('./routes/user')(passport, express);
 const client = require('./routes/client')(passport, express);
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
 
-app.all('/api/*', acl.isAuthenticated);
-app.use('/api/client', client);
-app.use('/api/user', user);
+app.all('/services/*', acl.isAuthenticated);
+app.use('/services/client', client);
+app.use('/services/user', user);
 app.use('/', index);
 
 

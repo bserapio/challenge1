@@ -2,7 +2,7 @@ import { Form, Icon, Input, Button, Checkbox, Alert } from 'antd';
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as appActions from '../../actions/appActions';
+import * as appActions from '../../ducks/modules/user';
 import './home.css';
 
 const FormItem = Form.Item;
@@ -11,9 +11,9 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(appActions, dispatch),
 });
 const mapStateToProps = state => ({
-    auth: state.app.auth,
-    users: state.app.users,
-    loginError: state.app.loginError,
+    auth: state.auth.auth,
+    users: state.user.users,
+    loginError: state.auth.loginError,
 });
 
 class NormalLoginForm extends React.Component {
