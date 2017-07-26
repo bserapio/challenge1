@@ -3,11 +3,8 @@ import enUS from 'antd/lib/locale-provider/en_US';
 import Link from 'react-router-redux-dom-link';
 import React, { Component } from 'react';
 import {Layout, Menu, LocaleProvider, notification} from 'antd';
-import {bindActionCreators} from 'redux';
+
 import {connect} from 'react-redux';
-
-
-import history from '../ducks/configureStore';
 import './app.css';
 
 const {Header, Content} = Layout;
@@ -20,14 +17,15 @@ const mapStateToProps = state => ({
     auth: state.auth.auth,
     users: state.user.users,
     apiError: state.api.apiError,
+    route: state.router,
 });
 
 
 class App extends Component {
 
     render() {
-        const {apiError, auth, children} = this.props;
-        const CurrentPath = history.history.location.pathname;
+        const {apiError, auth, children, route} = this.props;
+        const CurrentPath = route.location;
         const defaultKey = (CurrentPath === '/users') ? ['2'] : ['1']; // Is not the best way but is working
         let username = null;
         let visibleNotification = null;
