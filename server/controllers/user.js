@@ -2,22 +2,21 @@
 
 const t = require('tcomb-validation');
 const domain = require('../validator');
-const db = require('../db/models');
-
+const userManager = require('../managers/user');
+const clientMetaManager = require('../managers/client_meta');
 
 exports.addUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateInput);
     if (result.isValid()) {
-        input.createdAt = new Date();
-        input.modifiedAt = new Date();
-        db.User.create(input).then(
-            user => {
-                res.json(user);
-            },
-            err => {
-                res.status(403).json(err);
-            });
+        userManager.createUser(input)
+            .then(
+                response => res.json(response),
+                error => res.status(400).json(error)
+            )
+            .catch(
+                error => res.status(500).json(error)
+            );
     } else {
         res.status(400).json(result.errors);
     }
@@ -25,121 +24,57 @@ exports.addUser = (req, res) => {
 exports.listUser = (req, res) => {
     const limit = req.param('limit', null);
     const page = req.param('page', 1);
-    let offset = limit * (page - 1);
-    offset = (offset >= 0) ? offset : 0;
-    db.User.findAndCountAll({
-        include: [{
-            model: db.ClientMeta,
-            attributes: {},
-        }],
-            order: [['id', 'ASC']],
-        limit,
-        offset,
-        }
-    ).then(result => {
-        res.json(result);
-    });
+    userManager.getUsers(limit, page)
+        .then(
+            result => res.json(result),
+            error => res.status(400).json(error)
+        )
+        .catch(error => res.status(500).json(error));
 };
 exports.detailUser = (req, res) => {
-    db.User.find({
-        where: {id: req.params.id},
-        include: [{
-            model: db.ClientMeta,
-            attributes: {},
-        }],
-    }).then(user => {
-        res.json(user);
-    });
+    userManager.detailUser
+        .then(
+            user => res.json(user),
+            err => res.status(400).json(err)
+        )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
 exports.updateUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateInput);
     if (result.isValid()) {
-        input.updatedAt = new Date();
-        db.User.findById(req.params.id).then(user => {
-            if (!user) {
-                res.status(404).json({message: 'user does not exists'});
-            } else {
-                db.User.update(input, {
-                    where: { id: user.id },
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
+        userManager.updateUser
+            .then(
+                user => res.json(user),
+                error => res.status(400).json(error)
+            )
+            .catch(
+                error => {
+                    if (error.id === 404) {
+                        return res.status(404).json({message: error.message});
+                    }
+                    return res.status(500).json({message: 'kk'});
                 });
-            }
-        });
     } else {
         res.status(400).json(result.errors);
     }
 };
 exports.clientListUser = (req, res) => {
-    let limit = req.param('limit', 10);
+    const limit = req.param('limit');
     const page = req.param('page', 1);
-    let offset = limit * (page - 1);
-    limit = (limit > 0) ? limit : 10;
-    offset = (offset >= 0) ? offset : 0;
 
-    db.ClientMeta.findAndCountAll({
-        where: {
-            userId: req.user.id,
-        },
-        order: [['id', 'ASC']],
-        include: [{
-            model: req.model.ClientDb,
-            attributes: {},
-        }],
-        limit,
-        offset,
-    }).then(result => {
-        res.json(result);
-    });
+    clientMetaManager.listMeta(req.user.id, limit, page)
+        .then(
+            result => res.json(result),
+            error => res.status(400).json(error))
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
 exports.clientDetailUser = (req, res) => {
-    db.ClientMeta.findOne({
-        where: {
-            userId: req.params.id,
-            id: req.params.idMeta,
-        },
-        include: [
-            {
-                model: db.ClientDb,
-                attributes: {},
-            },
-            {
-                model: req.model.User,
-                attributes: {},
-            },
-        ],
-    }).then(result => {
+    clientMetaManager.detailMeta(req.params.idMeta).then(result => {
         res.json(result);
     });
-};
-exports.clientUpdateDetailUser = (req, res) => {
-    const input = req.body;
-    const result = t.validate(input, domain.CreateUpdateMetaDbInput);
-    if (result.isValid()) {
-        const clientMetaModel = req.model.ClientMeta;
-        db.ClientMeta.findOne({
-            where: {
-                userId: req.params.id,
-                id: req.params.idMeta,
-            },
-        }).then(client => {
-            if (client) {
-                clientMetaModel.update(input, {
-                    where: { id: client.id },
-                    returning: true,
-                    plain: true,
-                })
-                    .then(data => {
-                        res.json(data);
-                    });
-            } else {
-                res.status(404);
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
 };

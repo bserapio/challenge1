@@ -1,6 +1,6 @@
 'use strict';
 
-const groups = require('../../src/config/acl_groups');
+const groups = require('./acl');
 
 exports.isAuthenticated = (req, res, next) => {
     if (req.path === '/') {
@@ -9,7 +9,7 @@ exports.isAuthenticated = (req, res, next) => {
 
     try {
         if (req.user.id) {
-            if (req.method === 'DELETE' && (groups.adminGroups.indexOf(req.user.role) === -1)) {
+            if (req.method === 'DELETE' && (groups.adminGroup.indexOf(req.user.role) === -1)) {
                 return res.status(405).json({message: 'Method not allow'});
             }
             return next();
@@ -23,7 +23,7 @@ exports.isAuthenticated = (req, res, next) => {
 
 exports.isAdmin = (req, res, next) => {
     try {
-        if (groups.adminGroups.indexOf(req.user.role) === -1) {
+        if (groups.adminGroup.indexOf(req.user.role) === -1) {
             throw new Error(403, 'You are  not allow');
         }
 
@@ -35,7 +35,7 @@ exports.isAdmin = (req, res, next) => {
 
 exports.isManager = (req, res, next) => {
     try {
-        if (groups.managerGroups.indexOf(req.user.role) === -1) {
+        if (groups.manageGroup.indexOf(req.user.role) === -1) {
             throw new Error(403, 'You are  not allow');
         }
 

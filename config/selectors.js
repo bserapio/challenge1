@@ -1,4 +1,6 @@
-module.exports = {
+'use strict';
+
+const languages = {
     'en': 'English',
     'de': 'Deutsch',
     'es': 'Español',
@@ -18,3 +20,28 @@ module.exports = {
     'tr': 'Turkey',
 };
 
+const roles = [
+    'guest',
+    'user',
+    'finance',
+    'manager',
+    'sales',
+    'account-manager',
+    'admin',
+    'super',
+];
+
+const types = [
+
+    'demo',
+    'client',
+    'dev',
+    'edu',
+    'closed',
+
+];
+
+module.exports = {
+    languages, roles, types,
+}
+;

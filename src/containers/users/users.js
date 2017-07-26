@@ -8,19 +8,21 @@ import { connect } from 'react-redux';
 
 import UserCreateForm from '../../components/modals/createUserForm';
 
-import * as appActions from '../../ducks/modules/user';
+import * as userActions from '../../ducks/modules/user';
+import * as authActions from '../../ducks/modules/auth';
 import './user.css';
 
 const utils = require('../../utils/');
 
 const mapStateToProps = state => ({
-    auth: state.app.auth,
-    users: state.app.users,
-    createError: state.app.createError,
+    auth: state.auth.auth,
+    users: state.user.users,
+    createError: state.user.createError,
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(appActions, dispatch),
+    userActions: bindActionCreators(userActions, dispatch),
+    authActions: bindActionCreators(authActions, dispatch),
 });
 
 
@@ -79,9 +81,9 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        const {actions, auth} = this.props;
-        actions.checkAuth(auth);
-        actions.getUsers();
+        const {authActions, userActions, auth} = this.props;
+        authActions.checkAuth(auth);
+        userActions.getUsers();
     }
     unloadButton() {
         this.setState({ confirmLoading: false });
@@ -112,9 +114,9 @@ class User extends React.Component {
         this.form = form;
     };
     sendForm = () => {
-        const {actions, auth} = this.props;
+        const {userActions, auth} = this.props;
         const {userForm} = this.state;
-        actions.createNewUser(userForm).then(
+        userActions.createNewUser(userForm).then(
             data => {
                 if (data) {
                     this.setState({ visible: false });

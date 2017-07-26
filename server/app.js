@@ -1,6 +1,7 @@
 // server/app.js
 
 'use strict';
+
 const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
@@ -36,11 +37,12 @@ app.use(passport.session());
 const index = require('./routes/index')(passport, express);
 const user = require('./routes/user')(passport, express);
 const client = require('./routes/client')(passport, express);
-
+const common = require('./routes/common')(passport, express);
 
 app.all('/services/*', acl.isAuthenticated);
 app.use('/services/client', client);
 app.use('/services/user', user);
+app.use('/common', common);
 app.use('/', index);
 
 

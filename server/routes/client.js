@@ -3,7 +3,7 @@
 const clientController = require('../controllers/client');
 const acl = require('../acl/acl_middleware');
 
-module.exports = function (passport, express) {
+module.exports = (passport, express) => {
     const app = express();
 
     app.route('/:id/activate')

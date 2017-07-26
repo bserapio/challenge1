@@ -1,9 +1,7 @@
 'use strict';
 
 const t = require('tcomb');
-const roles = require('../../src/config/role');
-const type = require('../../src/config/type');
-const langs = require('../../src/config/lang');
+const selector = require('../../config/selectors');
 
 // a subtype is a pair (type, predicate)
 // where predicate is a function with signature (x) -> boolean
@@ -15,9 +13,9 @@ const Opcode = t.subtype(t.Str, s => {
 });
 
 
-const Role = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(roles, s.trim().toLowerCase()));
-const Lang = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(langs, s.trim().toLowerCase()));
-const Type = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(type, s.trim().toLowerCase()));
+const Role = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector.roles, s.trim().toLowerCase()));
+const Lang = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector.languages, s.trim().toLowerCase()));
+const Type = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector.types, s.trim().toLowerCase()));
 
 
 // a struct is a type containing properties (i.e. a class)

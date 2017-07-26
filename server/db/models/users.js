@@ -1,7 +1,5 @@
 'use strict';
 
-const roles = require('../../../config/role');
-
 const bcrypt = require('bcrypt-nodejs');
 
 module.exports = (sequelize, DataTypes) => {
@@ -17,20 +15,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             field: 'username',
             allowNull: false,
-            validate: {
-                isUnique(value, next) {
-                    const self = this;
-                    User.find({ where: { username: value } })
-                        .then(user => {
-                            // reject if a different user wants to use the same email
-                            if (user && self.id !== user.id) {
-                                return next('Username already in use!');
-                            }
-                            return next();
-                        })
-                        .catch(err => next(err));
-                },
-            },
         },
         name: {
             type: DataTypes.STRING(255),
@@ -41,14 +25,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             field: 'role',
             allowNull: false,
-            validate: {
-                isAllowed(value) {
-                    if (!roles.hasOwnProperty(value.trim().toLowerCase())) {
-                        throw new Error('Role is not permitted');
-                    }
-                    this.setDataValue('role', value.trim().toLowerCase());
-                },
-            },
         },
         password: {
             type: DataTypes.STRING(255),
@@ -70,14 +46,6 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 'users',
         timestamps: false,
         underscored: true,
-        hooks: {
-            beforeCreate: user => {
-                user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
-            },
-            beforeUpdate: user => {
-                user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
-            },
-        },
     });
 
     User.prototype.validPassword = function (password) {

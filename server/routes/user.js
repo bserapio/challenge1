@@ -3,11 +3,8 @@
 const userController = require('../controllers/user');
 const acl = require('../acl/acl_middleware');
 
-module.exports = function (passport, express) {
+module.exports = (passport, express) => {
     const app = express();
-    app.route('/:id/client/:idMeta')
-        .put(userController.clientUpdateDetailUser)
-        .get(userController.clientDetailUser);
     app.route('/:id/client')
         .get(userController.clientListUser);
     app.route('/:id')
