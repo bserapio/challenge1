@@ -1,6 +1,4 @@
-const types = require('../config/type');
-const langs = require('../config/lang');
-const roles = require('../config/role');
+
 
 const sha1 = require('sha1');
 
@@ -32,30 +30,8 @@ const checkAuth = () => {
 };
 
 const typeFilter = [];
-Object.keys(types).forEach(element => {
-    const x = {
-        value: element,
-        text: types[element],
-    };
-    typeFilter.push(x);
-});
 const langFilter = [];
-Object.keys(langs).forEach(element => {
-    const x = {
-        value: element,
-        text: langs[element],
-    };
-    langFilter.push(x);
-});
-
 const rolesFilter = [];
-Object.keys(roles).forEach(element => {
-    const x = {
-        value: element,
-        text: roles[element],
-    };
-    rolesFilter.push(x);
-});
 
 module.exports = {
     stringOrder,
