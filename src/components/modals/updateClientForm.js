@@ -5,8 +5,7 @@ import { Form, Input, Modal, Select, DatePicker } from 'antd';
 const moment = require('moment');
 
 const Option = Select.Option;
-const langs = require('../../config/lang');
-const types = require('../../config/type');
+
 
 const FormItem = Form.Item;
 
@@ -71,13 +70,17 @@ class CreateForm extends React.Component {
             onUpdateCancel,
             onUpdateCreate,
             form,
-            confirmLoading, users,
+            confirmLoading,
+            users,
+            config
         } = this.props;
 
         const {record} = this.state;
         if (!visible) {
             return null;
         }
+        const langs = config.lang;
+        const types = config.types;
 
         const { getFieldDecorator } = form;
         const children = [];

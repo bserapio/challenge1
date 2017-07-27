@@ -7,5 +7,7 @@ module.exports = (passport, express) => {
     app.route('/langs').get(commonController.getLanguages);
     app.route('/roles').get(commonController.getRoles);
     app.route('/types').get(commonController.getTypes);
+    app.route('/acl').get(commonController.getAcl);
+    app.route('/config').get(commonController.getConfig);
     return app;
 };

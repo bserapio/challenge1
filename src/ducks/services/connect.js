@@ -27,6 +27,11 @@ function getUsers() {
     return axios.get(url);
 }
 
+function getConfig() {
+    const url = apiEndPoints.config;
+    return axios.get(url);
+}
+
 function getClients() {
     const url = apiEndPoints.clientList;
     return axios.get(url);
@@ -93,6 +98,7 @@ function elevateClient(data) {
     return axios.post(url, data);
 }
 
+
 axios.interceptors.response.use(response => {
     return response;
 }
@@ -136,6 +142,7 @@ const connectService = {
     updateInvoiceClient,
     updateChannelClient,
     updateIkentooClient,
+    getConfig
 };
 
 export default connectService;

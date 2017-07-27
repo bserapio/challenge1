@@ -7,6 +7,8 @@ import api from './modules/api';
 import auth from './modules/auth';
 import client from './modules/client';
 import user from './modules/user';
+import common from './modules/common';
+
 
 const history = createHistory();
 const middleware = routerMiddleware(history);
@@ -18,6 +20,7 @@ const reducer = combineReducers({
     auth,
     client,
     user,
+    common,
 });
 
 

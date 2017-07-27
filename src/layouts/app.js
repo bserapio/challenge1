@@ -3,14 +3,15 @@ import enUS from 'antd/lib/locale-provider/en_US';
 import Link from 'react-router-redux-dom-link';
 import React, { Component } from 'react';
 import {Layout, Menu, LocaleProvider, notification} from 'antd';
-
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import './app.css';
+import * as commonActions from '../ducks/modules/common';
 
 const {Header, Content} = Layout;
 
 const mapDispatchToProps = dispatch => ({
-
+    commonActions: bindActionCreators(commonActions, dispatch),
 });
 
 const mapStateToProps = state => ({
@@ -18,11 +19,16 @@ const mapStateToProps = state => ({
     users: state.user.users,
     apiError: state.api.apiError,
     route: state.router,
+    config: state.common.config,
 });
 
 
 class App extends Component {
 
+    componentDidMount() {
+        const {commonActions} = this.props;
+        commonActions.getConfig();
+    }
     render() {
         const {apiError, auth, children, route} = this.props;
         const CurrentPath = route.location;

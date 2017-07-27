@@ -2,9 +2,8 @@ import React from 'react';
 import {Form, Input, Modal, Select} from 'antd';
 
 const Option = Select.Option;
-const langs = require('../../config/lang');
+
 const FormItem = Form.Item;
-const types = require('../../config/type');
 
 class CreateForm extends React.Component {
 
@@ -15,10 +14,12 @@ class CreateForm extends React.Component {
         this.props.onTypeChange(value);
     }
     render() {
-        const {visible, onCancel, onCreate, form, confirmLoading} = this.props;
+        const {visible, onCancel, onCreate, form, confirmLoading, config} = this.props;
         if (!visible) {
             return null;
         }
+        const langs = config.lang;
+        const types = config.types;
 
         const {getFieldDecorator} = form;
 

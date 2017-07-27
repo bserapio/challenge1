@@ -14,6 +14,10 @@ const apiEndPoints = {
     clientDetailIkentoo: 'services/client/:id/ikentoo',
     clientElevate: 'services/client/elevate',
     login: 'login',
+    acl: 'common/acl',
+    lang: 'common/lang',
+    types: 'common/type',
+    config: 'common/config',
 };
 
 export default apiEndPoints;

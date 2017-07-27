@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Input, Modal, Select, Alert} from 'antd';
 
-const roles = require('../../config/role');
+
 
 const Option = Select.Option;
 
@@ -14,11 +14,11 @@ class CreateForm extends React.Component {
         this.props.onChange(value);
     }
     render() {
-        const {visible, onCancel, onCreate, form, confirmLoading, createError} = this.props;
+        const {visible, onCancel, onCreate, form, confirmLoading, createError, config} = this.props;
         if (!visible) {
             return null;
         }
-
+        const roles = config.roles;
         const {getFieldDecorator} = form;
 
         const rolesChildren = [];

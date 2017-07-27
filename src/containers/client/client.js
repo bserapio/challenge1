@@ -11,17 +11,18 @@ import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
 import * as userActions from '../../ducks/modules/user';
 import * as clientActions from '../../ducks/modules/client';
+import * as commonActions from '../../ducks/modules/common';
 import './client.css';
 
 
 const utils = require('../../utils/');
-const acl = require('../../config/acl_groups');
 
 
 const mapDispatchToProps = dispatch => ({
 
     userActions: bindActionCreators(userActions, dispatch),
     clientActions: bindActionCreators(clientActions, dispatch),
+    commonActions: bindActionCreators(commonActions, dispatch),
 
 });
 
@@ -65,6 +66,7 @@ const mapStateToProps = state => {
     return {
         auth: state.auth.auth,
         users: state.user.users,
+        config: state.common.config,
         clients,
     };
 };
@@ -73,41 +75,38 @@ const mapStateToProps = state => {
 class Clients extends React.Component {
 
 
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            visible: {
-                elevate: false,
-                create: false,
-                update: false,
-            },
-            formLoading: {
-                elevate: false,
-                create: false,
-                update: false,
-            },
-            elevatorForm: {
-                password: '',
-                username: '',
-                identifier: '',
-            },
-            clientForm: {
-                identifier: '',
-                name: '',
-                lang: 'en',
-                type: 'demo',
-            },
-            paginationText: 'Show All',
-            editedRecord: {},
-            pagination: {},
-            elevateUrl: null,
-            footer: null,
-            loading: false,
-            filterDropdownVisible: false,
-            searchText: '',
-            filtered: false,
-        };
-    }
+    state = {
+        visible: {
+            elevate: false,
+            create: false,
+            update: false,
+        },
+        formLoading: {
+            elevate: false,
+            create: false,
+            update: false,
+        },
+        elevatorForm: {
+            password: '',
+            username: '',
+            identifier: '',
+        },
+        clientForm: {
+            identifier: '',
+            name: '',
+            lang: 'en',
+            type: 'demo',
+        },
+        paginationText: 'Show All',
+        editedRecord: {},
+        pagination: {},
+        elevateUrl: null,
+        footer: null,
+        loading: false,
+        filterDropdownVisible: false,
+        searchText: '',
+        filtered: false,
+    };
     componentDidMount() {
         const auth = utils.checkAuth();
         const {userActions, clientActions} = this.props;
@@ -209,43 +208,43 @@ class Clients extends React.Component {
     }
 
     editDone(newRecord, record, key, type) {
-        const {actions} = this.props;
+        const {clientActions} = this.props;
         if (type === 'save') {
             if (newRecord !== record) {
                 switch (key) {
 
 
                     case 'active': {
-                        actions.updateActiveClient(newRecord).then(data => data, error => error);
+                        clientActions.updateActiveClient(newRecord).then(data => data, error => error);
 
                         break;
                     }
                     case 'maintenance': {
-                        actions.updateManteinanceClient(newRecord).then(data => data, error => error);
+                        clientActions.updateManteinanceClient(newRecord).then(data => data, error => error);
                         break;
                     }
                     case 'autoUpdate': {
-                        actions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
+                        clientActions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
                         break;
                     }
 
                     case 'ClientMetum#newInvoice': {
-                        actions.updateInvoiceClient(newRecord).then(data => data, error => error);
+                        clientActions.updateInvoiceClient(newRecord).then(data => data, error => error);
                         break;
                     }
                     case 'ClientMetum#newChannel': {
-                        actions.updateChannelClient(newRecord).then(data => data, error => error);
+                        clientActions.updateChannelClient(newRecord).then(data => data, error => error);
                         break;
                     }
 
 
                     case 'ClientMetum#ikentoo': {
-                        actions.updateIkentooClient(newRecord).then(data => data, error => error);
+                        clientActions.updateIkentooClient(newRecord).then(data => data, error => error);
                         break;
                     }
 
                     default: {
-                        actions.updateClient(newRecord).then(data => data, error => error);
+                        clientActions.updateClient(newRecord).then(data => data, error => error);
                     }
                 }
             }
@@ -449,16 +448,20 @@ class Clients extends React.Component {
         return text;
     }
     render() {
-        const {clients, auth} = this.props;
+        const {clients, auth, config, users} = this.props;
+        const acl = config.acl;
 
-
-        const { searchText, filterDropdownVisible,
+        const {
+            searchText,
+            filterDropdownVisible,
             paginationText,
             filtered,
             editedRecord,
             visible,
             formLoading,
             elevateUrl,
+            pagination,
+            loading,
         } = this.state;
 
         const columns = [
@@ -474,10 +477,10 @@ class Clients extends React.Component {
                     return (
                         <Button.Group size="small">
                             <Button type="primary" onClick={() => this.showUpdateModal(record)}>Edit</Button>
-                            {acl.managerGroups.indexOf(auth.role) !== -1 &&
+                            {acl.managerGroup.indexOf(auth.role) !== -1 &&
                             <Button type="primary" onClick={() => this.showElevateModal(record)}>Connect</Button>
                             }
-                            {acl.adminGroups.indexOf(auth.role) !== -1 &&
+                            {acl.adminGroup.indexOf(auth.role) !== -1 &&
                             <Popconfirm
                                 placement="top"
                                 title="Do you want to delete the client?"
@@ -520,7 +523,7 @@ class Clients extends React.Component {
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => utils.stringOrder(a, b),
-                render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text', acl.userGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text', acl.userGroup),
             },
             {
                 title: 'Lang',
@@ -528,48 +531,48 @@ class Clients extends React.Component {
                 key: 'lang',
                 filters: utils.langFilter,
                 onFilter: (value, record) => record.lang.indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text', acl.userGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'lang', text, 'text', acl.userGroup),
 
             },
             {
                 title: 'Active',
                 dataIndex: 'active',
                 key: 'active',
-                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean', acl.userGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'active', text, 'boolean', acl.userGroup),
 
             },
             {
                 title: 'Manteinance',
                 dataIndex: 'maintenance',
                 key: 'maintenance',
-                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean', acl.userGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'maintenance', text, 'boolean', acl.userGroup),
             },
             {
                 title: 'AutoUpdate',
                 dataIndex: 'autoUpdate',
                 key: 'autoUpdate',
-                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean', acl.managerGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'new_invoice',
                 dataIndex: 'ClientMetum#newInvoice',
                 key: 'ClientMetum#newInvoice',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newInvoice', text, 'boolean', acl.managerGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newInvoice', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'channel_manager',
                 dataIndex: 'ClientMetum#newChannel',
                 key: 'ClientMetum#newChannel',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newChannel', text, 'boolean', acl.managerGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newChannel', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'ikentoo',
                 dataIndex: 'ClientMetum#ikentoo',
                 key: 'ClientMetum#ikentoo',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#ikentoo', text, 'boolean', acl.managerGroups),
+                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#ikentoo', text, 'boolean', acl.managerGroup),
 
             },
             {
@@ -606,6 +609,7 @@ class Clients extends React.Component {
                 <ClientCreateForm
                     ref={this.saveFormRef}
                     visible={visible.create}
+                    config={config}
                     onCancel={this.handleCreateCancel}
                     confirmLoading={formLoading.create}
                     onCreate={this.handleCreate}
@@ -617,6 +621,7 @@ class Clients extends React.Component {
                 <ElevatePrigilegesForm
                     ref={this.saveFormRefElevator}
                     visible={visible.elevate}
+                    config={config}
                     onElevatorCancel={this.handleElevateCancel}
                     confirmElevatorLoading={formLoading.elevate}
                     onElevatorCreate={this.handleElevateCreate}
@@ -627,12 +632,13 @@ class Clients extends React.Component {
                 <UpdateClientForm
                     ref={this.saveFormRefUpdate}
                     visible={visible.update}
+                    config={config}
                     onUpdateCancel={this.handleUpdateCancel}
                     confirmUpdateLoading={formLoading.update}
                     onUpdateCreate={this.handleUpdateCreate}
                     modalText={elevateUrl}
                     record={editedRecord}
-                    users={this.props.users}
+                    users={users}
                     changeUpdateRecord={record => this.changeUpdateRecord(record)}
                 />
 
@@ -640,8 +646,8 @@ class Clients extends React.Component {
                     columns={columns}
                     rowKey={record => record.id}
                     dataSource={clients}
-                    pagination={this.state.pagination}
-                    loading={this.state.loading}
+                    pagination={pagination}
+                    loading={loading}
 
                 />
             </div>
