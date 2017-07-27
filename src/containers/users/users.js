@@ -8,21 +8,18 @@ import { connect } from 'react-redux';
 
 import UserCreateForm from '../../components/modals/createUserForm';
 
-import * as userActions from '../../ducks/modules/user';
-import * as authActions from '../../ducks/modules/auth';
+import * as userAc from '../../ducks/modules/user';
 import './user.css';
 
 const utils = require('../../utils/');
 
 const mapStateToProps = state => ({
-    auth: state.auth.auth,
     users: state.user.users,
     createError: state.user.createError,
 });
 
 const mapDispatchToProps = dispatch => ({
-    userActions: bindActionCreators(userActions, dispatch),
-    authActions: bindActionCreators(authActions, dispatch),
+    userActions: bindActionCreators(userAc, dispatch),
 });
 
 
@@ -81,7 +78,7 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        const {authActions, userActions, auth} = this.props;
+        const {userActions} = this.props;
 
         userActions.getUsers();
     }
@@ -95,10 +92,10 @@ class User extends React.Component {
         this.setState({ visible: false });
     };
     handleCreate = () => {
+        const {userForm} = this.state;
         this.setState({ confirmLoading: true });
         this.form.validateFields((err, values) => {
             if (!err) {
-                const userForm = this.state.userForm;
                 userForm.username = values.username;
                 userForm.password = values.password;
                 userForm.name = values.name;
@@ -114,7 +111,7 @@ class User extends React.Component {
         this.form = form;
     };
     sendForm = () => {
-        const {userActions, auth} = this.props;
+        const {userActions} = this.props;
         const {userForm} = this.state;
         userActions.createNewUser(userForm).then(
             data => {
@@ -129,7 +126,7 @@ class User extends React.Component {
 
         );
         this.unloadButton();
-    }
+    };
 
 
     handleSelectChange = value => {
@@ -180,5 +177,19 @@ class User extends React.Component {
         );
     }
 }
+
+User.propTypes = {
+    userActions: PropTypes.object.isRequired,
+    createError: PropTypes.object,
+    users: PropTypes.array,
+};
+
+User.defaultProps = {
+
+    users: [],
+    auth: [],
+    createError: null,
+
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(User);
