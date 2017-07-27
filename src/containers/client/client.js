@@ -98,7 +98,7 @@ class Clients extends React.Component {
     componentWillReceiveProps(nextProps) {
         const {userActions, clientActions, auth} = this.props;
 
-        if (nextProps.auth !== this.props.auth) {
+        if (nextProps.auth !== auth) {
             userActions.getUsers(nextProps.auth.role);
             clientActions.getClientAction();
         }

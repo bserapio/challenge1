@@ -149,39 +149,12 @@ exports.ikentooClient = (req, res) => {
 
 exports.updateClient = (req, res) => {
     const input = req.body;
-    let element;
     const result = t.validate(input, domain.CreateUpdateDbInput);
     if (result.isValid()) {
-        db.ClientDb.findById(req.params.id).then(client => {
-            if (client) {
-                element = {};
-                element.name = input.name;
-                element.lang = input.lang;
-                element.expireDate = input.expireDate;
-                element.modifiedAt = new Date();
-                db.ClientDb.update(element, {
-                    where: {id: client.id},
-                    returning: true,
-                    plain: true,
-                }).then(() => {
-                    element = {};
-                    element.user_id = input.ClientMetum.user_id;
-                    db.ClientMeta.update(element, {
-                        where: { id: input.ClientMetum.id },
-                    }).then(
-                        meta => {
-                            res.json(meta);
-                        },
-                        err => {
-                            res.status(400).json(err);
-                        }
-                    )
-                    ;
-                });
-            } else {
-                res.status(404).json({ message: 'client does not exists' });
-            }
-        });
+        clientManager.fullUpdate(req.params.id, input).then(
+            result => res.json(result),
+            error => res.status(400).json(error)
+        ).catch(error => res.status(500).json(error));
     } else {
         res.status(400).json(result.errors);
     }

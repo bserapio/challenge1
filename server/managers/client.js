@@ -51,7 +51,6 @@ const detailClient = id => db.ClientDb.findById(id)
 const deleteClient = id => detailClient(id).then(
     client => {
         if (client) {
-
             return client.destroy();
         }
         throw new Error('Client does not exists', 404);
@@ -73,6 +72,31 @@ const updateClient = (id, data) => db.ClientDb.findById(id)
     .catch(error => error);
 
 
+const fullUpdate = (id, data) => {
+    let element = {};
+    element.name = data.name;
+    element.lang = data.lang;
+    element.expireDate = data.expireDate;
+    element.modifiedAt = new Date();
+    return updateClient(id, element).then(
+        client => {
+            element = {};
+            element.user_id = data.ClientMetum.user_id;
+            db.ClientMeta.update(element, {where: {client_id: client.id}})
+                .then(
+                    meta => meta,
+                    error => error
+                );
+        },
+        error => {
+            return error;
+        }
+    ).catch(error => {
+        throw error;
+    });
+};
+
+
 module.exports = {
-    createClient, listClient, updateClient, detailClient, deleteClient,
+    createClient, listClient, updateClient, detailClient, deleteClient, fullUpdate
 };

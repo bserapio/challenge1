@@ -101,7 +101,7 @@ class CreateForm extends React.Component {
         const typeChildren = [];
         Object.keys(types).forEach(element => {
             const value = types[element];
-            typeChildren.push(<Option value={element} key={element}>{value}</Option>);
+            typeChildren.push(<Option value={value} key={element}>{value}</Option>);
         });
 
 
