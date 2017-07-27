@@ -17,8 +17,8 @@ export function checkAuth() {
                 type: LOGIN_REQUEST,
                 payload: {},
             });
-        let auth = null;
-        auth = localStorage.getItem('user');
+
+        let auth = localStorage.getItem('user');
         if (auth) {
             auth = JSON.parse(auth);
             configureStore.history.push(window.location.pathname);
@@ -41,22 +41,18 @@ export function loginUser(credentials) {
             type: LOGIN_REQUEST,
             payload: {},
         });
-        console.log(credentials);
         return connectService.login(credentials).then(
-            (res) => {
+            res => {
                 const auth = res.data;
-                console.log("Entro aqui");
                 localStorage.setItem('user', JSON.stringify(res.data));
                 configureStore.history.push('/clients');
 
                 dispatch({
-                        type: LOG_IN_SUCCESS,
+                    type: LOG_IN_SUCCESS,
                     payload: {auth},
-                    });
+                });
             },
-            (loginError) => {
-                console.log("Entro en error");
-                console.log(loginError);
+            loginError => {
                 dispatch({
                     type: LOGIN_FAIL,
                     payload: {loginError},
@@ -76,7 +72,7 @@ export function logOutUser() {
 
 
 const initialState = {
-    auth: null,
+    auth: {role: 'guest', id: -1},
     loginError: null,
 };
 

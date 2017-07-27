@@ -82,7 +82,7 @@ class User extends React.Component {
 
     componentDidMount() {
         const {authActions, userActions, auth} = this.props;
-        authActions.checkAuth(auth);
+
         userActions.getUsers();
     }
     unloadButton() {

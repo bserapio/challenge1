@@ -1,5 +1,4 @@
 import configureStore from '../../ducks/configureStore';
-import connectService from '../services/connect';
 
 const DEFAULT_PATH = 'dashboard/api';
 

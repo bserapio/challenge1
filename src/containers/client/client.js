@@ -11,6 +11,7 @@ import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
 import * as userAc from '../../ducks/modules/user';
 import * as clientAc from '../../ducks/modules/client';
+import * as commonAc from '../../ducks/modules/common';
 import './client.css';
 
 
@@ -19,6 +20,7 @@ const utils = require('../../utils/');
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
     clientActions: bindActionCreators(clientAc, dispatch),
+    commonActions: bindActionCreators(commonAc, dispatch),
 });
 
 const mapStateToProps = state => {
@@ -88,21 +90,16 @@ class Clients extends React.Component {
         filtered: false,
     };
     componentDidMount() {
-        const auth = utils.checkAuth();
-        const {userActions, clientActions} = this.props;
-
-        if (auth) {
-            userActions.getUsers(auth.role);
-            clientActions.getClientAction();
-        }
+        const {userActions, clientActions, auth} = this.props;
+        userActions.getUsers(auth.role);
+        clientActions.getClientAction();
     }
 
-    /*
-        componentWillReceiveProps(nextProps) {
 
+    componentWillReceiveProps(nextProps) {
 
-        }
-    */
+    }
+
 
     // Search Filter
     onSearch = () => {
@@ -429,8 +426,14 @@ class Clients extends React.Component {
         return text;
     }
     render() {
-        const {clients, auth, config, users} = this.props;
-        const acl = config.acl;
+        const {clients, auth, config, users, commonActions} = this.props;
+        let acl;
+        try {
+            acl = config.acl;
+        } catch (err) {
+            commonActions.getConfig();
+        }
+
 
         const {
             searchText,
@@ -639,11 +642,11 @@ class Clients extends React.Component {
 
 
 Clients.propTypes = {
-    userActions: PropTypes.element.isRequired,
-    clientActions: PropTypes.element.isRequired,
+    userActions: PropTypes.object.isRequired,
+    clientActions: PropTypes.object.isRequired,
+    commonActions: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     clients: PropTypes.array,
-
     users: PropTypes.array,
     auth: PropTypes.object,
 };
@@ -652,5 +655,6 @@ Clients.defaultProps = {
     clients: [],
     users: [],
     auth: [],
+
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Clients);

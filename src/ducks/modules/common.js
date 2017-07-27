@@ -16,11 +16,23 @@ export function getConfig() {
             type: REQUEST_CONFIG,
             payload: {},
         });
+        let config = localStorage.getItem('config');
+        if (config) {
+            config = JSON.parse(config);
+
+            return dispatch(
+                {
+                    type: OK_CONFIG,
+                    payload: {config},
+                }
+            );
+        }
         return connectService.getConfig()
             .then(
                 res => {
-                    const config = res.data;
-                    console.log(config);
+                    config = res.data;
+
+                    localStorage.setItem('config', JSON.stringify(config));
                     return dispatch(
                         {
                             type: OK_CONFIG,
@@ -28,14 +40,12 @@ export function getConfig() {
                         }
                     );
                 },
-                err => {
-                    return dispatch(
+                err => dispatch(
                         {
                             type: KO_CONFIG,
                             payload: err,
                         }
-                    );
-                }
+                )
             )
             .catch(error => {
                 dispatch(
@@ -52,9 +62,7 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
 
         case OK_CONFIG: {
-
             const {config} = action.payload;
-            console.log(config);
             return {
                 ...state,
                 config,
