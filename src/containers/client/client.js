@@ -9,31 +9,17 @@ import ClientCreateForm from '../../components/modals/createClientForm';
 import UpdateClientForm from '../../components/modals/updateClientForm';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
-import * as userActions from '../../ducks/modules/user';
-import * as clientActions from '../../ducks/modules/client';
-import * as commonActions from '../../ducks/modules/common';
+import * as userAc from '../../ducks/modules/user';
+import * as clientAc from '../../ducks/modules/client';
 import './client.css';
 
 
 const utils = require('../../utils/');
 
-
 const mapDispatchToProps = dispatch => ({
-
-    userActions: bindActionCreators(userActions, dispatch),
-    clientActions: bindActionCreators(clientActions, dispatch),
-    commonActions: bindActionCreators(commonActions, dispatch),
-
+    userActions: bindActionCreators(userAc, dispatch),
+    clientActions: bindActionCreators(clientAc, dispatch),
 });
-
-
-const removeUndefined = value => {
-    if (value) {
-        return true;
-    }
-    return false;
-};
-
 
 const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
@@ -57,12 +43,10 @@ const mapStateToProps = state => {
             }
             return null;
         });
-        clients = clients.filter(removeUndefined);
+        clients = clients.filter(utils.removeUndefined);
     } else {
         clients = state.client.clients.rows;
     }
-
-
     return {
         auth: state.auth.auth,
         users: state.user.users,
@@ -70,11 +54,7 @@ const mapStateToProps = state => {
         clients,
     };
 };
-
-
 class Clients extends React.Component {
-
-
     state = {
         visible: {
             elevate: false,
@@ -117,11 +97,12 @@ class Clients extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    /*
+        componentWillReceiveProps(nextProps) {
 
 
-    }
-
+        }
+    */
 
     // Search Filter
     onSearch = () => {
@@ -176,9 +157,9 @@ class Clients extends React.Component {
         this.setState({ clientForm, confirmLoading: false });
     };
     sendCreateForm = form => {
-        const { actions } = this.props;
+        const {clientActions} = this.props;
         const { visible, clientForm, formLoading } = this.state;
-        actions.createClient(clientForm).then(
+        clientActions.createClient(clientForm).then(
             () => {
                 visible.create = false;
                 formLoading.create = false;
@@ -193,11 +174,12 @@ class Clients extends React.Component {
 
     // Update User
     showUpdateModal = record => {
-        let { visible, editedRecord } = this.state;
+        const {visible} = this.state;
+        let {editedRecord} = this.state;
         visible.update = true;
         editedRecord = { ...record };
         this.setState({ visible, editedRecord });
-    }
+    };
     saveFormRefUpdate = form => {
         this.formUpdate = form;
     };
@@ -205,7 +187,7 @@ class Clients extends React.Component {
         let { editedRecord } = this.state;
         editedRecord = { ...record };
         this.setState({ editedRecord });
-    }
+    };
 
     editDone(newRecord, record, key, type) {
         const {clientActions} = this.props;
@@ -275,7 +257,7 @@ class Clients extends React.Component {
     };
     handleUpdateCreate = () => {
         const { formLoading, editedRecord, visible } = this.state;
-        const {actions} = this.props;
+        const {clientActions} = this.props;
         formLoading.update = true;
         this.setState({ formLoading });
 
@@ -286,7 +268,7 @@ class Clients extends React.Component {
             } else {
                 editedRecord.name = values.name;
                 formLoading.update = true;
-                actions.updateClient(editedRecord).then(
+                clientActions.updateClient(editedRecord).then(
                     () => {
                         visible.update = false;
                         formLoading.update = false;
@@ -306,6 +288,7 @@ class Clients extends React.Component {
     };
     handleElevateCreate = () => {
         const { elevatorForm, formLoading } = this.state;
+        const {auth} = this.state;
         formLoading.create = true;
 
         this.setState({ formLoading });
@@ -316,16 +299,16 @@ class Clients extends React.Component {
                 this.setState({ formLoading });
             } else {
                 elevatorForm.password = values.password;
-                elevatorForm.username = this.props.auth.username;
+                elevatorForm.username = auth.username;
                 this.setState({ elevatorForm }, this.sendElevatorForm);
                 this.formElevator.resetFields();
             }
         });
     };
     sendElevatorForm() {
-        const { actions } = this.props;
+        const {clientActions} = this.props;
         const { elevatorForm, formLoading } = this.state;
-        actions.checkElevateClient(elevatorForm).then(
+        clientActions.checkElevateClient(elevatorForm).then(
             res => {
                 const elevateUrl = {
                     key: res.key,
@@ -352,11 +335,9 @@ class Clients extends React.Component {
         visible.elevate = false;
         this.setState({ visible });
     };
-
-
     remove = record => {
-        const { actions } = this.props;
-        actions.removeClient(record);
+        const {clientActions} = this.props;
+        clientActions.removeClient(record);
     };
 
 
@@ -653,7 +634,23 @@ class Clients extends React.Component {
             </div>
         );
     }
+
 }
 
 
+Clients.propTypes = {
+    userActions: PropTypes.element.isRequired,
+    clientActions: PropTypes.element.isRequired,
+    config: PropTypes.object.isRequired,
+    clients: PropTypes.array,
+
+    users: PropTypes.array,
+    auth: PropTypes.object,
+};
+
+Clients.defaultProps = {
+    clients: [],
+    users: [],
+    auth: [],
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Clients);

@@ -32,11 +32,17 @@ const checkAuth = () => {
 const typeFilter = [];
 const langFilter = [];
 const rolesFilter = [];
-
+const removeUndefined = value => {
+    if (value) {
+        return true;
+    }
+    return false;
+};
 module.exports = {
     stringOrder,
     checkAuth,
     generateKey,
+    removeUndefined,
     typeFilter,
     langFilter,
     rolesFilter,
