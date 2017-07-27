@@ -3,8 +3,7 @@
 const t = require('tcomb');
 const selector = require('../../config/selectors');
 
-// a subtype is a pair (type, predicate)
-// where predicate is a function with signature (x) -> boolean
+
 const Password = t.subtype(t.Str, s => s.length >= 6);
 
 const Opcode = t.subtype(t.Str, s => {
@@ -13,12 +12,12 @@ const Opcode = t.subtype(t.Str, s => {
 });
 
 
-const Role = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector.roles, s.trim().toLowerCase()));
+const Role = t.subtype(t.Str, s => selector.roles.indexOf(s.trim().toLowerCase()) > -1);
 const Lang = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector.languages, s.trim().toLowerCase()));
-const Type = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector.types, s.trim().toLowerCase()));
+const Type = t.subtype(t.Str, s => selector.types.indexOf(s.trim().toLowerCase()) > -1);
 
 
-// a struct is a type containing properties (i.e. a class)
+
 const CreateInput = t.struct({
     username: t.Str,
     name: t.Str,

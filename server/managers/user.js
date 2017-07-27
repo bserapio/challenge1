@@ -12,16 +12,11 @@ const createUser = data => {
     return db.User.create(data);
 };
 const getUsers = (limit, page) => {
-    let offset = limit * (page - 1);
-    offset = (offset >= 0) ? offset : 0;
+
     return db.User.findAndCountAll({
-        include: [{
-            model: db.ClientMeta,
-            attributes: {},
-        }],
+
         order: [['id', 'ASC']],
-        limit,
-        offset,
+
     });
 };
 const detailUser = id => {

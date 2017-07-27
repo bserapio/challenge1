@@ -21,9 +21,10 @@ export function getUsers(role) {
 
         return connectService.getUsers().then(
             res => {
+                const users = res.data;
                 dispatch({
                     type: GET_USERS_SUCCESS,
-                    payload: {res},
+                    payload: {users},
                 });
             },
             err => {
@@ -71,6 +72,7 @@ export default function reducer(state = initialState, action) {
 
         case GET_USERS_SUCCESS: {
             const {users} = action.payload;
+            console.log(users);
             return {
                 ...state,
                 createError: null,

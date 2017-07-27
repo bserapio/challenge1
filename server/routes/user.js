@@ -11,8 +11,8 @@ module.exports = (passport, express) => {
         .put(userController.updateUser)
         .get(userController.detailUser);
     app.route('/')
-        .post(acl.isAdmin, userController.addUser)
-        .get(acl.isAdmin, userController.listUser);
+        .post(userController.addUser)
+        .get(userController.listUser);
 
 
     return app;

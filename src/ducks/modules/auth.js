@@ -64,10 +64,11 @@ export function loginUser(credentials) {
 
 export function logOutUser() {
     return dispatch => {
+
         dispatch({type: LOG_OUT});
         localStorage.removeItem('user');
-        window.location.href = '/';
-    };
+        configureStore.history.push('/');
+    }
 }
 
 
@@ -98,7 +99,7 @@ export default function reducer(state = initialState, action) {
         case LOG_OUT: {
             return {
                 ...state,
-                auth: null,
+                auth: {role: 'guest', id: -1},
                 loginError: null,
                 apiError: null,
                 users: [],

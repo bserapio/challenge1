@@ -56,7 +56,13 @@ exports.detailClient = (req, res) => {
 };
 
 exports.removeClient = (req, res) => {
-    clientManager.deleteClient(req.params.id).then().catch();
+    clientManager.deleteClient(req.params.id).then(result => {
+            res.status(204).json(result);
+        },
+        error => {
+            res.status(400).json({message: 'record does not exists'});
+        }
+    ).catch();
 };
 
 

@@ -9,12 +9,14 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import './app.css';
 import * as commonAc from '../ducks/modules/common';
+import * as authAc from '../ducks/modules/auth';
 import utils from '../utils/index';
 
 const {Header, Content} = Layout;
 
 const mapDispatchToProps = dispatch => ({
     commonActions: bindActionCreators(commonAc, dispatch),
+    authActions: bindActionCreators(authAc, dispatch),
 });
 
 const mapStateToProps = state => ({
@@ -42,10 +44,15 @@ class App extends React.Component {
                     window.location = '/';
                 }
             } catch (err) {
-
+                throw err;
             }
         }
     }
+
+    logout = () => {
+        const {authActions} = this.props;
+        authActions.logOutUser();
+    };
 
 
     render() {
@@ -77,7 +84,7 @@ class App extends React.Component {
 
                     <Header>
                         <div className="logo"/>
-                        {auth !== null &&
+                        {auth !== null && auth.role !== 'guest' &&
 
 
                         <Menu
@@ -88,7 +95,7 @@ class App extends React.Component {
                         >
                             <Menu.Item key="1"><Link to="/clients">Clients</Link></Menu.Item>
                             <Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
-                            <Menu.Item key="3"><Link to="/logout">Log out</Link></Menu.Item>
+                            <Menu.Item key="3"><Link to="/logout" onClick={this.logout}>Log out</Link></Menu.Item>
 
                         </Menu>
 
@@ -108,9 +115,10 @@ class App extends React.Component {
 App.propTypes = {
 
     commonActions: PropTypes.object.isRequired,
-    config: PropTypes.object,
+    authActions: PropTypes.object.isRequired,
     apiError: PropTypes.object,
     auth: PropTypes.object,
+    children: PropTypes.object,
     route: PropTypes.object.isRequired,
 
 
@@ -121,7 +129,6 @@ App.defaultProps = {
     apiError: null,
     users: [],
     auth: [],
-    config: null,
     children: null,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);

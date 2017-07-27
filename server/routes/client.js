@@ -11,13 +11,13 @@ module.exports = (passport, express) => {
     app.route('/:id/manteinance')
         .put(clientController.manteinanceClient);
     app.route('/:id/autoUpdate')
-        .put(acl.isManager, clientController.autoUpdateClient);
+        .put(clientController.autoUpdateClient);
     app.route('/:id/invoice')
-        .put(acl.isManager, clientController.newInvoiceClient);
+        .put(clientController.newInvoiceClient);
     app.route('/:id/channel')
-        .put(acl.isManager, clientController.channelClient);
+        .put(clientController.channelClient);
     app.route('/:id/ikentoo')
-        .put(acl.isManager, clientController.ikentooClient);
+        .put(clientController.ikentooClient);
     app.route('/:id')
         .get(clientController.detailClient)
         .put(clientController.updateClient)
@@ -26,7 +26,7 @@ module.exports = (passport, express) => {
         .post(clientController.addClient)
         .get(clientController.listClient);
     app.route('/elevate')
-        .post(acl.isManager, clientController.elevateClient);
+        .post(clientController.elevateClient);
 
     return app;
 };

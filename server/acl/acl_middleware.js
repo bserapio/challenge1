@@ -3,6 +3,7 @@
 const groups = require('./acl');
 
 exports.isAuthenticated = (req, res, next) => {
+    console.log(req.path);
     if (req.path === '/') {
         return next();
     }
