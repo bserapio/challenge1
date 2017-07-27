@@ -42,6 +42,35 @@ const listClient = () => db.ClientDb.findAndCountAll({
     order: [['id', 'ASC']],
 });
 
+const detailClient = id => db.ClientDb.findById(id)
+    .then(client, error)
+    .catch(error => {
+        throw error;
+    });
+
+const deleteClient = id => {
+    return detailClient(id).then(client => client.destroy(),
+        error => {
+        }).catch(error => {
+        throw error;
+    });
+};
+
+
+const updateClient = (id, data) => db.ClientDb.findById(id)
+    .then(
+        client => {
+            if (client) {
+                client.update(data);
+            } else {
+                throw new Error('Client does not exists', 404);
+            }
+        },
+        error => error
+    )
+    .catch(error => error);
+
+
 module.exports = {
-    createClient, listClient,
+    createClient, listClient, updateClient, detailClient, deleteClient
 };

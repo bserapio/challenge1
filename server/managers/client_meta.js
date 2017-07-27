@@ -30,8 +30,22 @@ const detailMeta = id => db.ClientMeta.findOne({
         {model: db.User, attributes: {}},
     ],
 });
+const updateMeta = (id, data) => {
 
+    db.ClientMeta.findById(id)
+        .then(
+            client => {
+                if (client) {
+                    client.update(data);
+                } else {
+                    throw new Error('Client does not exists', 404);
+                }
+            },
+            error => error
+        )
+        .catch(error => error);
+}
 
 module.exports = {
-    listMeta, detailMeta,
+    listMeta, detailMeta, updateMeta
 };

@@ -4,6 +4,23 @@ const t = require('tcomb-validation');
 const domain = require('../validator');
 const db = require('../db/models');
 const clientManager = require('../managers/client');
+const clientMetaManager = require('../managers/client_meta');
+
+const performClientUpdate = (id, element, input) => {
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        return clientManager.updateClient(id, element);
+    }
+    throw result.errors;
+};
+
+const performClientMetaUpdate = (id, element, input) => {
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        return clientMetaManager.updateMeta(id, element);
+    }
+    throw result.errors;
+};
 
 
 exports.addClient = (req, res) => {
@@ -34,188 +51,94 @@ exports.listClient = (req, res) => {
         );
 };
 
-
-
 exports.detailClient = (req, res) => {
-    db.ClientDb.findById(req.params.id).then(user => {
-        res.json(user);
-    });
+    clientManager.detailClient(req.params.id).then().catch();
 };
 
 exports.removeClient = (req, res) => {
-    db.ClientDb.find({ where: { 'id': req.params.id } }).then(client => {
-        if (client) {
-            db.ClientMeta.find({ where: { 'client_id': client.id } }).then(
-                    cmeta => {
-                        if (cmeta) {
-                            cmeta.destroy();
-                        }
-                    }
-                );
-            client.destroy().then(
-                    () => {
-                        res.status(204).json({ message: 'Client Deleted' });
-                    }
-                );
-        } else {
-            res.status(404).json({ message: 'client does not exists' });
-        }
-    }, err => {
-        res.status(400).json({ err });
-    }
-    );
+    clientManager.deleteClient(req.params.id).then().catch();
 };
 
 
 exports.activateClient = (req, res) => {
     const input = req.body;
-    let element;
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        db.ClientDb.findById(req.params.id).then(client => {
-            if (client) {
-                element = {};
-                element.active = input.active;
-                db.ClientDb.update(element, {
-                    where: { id: client.id },
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
-                });
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
+    const element = {};
+    element.active = input.active;
+    return performClientUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
+
 
 exports.manteinanceClient = (req, res) => {
     const input = req.body;
-    let element;
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        db.ClientDb.findById(req.params.id).then(client => {
-            if (client) {
-                element = {};
-                element.maintenance = input.maintenance;
-                db.ClientDb.update(element, {
-                    where: {id: client.id},
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
-                });
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
+    const element = {};
+    element.maintenance = input.maintenance;
+    return performClientUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
+
 
 exports.autoUpdateClient = (req, res) => {
     const input = req.body;
-    let element;
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        db.ClientDb.findById(req.params.id).then(client => {
-            if (client) {
-                element = {};
-                element.autoUpdate = input.autoUpdate;
-                db.ClientDb.update(element, {
-                    where: {id: client.id},
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
-                });
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
+    const element = {};
+    element.autoUpdate = input.autoUpdate;
+    return performClientUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
 
 exports.newInvoiceClient = (req, res) => {
     const input = req.body;
-    let element;
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        db.ClientMeta.find({where: {client_id: req.params.id}}).then(meta => {
-            if (meta) {
-                element = {};
-                element.newInvoice = input.ClientMetum.newInvoice;
-                db.ClientMeta.update(element, {
-                    where: {id: meta.id},
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
-                });
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
+    const element = {};
+    element.newInvoice = input.ClientMetum.newInvoice;
+    performClientMetaUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
 
 exports.channelClient = (req, res) => {
     const input = req.body;
-    let element;
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        db.ClientMeta.find({where: {client_id: req.params.id}}).then(meta => {
-            if (meta) {
-                element = {};
-                element.newChannel = input.ClientMetum.newChannel;
-                db.ClientMeta.update(element, {
-                    where: {id: meta.id},
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
-                });
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
+    const element = {};
+    element.newChannel = input.ClientMetum.newChannel;
+    performClientMetaUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
 
 
 exports.ikentooClient = (req, res) => {
     const input = req.body;
-    let element;
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        db.ClientMeta.find({where: {client_id: req.params.id}}).then(meta => {
-            if (meta) {
-                element = {};
-                element.ikentoo = input.ClientMetum.ikentoo;
-                db.ClientMeta.update(element, {
-                    where: {id: meta.id},
-                    returning: true,
-                    plain: true,
-                }).then(data => {
-                    res.json(data);
-                });
-            } else {
-                res.status(404).json({message: 'client does not exists'});
-            }
-        });
-    } else {
-        res.status(400).json(result.errors);
-    }
+    const element = {};
+    element.ikentoo = input.ClientMetum.ikentoo;
+    performClientMetaUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };
 
 exports.updateClient = (req, res) => {
