@@ -32,7 +32,7 @@ const clientChannel = {
     ],
 
 };
-const clientActivate = {
+const clientActions = {
     '/services/client/:id(\\d+)/*': [
         {
             groups: [groups.adminGroup], // min group
@@ -45,7 +45,7 @@ const clientActivate = {
     ],
 
 };
-const clientList = {
+const clientDetail = {
     '/services/client/:id(\\d+)': [
         {
             groups: [groups.adminGroup], // min group
@@ -66,7 +66,43 @@ const clientList = {
 };
 
 
-Object.assign(urlPath, usersPath, clientList, clientChannel, clientActivate);
+const clientList = {
+    '/services/client': [
+        {
+            groups: [groups.adminGroup], // min group
+            methods: ['*'],
+        },
+        {
+            groups: [groups.managerGroup], // min group
+            methods: ['GET', 'POST', 'PUT'],
+        },
+
+        {
+            groups: [groups.userGroup], // min group
+            methods: ['GET'],
+
+        },
+    ],
+
+};
+
+const clientelevate = {
+    '/services/client/elevate': [
+        {
+            groups: [groups.adminGroup], // min group
+            methods: ['*'],
+        },
+        {
+            groups: [groups.managerGroup], // min group
+            methods: ['GET', 'POST', 'PUT'],
+        },
+
+    ],
+
+};
+
+
+Object.assign(urlPath, usersPath, clientList, clientDetail, clientChannel, clientActions, clientelevate);
 
 for (const url in urlPath) {
     urlPath[url].forEach(element => {

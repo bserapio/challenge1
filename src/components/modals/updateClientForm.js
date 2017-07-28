@@ -58,7 +58,7 @@ class CreateForm extends React.Component {
     handleUpdateExpire = value => {
         const { record } = this.state;
         const {changeUpdateRecord} = this.props;
-        record.ClientMetum.expireDate = value.format('YYYY-MM-DD');
+        record.expireDate = value.format('YYYY-MM-DD');
         this.setState({ record });
         changeUpdateRecord(record);
     };
