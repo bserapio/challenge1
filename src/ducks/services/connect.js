@@ -99,42 +99,6 @@ function elevateClient(data) {
 }
 
 
-axios.interceptors.response.use(
-    response => {
-        console.log(response);
-    return response;
-}
-    , err => {
-    switch (err.response.status) {
-
-
-        case 401: {
-            localStorage.removeItem('user');
-            store.dispatch(apiActions.error401());
-            throw err;
-        }
-        case 403: {
-            console.log('error 403');
-            store.dispatch(apiActions.error403());
-            throw err;
-        }
-        case 405: {
-            console.log('error 405');
-            store.dispatch(apiActions.error405());
-            throw err;
-        }
-        case 500: {
-            console.log('error 500');
-            store.dispatch(apiActions.error500());
-            throw err;
-        }
-        default: {
-            throw err;
-        }
-    }
-});
-
-
 const connectService = {
     login,
     getUsers,

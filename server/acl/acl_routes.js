@@ -6,7 +6,7 @@ const urlPath = {};
 
 
 const usersPath = {
-    '/services/user*': [
+    '/services/user': [
         {
             groups: [groups.adminGroup], // min group
             methods: ['*'],

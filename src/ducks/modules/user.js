@@ -1,5 +1,4 @@
-
-import connectService from '../services/connect';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
 
 const DEFAULT_PATH = 'dashboard/user';
 export const CREATE_USER = `${{DEFAULT_PATH}}/CREATE_USER`;
@@ -8,6 +7,32 @@ export const GET_USERS_SUCCESS = `${{DEFAULT_PATH}}/GET_USERS_SUCCESS`;
 export const GET_USERS_ERROR = `${{DEFAULT_PATH}}/GET_USERS_SUCCESS`;
 export const GET_USERS_REQUEST = `${{DEFAULT_PATH}}/GET_USERS_REQUEST`;
 
+
+export
+type
+Action =
+    {
+        type: GET_USERS_REQUEST,
+        payload: {
+            request: AxiosRequestConfig
+        }
+    } | {
+        type: GET_USERS_SUCCESS,
+        payload: AxiosResponse
+    } | {
+        type: CREATE_USER,
+        payload: {
+            request: AxiosRequestConfig
+        }
+    } | {
+        type: 'APP_DECREMENT',
+        payload: {
+            request: AxiosRequestConfig
+        }
+    };
+
+
+/*
 export function getUsers(role) {
     return dispatch => {
         if (role === 'user') {
@@ -24,25 +49,42 @@ export function getUsers(role) {
                 const users = res.data;
                 dispatch({
                     type: GET_USERS_SUCCESS,
-                    payload: {users},
+                    payload: { users },
                 });
             },
             err => {
                 dispatch({
                     type: GET_USERS_ERROR,
-                    payload: {err},
+                    payload: { err },
                 });
             }
         );
     };
 }
 
+*/
+
+
+export const getUsers = (role): Action => ({
+
+    types: [GET_USERS_REQUEST, GET_USERS_SUCCESS, GET_USERS_ERROR],
+    payload: {
+        request: {
+            method: 'GET',
+            url: '/services/user',
+        }
+    }
+});
+
+
+/*
+
 export function createNewUser(data) {
     return dispatch => connectService.createUser(data).then(
         res => {
             dispatch({
                 type: CREATE_USER,
-                payload: {res},
+                payload: { res },
             });
             dispatch(getUsers());
             return res;
@@ -50,18 +92,18 @@ export function createNewUser(data) {
         err => {
             dispatch({
                 type: ERROR_CREATE_USER,
-                payload: {err},
+                payload: { err },
             });
             throw err;
         }
     ).catch(err => {
         dispatch({
             type: ERROR_CREATE_USER,
-            payload: {err},
+            payload: { err },
         });
     });
 }
-
+*/
 const initialState = {
     users: [],
     createError: null,
@@ -71,7 +113,8 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
 
         case GET_USERS_SUCCESS: {
-            const {users} = action.payload;
+            console.log(action.payload);
+            const users = action.payload.data;
             console.log(users);
             return {
                 ...state,
