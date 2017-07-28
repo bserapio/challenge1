@@ -99,11 +99,14 @@ function elevateClient(data) {
 }
 
 
-axios.interceptors.response.use(response => {
+axios.interceptors.response.use(
+    response => {
+        console.log(response);
     return response;
 }
     , err => {
     switch (err.response.status) {
+
 
         case 401: {
             localStorage.removeItem('user');
@@ -111,6 +114,7 @@ axios.interceptors.response.use(response => {
             throw err;
         }
         case 403: {
+            console.log('error 403');
             store.dispatch(apiActions.error403());
             throw err;
         }
@@ -119,7 +123,11 @@ axios.interceptors.response.use(response => {
             store.dispatch(apiActions.error405());
             throw err;
         }
-
+        case 500: {
+            console.log('error 500');
+            store.dispatch(apiActions.error500());
+            throw err;
+        }
         default: {
             throw err;
         }

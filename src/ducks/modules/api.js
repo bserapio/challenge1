@@ -6,7 +6,7 @@ export const OK_RESPONSE = `${{DEFAULT_PATH}}/OK_RESPONSE`;
 export const ERROR_401 = `${{DEFAULT_PATH}}/ERROR_401`;
 export const ERROR_403 = `${{DEFAULT_PATH}}/ERROR_403`;
 export const ERROR_405 = `${{DEFAULT_PATH}}/ERROR_405`;
-
+export const ERROR_500 = `${{DEFAULT_PATH}}/ERROR_500`;
 
 export function okResponse(response) {
     return response;
@@ -51,6 +51,21 @@ export function error405() {
     };
 }
 
+
+export function error500() {
+    return dispatch => {
+        const apiError = {};
+        console.log('Entro en 500 action');
+        apiError.code = '405';
+        apiError.message = 'Method not allow';
+        return dispatch({
+            type: ERROR_500,
+            payload: {apiError},
+        });
+    };
+}
+
+
 const initialState = {
     apiError: null,
 };
@@ -63,28 +78,16 @@ export default function reducer(state = initialState, action) {
                 apiError: null,
             };
         }
-        case ERROR_401: {
+        case ERROR_401:
+        case ERROR_403:
+        case ERROR_405:
+        case ERROR_500: {
             const {apiError} = action.payload;
             return {
                 ...state,
                 apiError,
             };
         }
-        case ERROR_403: {
-            const {apiError} = action.payload;
-            return {
-                ...state,
-                apiError,
-            };
-        }
-        case ERROR_405: {
-            const {apiError} = action.payload;
-            return {
-                ...state,
-                apiError,
-            };
-        }
-
 
         default: {
             return state;
