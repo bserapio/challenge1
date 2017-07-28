@@ -41,7 +41,7 @@ class CreateForm extends React.Component {
     handleSelectTypeChange = value => {
         const {changeUpdateRecord} = this.props;
         const { record } = this.state;
-        record.type = value;
+        record.ClientMetum.type = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };

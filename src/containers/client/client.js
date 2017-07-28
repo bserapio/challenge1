@@ -96,7 +96,7 @@ class Clients extends React.Component {
 
 
     componentWillReceiveProps(nextProps) {
-        const {userActions, clientActions, auth} = this.props;
+        const { userActions, clientActions, auth } = this.props;
 
         if (nextProps.auth !== auth) {
             userActions.getUsers(nextProps.auth.role);
@@ -107,7 +107,7 @@ class Clients extends React.Component {
 
     // Search Filter
     onSearch = () => {
-        const {clientActions} = this.props;
+        const { clientActions } = this.props;
         clientActions.searchFilter(this.state.searchText);
     };
     onInputChange = e => {
@@ -158,7 +158,7 @@ class Clients extends React.Component {
         this.setState({ clientForm, confirmLoading: false });
     };
     sendCreateForm = form => {
-        const {clientActions} = this.props;
+        const { clientActions } = this.props;
         const { visible, clientForm, formLoading } = this.state;
         clientActions.createClient(clientForm).then(
             () => {
@@ -175,8 +175,8 @@ class Clients extends React.Component {
 
     // Update User
     showUpdateModal = record => {
-        const {visible} = this.state;
-        let {editedRecord} = this.state;
+        const { visible } = this.state;
+        let { editedRecord } = this.state;
         visible.update = true;
         editedRecord = { ...record };
         this.setState({ visible, editedRecord });
@@ -191,7 +191,7 @@ class Clients extends React.Component {
     };
 
     editDone(newRecord, record, key, type) {
-        const {clientActions} = this.props;
+        const { clientActions } = this.props;
         if (type === 'save') {
             if (newRecord !== record) {
                 switch (key) {
@@ -258,7 +258,7 @@ class Clients extends React.Component {
     };
     handleUpdateCreate = () => {
         const { formLoading, editedRecord, visible } = this.state;
-        const {clientActions} = this.props;
+        const { clientActions } = this.props;
         formLoading.update = true;
         this.setState({ formLoading });
 
@@ -289,7 +289,7 @@ class Clients extends React.Component {
     };
     handleElevateCreate = () => {
         const { elevatorForm, formLoading } = this.state;
-        const {auth} = this.state;
+        const { auth } = this.props;
         formLoading.create = true;
 
         this.setState({ formLoading });
@@ -307,7 +307,7 @@ class Clients extends React.Component {
         });
     };
     sendElevatorForm() {
-        const {clientActions} = this.props;
+        const { clientActions } = this.props;
         const { elevatorForm, formLoading } = this.state;
         clientActions.checkElevateClient(elevatorForm).then(
             res => {
@@ -337,7 +337,7 @@ class Clients extends React.Component {
         this.setState({ visible });
     };
     remove = record => {
-        const {clientActions} = this.props;
+        const { clientActions } = this.props;
         clientActions.removeClient(record);
     };
 
@@ -361,7 +361,7 @@ class Clients extends React.Component {
     };
 
     renderColumns(data, index, key, text, type, aclObject) {
-        const {auth} = this.props;
+        const { auth } = this.props;
 
         let extraButton = null;
         if (!data) {
@@ -396,7 +396,7 @@ class Clients extends React.Component {
 
             if (data[index][key] === true) {
                 if (aclObject.indexOf(auth.role) === -1) {
-                    element = (<Icon type="check"/>);
+                    element = (<Icon type="check" />);
                 } else {
                     element = (
 
@@ -408,11 +408,11 @@ class Clients extends React.Component {
                             cancelText="No"
                             key="deletePopup"
                         >
-                            <Button type="primary" icon="check" className="active"/>
+                            <Button type="primary" icon="check" className="active" />
                         </Popconfirm>);
                 }
             } else if (aclObject.indexOf(auth.role) === -1) {
-                element = (<Icon type="close"/>);
+                element = (<Icon type="close" />);
             } else {
                 element = (<Popconfirm
                     placement="top"
@@ -430,7 +430,7 @@ class Clients extends React.Component {
         return text;
     }
     render() {
-        const {clients, auth, config, users, commonActions} = this.props;
+        const { clients, auth, config, users, commonActions } = this.props;
         let acl;
         try {
             acl = config.acl;

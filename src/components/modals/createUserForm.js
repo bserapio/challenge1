@@ -18,13 +18,13 @@ class CreateForm extends React.Component {
         if (!visible) {
             return null;
         }
-        const roles = config.roles;
+        const roles = config.roles
         const {getFieldDecorator} = form;
 
         const rolesChildren = [];
         Object.keys(roles).forEach(element => {
             const value = roles[element];
-            rolesChildren.push(<Option value={element}>{value}</Option>);
+            rolesChildren.push(<Option value={value} key={element}>{value}</Option>);
         });
 
         let errorMessage = null;

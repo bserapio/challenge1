@@ -82,6 +82,8 @@ const fullUpdate = (id, data) => {
         client => {
             element = {};
             element.user_id = data.ClientMetum.user_id;
+            element.type = data.ClientMetum.type;
+            console.log(element);
             db.ClientMeta.update(element, {where: {client_id: client.id}})
                 .then(
                     meta => meta,

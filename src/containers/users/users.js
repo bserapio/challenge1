@@ -15,6 +15,8 @@ const utils = require('../../utils/');
 
 const mapStateToProps = state => ({
     users: state.user.users,
+    auth: state.auth.auth,
+    config: state.common.config,
     createError: state.user.createError,
 });
 
@@ -146,7 +148,7 @@ class User extends React.Component {
     render() {
         const {visible, confirmLoading, loading, pagination, paginationText} = this.state;
 
-        const { createError, users } = this.props;
+        const { createError, users,config} = this.props;
         return (
             <div>
                 <Button.Group size="default">
@@ -163,6 +165,7 @@ class User extends React.Component {
                     onCreate={this.handleCreate}
                     onChange={value => this.handleSelectChange(value)}
                     createError={createError}
+                    config={config}
 
                 />
 
