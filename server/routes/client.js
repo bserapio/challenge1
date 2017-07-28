@@ -6,19 +6,19 @@ const acl = require('../acl/acl_middleware');
 module.exports = (passport, express) => {
     const app = express();
 
-    app.route('/:id/activate')
+    app.route('/:id(\\d+)/activate')
         .put(clientController.activateClient);
-    app.route('/:id/manteinance')
+    app.route('/:id(\\d+)/manteinance')
         .put(clientController.manteinanceClient);
-    app.route('/:id/autoUpdate')
+    app.route('/:id(\\d+)/autoUpdate')
         .put(clientController.autoUpdateClient);
-    app.route('/:id/invoice')
+    app.route('/:id(\\d+)/invoice')
         .put(clientController.newInvoiceClient);
-    app.route('/:id/channel')
+    app.route('/:id(\\d+)/channel')
         .put(clientController.channelClient);
-    app.route('/:id/ikentoo')
+    app.route('/:id(\\d+)/ikentoo')
         .put(clientController.ikentooClient);
-    app.route('/:id')
+    app.route('/:id(\\d+)')
         .get(clientController.detailClient)
         .put(clientController.updateClient)
         .delete(clientController.removeClient);

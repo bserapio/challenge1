@@ -39,7 +39,7 @@ const user = require('./routes/user')(passport, express);
 const client = require('./routes/client')(passport, express);
 const common = require('./routes/common')(passport, express);
 
-app.all('/services/*', acl.isAuthenticated);
+app.all('/services/*', acl.aclMiddleware);
 app.use('/services/client', client);
 app.use('/services/user', user);
 app.use('/common', common);

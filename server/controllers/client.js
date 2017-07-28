@@ -52,7 +52,15 @@ exports.listClient = (req, res) => {
 };
 
 exports.detailClient = (req, res) => {
-    clientManager.detailClient(req.params.id).then().catch();
+    clientManager.detailClient(req.params.id).then(response => {
+            res.json(response)
+        },
+        error => {
+            res.status(400).json(error)
+        }).catch(error => {
+            res.status(500).json(error)
+        }
+    );
 };
 
 exports.removeClient = (req, res) => {

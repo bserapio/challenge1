@@ -97,6 +97,7 @@ module.exports = (sequelize, DataTypes) => {
         ClientDb.hasOne(models.ClientMeta, {
             onDelete: 'CASCADE',
             foreignKey: 'client_id',
+            sourceKey: 'id',
             allowNull: true,
         });
     };
