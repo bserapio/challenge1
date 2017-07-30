@@ -80,7 +80,7 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        const {userActions} = this.props;
+        const { userActions } = this.props;
 
         userActions.getUsers();
     }
@@ -94,7 +94,7 @@ class User extends React.Component {
         this.setState({ visible: false });
     };
     handleCreate = () => {
-        const {userForm} = this.state;
+        const { userForm } = this.state;
         this.setState({ confirmLoading: true });
         this.form.validateFields((err, values) => {
             if (!err) {
@@ -113,12 +113,13 @@ class User extends React.Component {
         this.form = form;
     };
     sendForm = () => {
-        const {userActions} = this.props;
-        const {userForm} = this.state;
+        const { userActions } = this.props;
+        const { userForm } = this.state;
         userActions.createNewUser(userForm).then(
             data => {
                 if (data) {
                     this.setState({ visible: false });
+                    userActions.getUsers();
                     this.form.resetFields();
                 }
             },
@@ -132,7 +133,7 @@ class User extends React.Component {
 
 
     handleSelectChange = value => {
-        const {userForm} = this.state;
+        const { userForm } = this.state;
         userForm.role = value;
         this.setState({ userForm });
     };
@@ -146,9 +147,9 @@ class User extends React.Component {
         }
     };
     render() {
-        const {visible, confirmLoading, loading, pagination, paginationText} = this.state;
+        const { visible, confirmLoading, loading, pagination, paginationText } = this.state;
 
-        const { createError, users,config} = this.props;
+        const { createError, users, config } = this.props;
         return (
             <div>
                 <Button.Group size="default">
@@ -184,6 +185,7 @@ class User extends React.Component {
 User.propTypes = {
     userActions: PropTypes.object.isRequired,
     createError: PropTypes.object,
+    config: PropTypes.object.isRequired,
     users: PropTypes.array,
 };
 

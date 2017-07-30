@@ -1,5 +1,5 @@
-import {createStore, applyMiddleware, combineReducers} from 'redux';
-import {routerReducer, routerMiddleware} from 'react-router-redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
@@ -36,19 +36,20 @@ const reducer = combineReducers({
 const middlewareConfig = {
     interceptors: {
         request: [{
-            success({getState, dispatch, getSourceAction}, req) {
+            success({ getState, dispatch, getSourceAction }, req) {
 
             },
-            error({getState, dispatch, getSourceAction}, error) {
+            error({ getState, dispatch, getSourceAction }, error) {
 
             },
         },
         ],
         response: [{
-            success({getState, dispatch, getSourceAction}, res) {
+            success({ getState, dispatch, getSourceAction }, res) {
+                return res;
 
             },
-            error({getState, dispatch, getSourceAction}, err) {
+            error({ getState, dispatch, getSourceAction }, err) {
                 console.log(err);
                 switch (err.response.status) {
 
@@ -87,7 +88,7 @@ const middlewareConfig = {
 const composeEnhancers = composeWithDevTools({});
 
 const enhancer = composeEnhancers(
-    applyMiddleware(thunk, middleware, axiosMiddleware(axiosClient, middlewareConfig))
+    applyMiddleware(thunk, middleware, axiosMiddleware(axiosClient))
 );
 
 const configureStore = () => createStore(reducer, enhancer);
