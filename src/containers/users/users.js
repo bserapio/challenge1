@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import UserCreateForm from '../../components/modals/createUserForm';
 
 import * as userAc from '../../ducks/modules/user';
+import * as authAc from '../../ducks/modules/auth';
 import './user.css';
 
 const utils = require('../../utils/');
@@ -22,6 +23,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
+    authActions: bindActionCreators(authAc, dispatch)
 });
 
 
@@ -80,7 +82,9 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        const { userActions } = this.props;
+        const {userActions, authActions} = this.props;
+
+        authActions.checkAuthAction();
 
         userActions.getUserAction();
     }

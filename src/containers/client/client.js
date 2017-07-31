@@ -10,6 +10,7 @@ import UpdateClientForm from '../../components/modals/updateClientForm';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
 import * as userAc from '../../ducks/modules/user';
+import * as authAc from '../../ducks/modules/auth';
 import * as clientAc from '../../ducks/modules/client';
 import * as commonAc from '../../ducks/modules/common';
 import './client.css';
@@ -21,6 +22,7 @@ const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
     clientActions: bindActionCreators(clientAc, dispatch),
     commonActions: bindActionCreators(commonAc, dispatch),
+    authActions: bindActionCreators(authAc, dispatch)
 });
 
 const mapStateToProps = state => {
@@ -90,7 +92,8 @@ class Clients extends React.Component {
         filtered: false,
     };
     componentDidMount() {
-
+        const {authActions} = this.props;
+        authActions.checkAuthAction();
 
     }
 
@@ -445,7 +448,7 @@ class Clients extends React.Component {
         try {
             acl = config.acl;
         } catch (err) {
-            commonActions.getConfig();
+            commonActions.getConfigAction();
         }
 
 

@@ -1,16 +1,17 @@
 import configureStore from '../../ducks/configureStore';
-import connectService from '../services/connect';
 
+import {push} from 'react-router-redux';
 const DEFAULT_PATH = 'dashboard/auth';
 export const LOGIN_REQUEST = `${{DEFAULT_PATH}}/LOGIN_REQUEST`;
-export const LOG_IN_SUCCESS = `${{DEFAULT_PATH}}/LOG_IN_SUCCESS`;
+export const LOGIN_SUCCESS = `${{DEFAULT_PATH}}/LOGIN_SUCCESS`;
+export const LOGIN_ERROR = `${{DEFAULT_PATH}}/LOGIN_ERROR`;
 export const LOG_OUT = `${{DEFAULT_PATH}}/LOG_OUT`;
-export const LOGIN_FAIL = `${{DEFAULT_PATH}}/LOGIN_FAIL`;
+
 export const CHECK_LOGIN = `${{DEFAULT_PATH}}/CHECK_LOGIN`;
 export const NOT_LOGGED = `${{DEFAULT_PATH}}/NOT_LOGGED`;
 
 
-export function checkAuth() {
+export function checkAuthAction() {
     return dispatch => {
         dispatch(
             {
@@ -18,23 +19,26 @@ export function checkAuth() {
                 payload: {},
             });
 
-        let auth = localStorage.getItem('user');
-        if (auth) {
-            auth = JSON.parse(auth);
+        const checkAuth = localStorage.getItem('user');
+        if (checkAuth) {
+            console.log(checkAuth);
+            const auth = {};
+            auth.data = JSON.parse(checkAuth);
             configureStore.history.push(window.location.pathname);
             return dispatch(
                 {
-                    type: LOG_IN_SUCCESS,
-                    payload: {auth},
+                    type: LOGIN_SUCCESS,
+                    payload: auth,
                 });
         }
         return dispatch({
-            type: NOT_LOGGED,
+            type: LOGIN_ERROR,
             payload: {},
         });
     };
 }
 
+/*
 export function loginUser(credentials) {
     return dispatch => {
         dispatch({
@@ -48,27 +52,41 @@ export function loginUser(credentials) {
                 configureStore.history.push('/clients');
 
                 dispatch({
-                    type: LOG_IN_SUCCESS,
-                    payload: {auth},
+                    type: LOGIN_SUCCESS,
+                    payload: { auth },
                 });
             },
             loginError => {
                 dispatch({
-                    type: LOGIN_FAIL,
-                    payload: {loginError},
+                    type: LOGIN_ERROR,
+                    payload: { loginError },
                 });
             }
         );
     };
 }
+*/
 
-export function logOutUser() {
+export const loginUserAction = data => ({
+    types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'POST',
+            url: 'login',
+            data,
+
+        },
+    },
+});
+
+
+export function logOutUserAction() {
     return dispatch => {
-
         dispatch({type: LOG_OUT});
         localStorage.removeItem('user');
         configureStore.history.push('/');
-    }
+    };
 }
 
 
@@ -80,8 +98,12 @@ const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
 
-        case LOG_IN_SUCCESS: {
-            const {auth} = action.payload;
+        case LOGIN_SUCCESS: {
+            const auth = action.payload.data;
+            console.log(auth);
+            console.log(JSON.stringify(auth));
+
+            localStorage.setItem('user', JSON.stringify(action.payload.data));
             return {
                 ...state,
                 auth,
@@ -106,7 +128,7 @@ export default function reducer(state = initialState, action) {
 
             };
         }
-        case LOGIN_FAIL: {
+        case LOGIN_ERROR: {
             const {loginError} = action.payload;
 
             return {

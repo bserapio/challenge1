@@ -55,7 +55,7 @@ class App extends React.Component {
 
     logout = () => {
         const {authActions} = this.props;
-        authActions.logOutUser();
+        authActions.logOutUserAction();
     };
 
 
