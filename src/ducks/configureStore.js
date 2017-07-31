@@ -57,7 +57,9 @@ const middlewareConfig = {
             },
             error({getState, dispatch, getSourceAction}, error) {
                 switch (error.response.status) {
-
+                    case 400: {
+                        return dispatch(apiAc.error400());
+                    }
                     case 401: {
                         return dispatch(apiAc.error401());
                     }
