@@ -1,68 +1,47 @@
-import connectService from '../services/connect';
 
 const DEFAULT_PATH = 'dashboard/common';
 
 export const REQUEST_CONFIG = `${{DEFAULT_PATH}}/REQUEST_CONFIG`;
-export const OK_CONFIG = `${{DEFAULT_PATH}}/OK_CONFIG`;
-export const KO_CONFIG = `${{DEFAULT_PATH}}/KO_CONFIG`;
-export const ERROR_CONFIG = `${{DEFAULT_PATH}}/ERROR_CONFIG`;
+export const REQUEST_CONFIG_SUCCESS = `${{DEFAULT_PATH}}/REQUEST_CONFIG_SUCCESS`;
+export const REQUEST_CONFIG_ERROR = `${{DEFAULT_PATH}}/REQUEST_CONFIG_ERROR`;
+
 const initialState = {
     config: null,
 };
 
-export function getConfig() {
-    return dispatch => {
-        dispatch({
-            type: REQUEST_CONFIG,
-            payload: {},
-        });
-        let config = localStorage.getItem('config');
-        if (config) {
-            config = JSON.parse(config);
+export const getConfigAction = () => {
+    const configStorage = localStorage.getItem('getItem');
+    if (configStorage) {
+        const config = {};
+        config.data = configStorage;
+        return dispatch => {
+            dispatch({
+                type: REQUEST_CONFIG_SUCCESS,
+                payload: config,
 
-            return dispatch(
-                {
-                    type: OK_CONFIG,
-                    payload: {config},
-                }
-            );
-        }
-        return connectService.getConfig()
-            .then(
-                res => {
-                    config = res.data;
-
-                    localStorage.setItem('config', JSON.stringify(config));
-                    return dispatch(
-                        {
-                            type: OK_CONFIG,
-                            payload: {config},
-                        }
-                    );
-                },
-                err => dispatch(
-                        {
-                            type: KO_CONFIG,
-                            payload: err,
-                        }
-                )
-            )
-            .catch(error => {
-                dispatch(
-                    {
-                        type: ERROR_CONFIG,
-                        payload: error,
-                    }
-                );
             });
+        };
+    }
+
+    return {
+        types: [REQUEST_CONFIG, REQUEST_CONFIG_SUCCESS, REQUEST_CONFIG_ERROR],
+        client: 'default',
+        payload: {
+            request: {
+                method: 'GET',
+                url: 'common/config',
+
+            },
+        },
     };
-}
+};
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
 
-        case OK_CONFIG: {
-            const {config} = action.payload;
+        case REQUEST_CONFIG_SUCCESS: {
+            const config = action.payload.data;
+            localStorage.setItem('config', JSON.stringify(config));
             return {
                 ...state,
                 config,

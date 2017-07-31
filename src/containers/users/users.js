@@ -82,7 +82,7 @@ class User extends React.Component {
     componentDidMount() {
         const { userActions } = this.props;
 
-        userActions.getUsers();
+        userActions.getUserAction();
     }
     unloadButton() {
         this.setState({ confirmLoading: false });
@@ -115,11 +115,11 @@ class User extends React.Component {
     sendForm = () => {
         const { userActions } = this.props;
         const { userForm } = this.state;
-        userActions.createNewUser(userForm).then(
+        userActions.createUserAction(userForm).then(
             data => {
                 if (data) {
                     this.setState({ visible: false });
-                    userActions.getUsers();
+                    userActions.getUserAction();
                     this.form.resetFields();
                 }
             },

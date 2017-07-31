@@ -34,7 +34,7 @@ class App extends React.Component {
 
     componentDidMount() {
         const {commonActions} = this.props;
-        commonActions.getConfig();
+        commonActions.getConfigAction();
     }
 
     componentWillReceiveProps(nextProps) {

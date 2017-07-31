@@ -99,7 +99,7 @@ class Clients extends React.Component {
         const { userActions, clientActions, auth } = this.props;
 
         if (nextProps.auth !== auth) {
-            userActions.getUsers();
+            userActions.getUserAction();
             clientActions.getClientAction();
         }
     }
@@ -160,12 +160,13 @@ class Clients extends React.Component {
     sendCreateForm = form => {
         const { clientActions } = this.props;
         const { visible, clientForm, formLoading } = this.state;
-        clientActions.createClient(clientForm).then(
+        clientActions.createClientAction(clientForm).then(
             () => {
                 visible.create = false;
                 formLoading.create = false;
                 this.setState({ visible, formLoading });
                 form.resetFields();
+                clientActions.getClientAction();
             },
             err => {
                 console.log(err);
@@ -316,7 +317,7 @@ class Clients extends React.Component {
     sendElevatorForm() {
         const { clientActions } = this.props;
         const { elevatorForm, formLoading } = this.state;
-        clientActions.checkElevateClient(elevatorForm).then(
+        clientActions.checkElevateAction(elevatorForm).then(
             res => {
                 const elevateUrl = {
                     key: res.key,
@@ -345,7 +346,9 @@ class Clients extends React.Component {
     };
     remove = record => {
         const { clientActions } = this.props;
-        clientActions.removeClient(record);
+        clientActions.removeClientAction(record).then(() => {
+            clientActions.getClientAction();
+        });
     };
 
 

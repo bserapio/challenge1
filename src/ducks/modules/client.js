@@ -10,9 +10,13 @@ export const GET_CLIENTS_UPDATE_SUCCESS = `${{DEFAULT_PATH}}/GET_UPDATE_SUCCESS`
 export const GET_CLIENTS_UPDATE_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_UPDATE_ERROR`;
 export const GET_CLIENTS_REMOVE_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_REMOVE_REQUEST`;
 export const GET_CLIENTS_REMOVE_SUCCESS = `${{DEFAULT_PATH}}/GET_CLIENTS_REMOVE_SUCCESS`;
+export const GET_CLIENTS_REMOVE_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_REMOVE_ERROR`;
 export const GET_CLIENTS_CREATION_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_CREATION_REQUEST`;
+export const GET_CLIENTS_CREATION_RESPONSE = `${{DEFAULT_PATH}}/GET_CLIENTS_CREATION_RESPONSE`;
+export const GET_CLIENTS_CREATION_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_CREATION_ERROR`;
 export const GET_CLIENTS_ELEVATOR_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATOR_REQUEST`;
 export const GET_CLIENTS_ELEVATOR_SUCCESS = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATOR_SUCCESS`;
+export const GET_CLIENTS_ELEVATOR_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATOR_ERROR`;
 export const SEARCH_FILTER = `${{DEFAULT_PATH}}/SEARCH_FILTER`;
 
 const prepareClients = data => {
@@ -40,20 +44,6 @@ const prepareClients = data => {
     return results;
 };
 
-
-export function getClientSuccess(clients) {
-    return {
-        type: GET_CLIENTS_SUCCESS,
-        payload: {clients},
-    };
-}
-
-export function getClientUpdateSuccess(clients) {
-    return {
-        type: GET_CLIENTS_UPDATE_SUCCESS,
-        payload: {clients},
-    };
-}
 
 export function getElevatorUpdateSuccess(res) {
     return {
@@ -125,139 +115,52 @@ export const updateClientActionBooleanAction = (data, method) => {
         payload: {
             request: {
                 method: 'PUT',
-                url: url,
+                url,
                 data,
 
             },
         },
-    }
-
+    };
 };
 
 
-export function updateActiveClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
+export const removeClientAction = data => ({
+    types: [GET_CLIENTS_REMOVE_REQUEST, GET_CLIENTS_REMOVE_SUCCESS, GET_CLIENTS_REMOVE_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'DELETE',
+            url: `services/client/${data.id}`,
 
+        },
+    },
+});
 
-        return connectService.updateActiveClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
+export const createClientAction = data => ({
+    types: [GET_CLIENTS_CREATION_REQUEST, GET_CLIENTS_CREATION_RESPONSE, GET_CLIENTS_CREATION_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'POST',
+            url: 'services/client',
+            data,
 
-export function updateManteinanceClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
+        },
+    },
+});
 
+export const checkElevateAction = data => ({
+    types: [GET_CLIENTS_ELEVATOR_REQUEST, GET_CLIENTS_ELEVATOR_SUCCESS, GET_CLIENTS_ELEVATOR_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'POST',
+            url: 'services/client/elevate',
+            data,
 
-        return connectService.updateManteinanceClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function updateAutoUpdateClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateAutoUpdateClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-
-export function updateInvoiceClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateInvoiceClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function updateChannelClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateChannelClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function updateIkentooClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateIkentooClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function removeClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-        return connectService.removeClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function createClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_CREATION_REQUEST,
-            payload: {record},
-        });
-        return connectService.createClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function checkElevateClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_ELEVATOR_REQUEST,
-            payload: {record},
-        });
-        return connectService.elevateClient(record).then(
-            res => {
-                dispatch(getElevatorUpdateSuccess(res.data));
-                return res.data;
-            }
-        );
-    };
-}
+        },
+    },
+});
 
 export function searchFilter(searchText) {
     return dispatch => {

@@ -8,7 +8,7 @@ export const GET_USERS_SUCCESS = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_ERROR = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_REQUEST = `${{ DEFAULT_PATH }}/GET_USERS_REQUEST`;
 
-export const getUsers = () => ({
+export const getUserAction = () => ({
     types: [GET_USERS_REQUEST, GET_USERS_SUCCESS, GET_USERS_ERROR],
     client: 'default',
     payload: {
@@ -21,7 +21,7 @@ export const getUsers = () => ({
 });
 
 
-export const createNewUser = data => ({
+export const createUserAction = data => ({
 
     types: [CREATE_USER_REQUEST, CREATE_USER_SUCCESS, CREATE_USER_ERROR],
     payload: {

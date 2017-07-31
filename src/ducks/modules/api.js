@@ -1,5 +1,3 @@
-import configureStore from '../../ducks/configureStore';
-
 const DEFAULT_PATH = 'dashboard/api';
 export const SEND_REQUEST = `${{DEFAULT_PATH}}/SEND_REQUEST`;
 export const OK_RESPONSE = `${{DEFAULT_PATH}}/OK_RESPONSE`;
@@ -11,33 +9,24 @@ export const ERROR_405 = `${{DEFAULT_PATH}}/ERROR_405`;
 export const ERROR_500 = `${{DEFAULT_PATH}}/ERROR_500`;
 
 export function sendRequest() {
-    return dispatch => {
-
-        return dispatch({
-            type: SEND_REQUEST,
-            payload: {},
-        });
-    };
+    return dispatch => dispatch({
+        type: SEND_REQUEST,
+        payload: {},
+    });
 }
 
 export function clearError() {
-    return dispatch => {
-
-        return dispatch({
-            type: CLEAR_ERROR,
-            payload: {},
-        });
-    };
+    return dispatch => dispatch({
+        type: CLEAR_ERROR,
+        payload: {},
+    });
 }
 
 export function okResponse() {
-    return dispatch => {
-
-        return dispatch({
-            type: OK_RESPONSE,
-            payload: {},
-        });
-    };
+    return dispatch => dispatch({
+        type: OK_RESPONSE,
+        payload: {},
+    });
 }
 
 export function error400() {
@@ -57,8 +46,9 @@ export function error401() {
         const apiError = {};
         apiError.code = '401';
         apiError.message = 'You are not logged in';
-        configureStore.history.push('/');
+
         localStorage.removeItem('user');
+        window.location = '/';
         return dispatch({
             type: ERROR_401,
             payload: {apiError},
@@ -125,7 +115,6 @@ export default function reducer(state = initialState, action) {
         case ERROR_403:
         case ERROR_405:
         case ERROR_500: {
-
             const {apiError} = action.payload;
             return {
                 ...state,
