@@ -41,10 +41,10 @@ export function getConfig() {
                     );
                 },
                 err => dispatch(
-                        {
-                            type: KO_CONFIG,
-                            payload: err,
-                        }
+                    {
+                        type: KO_CONFIG,
+                        payload: err,
+                    }
                 )
             )
             .catch(error => {

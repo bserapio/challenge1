@@ -2,7 +2,6 @@
 
 module.exports = {
     up(queryInterface, Sequelize) {
-
         queryInterface.addConstraint('client_meta', ['client_id'], {
             type: 'FOREIGN KEY',
             references: {

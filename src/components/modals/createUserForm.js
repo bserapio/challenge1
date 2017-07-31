@@ -2,7 +2,6 @@ import React from 'react';
 import {Form, Input, Modal, Select, Alert} from 'antd';
 
 
-
 const Option = Select.Option;
 
 const FormItem = Form.Item;
@@ -18,7 +17,7 @@ class CreateForm extends React.Component {
         if (!visible) {
             return null;
         }
-        const roles = config.roles
+        const roles = config.roles;
         const {getFieldDecorator} = form;
 
         const rolesChildren = [];

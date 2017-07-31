@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import './app.css';
 import * as commonAc from '../ducks/modules/common';
 import * as authAc from '../ducks/modules/auth';
-import utils from '../utils/index';
+
 
 const { Header, Content } = Layout;
 
@@ -31,18 +31,14 @@ const mapStateToProps = state => ({
 class App extends React.Component {
 
     componentDidMount() {
-        const { commonActions,authActions } = this.props;
+        const {commonActions, authActions} = this.props;
         commonActions.getConfig();
-        const auth = authActions.checkAuth();
+        authActions.checkAuth();
     }
 
     componentWillReceiveProps(nextProps) {
         const { auth } = this.props;
-        console.log(nextProps);
-
         const { route } = nextProps;
-        console.log(auth);
-        console.log(this.props.auth);
         if (nextProps.auth.role !== auth.role) {
             if (nextProps.auth.role === 'guest') {
                 try {

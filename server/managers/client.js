@@ -90,9 +90,7 @@ const fullUpdate = (id, data) => {
                     error => error
                 );
         },
-        error => {
-            return error;
-        }
+        error => error
     ).catch(error => {
         throw error;
     });
@@ -100,5 +98,5 @@ const fullUpdate = (id, data) => {
 
 
 module.exports = {
-    createClient, listClient, updateClient, detailClient, deleteClient, fullUpdate
+    createClient, listClient, updateClient, detailClient, deleteClient, fullUpdate,
 };

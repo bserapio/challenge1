@@ -79,10 +79,12 @@ class User extends React.Component {
         };
     }
 
-    componentDidMount() {
-        const {userActions} = this.props;
+    componentWillReceiveProps(nextProps) {
+        const {userActions, auth} = this.props;
 
-        userActions.getUsers();
+        if (nextProps.auth !== auth) {
+            userActions.getUsers(nextProps.auth.role);
+        }
     }
     unloadButton() {
         this.setState({ confirmLoading: false });
@@ -148,7 +150,7 @@ class User extends React.Component {
     render() {
         const {visible, confirmLoading, loading, pagination, paginationText} = this.state;
 
-        const { createError, users,config} = this.props;
+        const {createError, users, config} = this.props;
         return (
             <div>
                 <Button.Group size="default">
@@ -185,6 +187,8 @@ User.propTypes = {
     userActions: PropTypes.object.isRequired,
     createError: PropTypes.object,
     users: PropTypes.array,
+    auth: PropTypes.object,
+    config: PropTypes.object.isRequired,
 };
 
 User.defaultProps = {

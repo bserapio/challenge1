@@ -72,7 +72,7 @@ class CreateForm extends React.Component {
             form,
             confirmLoading,
             users,
-            config
+            config,
         } = this.props;
 
         const {record} = this.state;

@@ -5,20 +5,16 @@ const utils = require('../utils/index');
 
 
 const createUser = data => {
-
     data.password = utils.generatePassword(data.password);
     data.createdAt = new Date();
     data.modifiedAt = new Date();
     return db.User.create(data);
 };
-const getUsers = (limit, page) => {
+const getUsers = (limit, page) => db.User.findAndCountAll({
 
-    return db.User.findAndCountAll({
+    order: [['id', 'ASC']],
 
-        order: [['id', 'ASC']],
-
-    });
-};
+});
 const detailUser = id => {
     db.User.find({
         where: {id},

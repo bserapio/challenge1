@@ -1,12 +1,12 @@
 import apiEndPoints from './shared/endpoints';
-
+import configStore from '../configureStore';
 import * as apiActions from '../modules/api';
 
-import  configureStore from '../configureStore';
 
+console.log(configStore);
+const store = configStore;
 const axios = require('axios');
 
-const store = configureStore;
 
 function login(data) {
     const url = apiEndPoints.login;
@@ -109,22 +109,22 @@ axios.interceptors.response.use(
 
         case 401: {
             localStorage.removeItem('user');
-            //store.dispatch(apiActions.error401());
+            store.dispatch(apiActions.error401());
             throw err;
         }
         case 403: {
             console.log('error 403');
-            //store.dispatch(apiActions.error403());
+            store.dispatch(apiActions.error403());
             throw err;
         }
         case 405: {
             console.log('error 405');
-           // store.dispatch(apiActions.error405());
+            store.dispatch(apiActions.error405());
             throw err;
         }
         case 500: {
             console.log('error 500');
-            //store.dispatch(apiActions.error500());
+            store.dispatch(apiActions.error500());
             throw err;
         }
         default: {

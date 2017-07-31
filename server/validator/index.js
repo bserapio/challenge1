@@ -17,7 +17,6 @@ const Lang = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector
 const Type = t.subtype(t.Str, s => selector.types.indexOf(s.trim().toLowerCase()) > -1);
 
 
-
 const CreateInput = t.struct({
     username: t.Str,
     name: t.Str,

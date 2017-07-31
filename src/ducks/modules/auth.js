@@ -1,4 +1,3 @@
-import configureStore from '../../ducks/configureStore';
 import connectService from '../services/connect';
 
 const DEFAULT_PATH = 'dashboard/auth';
@@ -21,7 +20,7 @@ export function checkAuth() {
         let auth = localStorage.getItem('user');
         if (auth) {
             auth = JSON.parse(auth);
-            configureStore.history.push(window.location.pathname);
+
             return dispatch(
                 {
                     type: LOG_IN_SUCCESS,
@@ -45,7 +44,7 @@ export function loginUser(credentials) {
             res => {
                 const auth = res.data;
                 localStorage.setItem('user', JSON.stringify(res.data));
-                configureStore.history.push('/clients');
+                window.location = '/clients';
 
                 dispatch({
                     type: LOG_IN_SUCCESS,
@@ -64,11 +63,10 @@ export function loginUser(credentials) {
 
 export function logOutUser() {
     return dispatch => {
-
         dispatch({type: LOG_OUT});
         localStorage.removeItem('user');
-        configureStore.history.push('/');
-    }
+        window.location = '/';
+    };
 }
 
 
