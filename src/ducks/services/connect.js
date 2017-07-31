@@ -101,7 +101,6 @@ function elevateClient(data) {
 
 const connectService = {
     login,
-    getUsers,
     getClients,
     updateClient,
     createUser,

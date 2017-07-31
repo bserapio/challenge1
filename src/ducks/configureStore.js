@@ -6,6 +6,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 
+import * as apiAc from './modules/api';
 
 import thunk from 'redux-thunk';
 import api from './modules/api';
@@ -18,9 +19,14 @@ import common from './modules/common';
 const history = createHistory();
 const middleware = routerMiddleware(history);
 
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+
+
 const axiosClient = axios.create({ // all axios can be used, shown in axios documentation
     baseURL: '/',
-    responseType: 'json',
+    withCredentials: true,
+    cancelToken: source.token,
 });
 
 const reducer = combineReducers({
@@ -36,59 +42,51 @@ const reducer = combineReducers({
 const middlewareConfig = {
     interceptors: {
         request: [{
-            success({ getState, dispatch, getSourceAction }, req) {
-
+            success: function ({getState, dispatch, getSourceAction}, req) {
+                dispatch(apiAc.sendRequest(req));
+                return req;
             },
-            error({ getState, dispatch, getSourceAction }, error) {
-
-            },
-        },
+            error: function ({getState, dispatch, getSourceAction}, error) {
+                console.log(error);
+                return error;
+            }
+        }
         ],
         response: [{
-            success({ getState, dispatch, getSourceAction }, res) {
-                return res;
+            success: function ({getState, dispatch, getSourceAction}, req) {
+                return req;
 
             },
-            error({ getState, dispatch, getSourceAction }, err) {
-                console.log(err);
-                switch (err.response.status) {
+            error: function ({getState, dispatch, getSourceAction}, error) {
 
+                switch (error.response.status) {
 
                     case 401: {
-                        localStorage.removeItem('user');
-                        dispatch(api.error401());
-                        throw err;
+                        return dispatch(apiAc.error401());
                     }
                     case 403: {
-                        console.log('error 403');
-                        dispatch(api.error403());
-                        throw err;
+                        return dispatch(apiAc.error403());
                     }
                     case 405: {
-                        console.log('error 405');
-                        dispatch(api.error405());
-                        throw err;
+                        return dispatch(apiAc.error405());
                     }
                     case 500: {
-                        console.log('error 500');
-                        dispatch(api.error500());
-                        throw err;
+                        return dispatch(apiAc.error500());
                     }
-                    default: {
-                        throw err;
-                    }
+
+
                 }
-            },
-        },
-        ],
-    },
+
+
+            }
+        }
+        ]
+    }
 };
-
-
 const composeEnhancers = composeWithDevTools({});
 
 const enhancer = composeEnhancers(
-    applyMiddleware(thunk, middleware, axiosMiddleware(axiosClient))
+    applyMiddleware(thunk, middleware, axiosMiddleware(axiosClient, middlewareConfig))
 );
 
 const configureStore = () => createStore(reducer, enhancer);

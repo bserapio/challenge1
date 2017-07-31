@@ -27,7 +27,7 @@ const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
     let clients;
     if (state.client.searchText !== '' && state.client.searchText) {
-        clients = state.client.clients.rows.map(record => {
+        clients = state.client.clients.map(record => {
             const match = record.identifier.match(reg);
             if (match) {
                 return {
@@ -47,7 +47,7 @@ const mapStateToProps = state => {
         });
         clients = clients.filter(utils.removeUndefined);
     } else {
-        clients = state.client.clients.rows;
+        clients = state.client.clients;
     }
     return {
         auth: state.auth.auth,
@@ -192,43 +192,49 @@ class Clients extends React.Component {
 
     editDone(newRecord, record, key, type) {
         const { clientActions } = this.props;
+        let method = null;
         if (type === 'save') {
             if (newRecord !== record) {
                 switch (key) {
-
-
                     case 'active': {
-                        clientActions.updateActiveClient(newRecord).then(data => data, error => error);
-
+                        method = 'active';
                         break;
                     }
                     case 'maintenance': {
-                        clientActions.updateManteinanceClient(newRecord).then(data => data, error => error);
+                        method = 'maintenance';
                         break;
                     }
                     case 'autoUpdate': {
-                        clientActions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
+                        method = 'autoUpdate';
                         break;
                     }
 
                     case 'ClientMetum#newInvoice': {
-                        clientActions.updateInvoiceClient(newRecord).then(data => data, error => error);
+                        method = 'invoice';
                         break;
                     }
                     case 'ClientMetum#newChannel': {
-                        clientActions.updateChannelClient(newRecord).then(data => data, error => error);
+                        method = 'channel';
                         break;
                     }
 
 
                     case 'ClientMetum#ikentoo': {
-                        clientActions.updateIkentooClient(newRecord).then(data => data, error => error);
+                        method = 'ikentoo';
+                        break;
+                    }
+                    default: {
+                        method = null;
                         break;
                     }
 
-                    default: {
-                        clientActions.updateClient(newRecord).then(data => data, error => error);
-                    }
+                }
+                if (method) {
+                    clientActions.updateClientActionBooleanAction(newRecord, method).then(
+                        () => {
+                            clientActions.getClientAction();
+                        }
+                    );
                 }
             }
         } else {
@@ -269,11 +275,12 @@ class Clients extends React.Component {
             } else {
                 editedRecord.name = values.name;
                 formLoading.update = true;
-                clientActions.updateClient(editedRecord).then(
+                clientActions.updateClientAction(editedRecord).then(
                     () => {
                         visible.update = false;
                         formLoading.update = false;
                         this.setState({ visible, formLoading });
+                        clientActions.getClientAction();
                     },
                     errReq => {
                         console.log(errReq);

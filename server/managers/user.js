@@ -11,7 +11,7 @@ const createUser = data => {
     data.modifiedAt = new Date();
     return db.User.create(data);
 };
-const getUsers = (limit, page) => {
+const getUsers = () => {
 
     return db.User.findAndCountAll({
 

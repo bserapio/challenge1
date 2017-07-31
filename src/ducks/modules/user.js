@@ -1,4 +1,3 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const DEFAULT_PATH = 'dashboard/user';
 export const CREATE_USER_REQUEST = `${{ DEFAULT_PATH }}/CREATE_USER_REQUEST`;
@@ -9,42 +8,20 @@ export const GET_USERS_SUCCESS = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_ERROR = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_REQUEST = `${{ DEFAULT_PATH }}/GET_USERS_REQUEST`;
 
-
-export type Action =
-    {
-        type: GET_USERS_REQUEST,
-        payload: {
-            request: AxiosRequestConfig
-        }
-    } | {
-        type: GET_USERS_SUCCESS,
-        payload: AxiosResponse
-    } | {
-        type: CREATE_USER_REQUEST,
-        payload: {
-            request: AxiosRequestConfig
-        }
-    } | {
-        type: CREATE_USER_SUCCESS,
-        payload: {
-            request: AxiosResponse
-        }
-    };
-
-
-export const getUsers = (): Action => ({
-
+export const getUsers = () => ({
     types: [GET_USERS_REQUEST, GET_USERS_SUCCESS, GET_USERS_ERROR],
+    client: 'default',
     payload: {
         request: {
             method: 'GET',
             url: '/services/user',
+
         },
     },
 });
 
 
-export const createNewUser = (data): Action => ({
+export const createNewUser = data => ({
 
     types: [CREATE_USER_REQUEST, CREATE_USER_SUCCESS, CREATE_USER_ERROR],
     payload: {
@@ -74,6 +51,10 @@ export default function reducer(state = initialState, action) {
                 apiError: null,
                 users,
             };
+        }
+        case GET_USERS_ERROR: {
+            console.log(action.payload);
+            return {...state};
         }
         case ERROR_CREATE_USER: {
             const { createError } = action.payload;
