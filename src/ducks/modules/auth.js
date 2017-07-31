@@ -1,16 +1,15 @@
 import configureStore from '../../ducks/configureStore';
-import connectService from '../services/connect';
 
 const DEFAULT_PATH = 'dashboard/auth';
-export const LOGIN_REQUEST = `${{ DEFAULT_PATH }}/LOGIN_REQUEST`;
-export const LOG_IN_SUCCESS = `${{ DEFAULT_PATH }}/LOG_IN_SUCCESS`;
-export const LOG_OUT = `${{ DEFAULT_PATH }}/LOG_OUT`;
-export const LOGIN_FAIL = `${{ DEFAULT_PATH }}/LOGIN_FAIL`;
-export const CHECK_LOGIN = `${{ DEFAULT_PATH }}/CHECK_LOGIN`;
-export const NOT_LOGGED = `${{ DEFAULT_PATH }}/NOT_LOGGED`;
+export const LOGIN_REQUEST = `${{DEFAULT_PATH}}/LOGIN_REQUEST`;
+export const LOGIN_SUCCESS = `${{DEFAULT_PATH}}/LOGIN_SUCCESS`;
+export const LOGIN_ERROR = `${{DEFAULT_PATH}}/LOGIN_ERROR`;
+export const LOGOUT_REQUEST = `${{DEFAULT_PATH}}/LOGOUT_REQUEST`;
+export const LOGOUT_SUCCESS = `${{DEFAULT_PATH}}/LOGOUT_SUCCESS`;
+export const CHECK_LOGIN = `${{DEFAULT_PATH}}/CHECK_LOGIN`;
 
 
-export function checkAuth() {
+export function checkAuthAction() {
     return dispatch => {
         dispatch(
             {
@@ -18,69 +17,67 @@ export function checkAuth() {
                 payload: {},
             });
 
-        let auth = localStorage.getItem('user');
-        if (auth) {
-            auth = JSON.parse(auth);
-            configureStore.history.push(window.location.pathname);
-            return dispatch(
-                {
-                    type: LOG_IN_SUCCESS,
-                    payload: { auth },
-                });
-        }
-        return dispatch({
-            type: NOT_LOGGED,
-            payload: {},
-        });
-    };
-}
-
-export function loginUser(credentials) {
-    return dispatch => {
-        dispatch({
-            type: LOGIN_REQUEST,
-            payload: {},
-        });
-        return connectService.login(credentials).then(
-            res => {
-                const auth = res.data;
-                localStorage.setItem('user', JSON.stringify(res.data));
-                configureStore.history.push('/clients');
-
-                dispatch({
-                    type: LOG_IN_SUCCESS,
-                    payload: { auth },
-                });
-            },
-            loginError => {
-                dispatch({
-                    type: LOGIN_FAIL,
-                    payload: { loginError },
+        const checkAuth = localStorage.getItem('user');
+        if (checkAuth) {
+            try {
+                const auth = {};
+                auth.data = JSON.parse(checkAuth);
+                configureStore.history.replace(window.location.pathname);
+                return dispatch(
+                    {
+                        type: LOGIN_SUCCESS,
+                        payload: auth,
+                    });
+            } catch (err) {
+                return dispatch({
+                    type: LOGIN_ERROR,
+                    payload: {},
                 });
             }
-        );
+        }
+        return dispatch({
+            type: LOGIN_ERROR,
+            payload: {},
+        });
     };
 }
+export const loginUserAction = data => ({
+    types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'POST',
+            url: 'login',
+            data,
 
-export function logOutUser() {
-    return dispatch => {
-        dispatch({ type: LOG_OUT });
-        localStorage.removeItem('user');
-        configureStore.history.push('/');
-    };
-}
+        },
+    },
+});
+
+
+export const logOutUserAction = () => ({
+    types: [LOGOUT_REQUEST, LOGOUT_SUCCESS],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'GET',
+            url: 'logout',
+        },
+    },
+});
 
 
 const initialState = {
-    auth: { role: 'guest', id: -1 },
+    auth: {role: 'guest', id: -1},
     loginError: null,
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
 
-        case LOG_IN_SUCCESS: {
-            const { auth } = action.payload;
+        case LOGIN_SUCCESS: {
+            const auth = action.payload.data;
+            localStorage.setItem('user', JSON.stringify(action.payload.data));
             return {
                 ...state,
                 auth,
@@ -95,18 +92,19 @@ export default function reducer(state = initialState, action) {
                 loginError: null,
             };
         }
-        case LOG_OUT: {
+        case LOGOUT_SUCCESS: {
+            localStorage.removeItem('user');
             return {
                 ...state,
-                auth: { role: 'guest', id: -1 },
+                auth: {role: 'guest', id: -1},
                 loginError: null,
                 apiError: null,
                 users: [],
 
             };
         }
-        case LOGIN_FAIL: {
-            const { loginError } = action.payload;
+        case LOGIN_ERROR: {
+            const {loginError} = action.payload;
 
             return {
                 ...state,

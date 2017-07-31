@@ -8,33 +8,31 @@ export const GET_USERS_SUCCESS = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_ERROR = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_REQUEST = `${{ DEFAULT_PATH }}/GET_USERS_REQUEST`;
 
+export const getUserAction = () => ({
+    types: [GET_USERS_REQUEST, GET_USERS_SUCCESS, GET_USERS_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'GET',
+            url: '/services/user',
 
-
-export function getUsers() {
-    return {
-
-        types: [GET_USERS_REQUEST, GET_USERS_SUCCESS, GET_USERS_ERROR],
-        payload: {
-            request: {
-                method: 'GET',
-                url: '/services/user',
-            },
         },
-    };
-}
-export function createNewUser(data) {
-    return {
-        types: [CREATE_USER_REQUEST, CREATE_USER_SUCCESS, CREATE_USER_ERROR],
-        payload: {
-            request: {
-                method: 'POST',
-                url: '/services/user',
-                data,
+    },
+});
 
-            },
+
+export const createUserAction = data => ({
+
+    types: [CREATE_USER_REQUEST, CREATE_USER_SUCCESS, CREATE_USER_ERROR],
+    payload: {
+        request: {
+            method: 'POST',
+            url: '/services/user',
+            data,
+
         },
-    };
-}
+    },
+});
 
 
 const initialState = {
@@ -53,6 +51,9 @@ export default function reducer(state = initialState, action) {
                 apiError: null,
                 users,
             };
+        }
+        case GET_USERS_ERROR: {
+            return {...state};
         }
         case ERROR_CREATE_USER: {
             const { createError } = action.payload;

@@ -22,9 +22,8 @@ exports.addUser = (req, res) => {
     }
 };
 exports.listUser = (req, res) => {
-    const limit = req.param('limit', null);
-    const page = req.param('page', 1);
-    userManager.getUsers(limit, page)
+
+    userManager.getUsers()
         .then(
             result => res.json(result),
             error => res.status(400).json(error)

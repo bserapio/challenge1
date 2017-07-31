@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import UserCreateForm from '../../components/modals/createUserForm';
 
 import * as userAc from '../../ducks/modules/user';
+import * as authAc from '../../ducks/modules/auth';
 import './user.css';
 
 const utils = require('../../utils/');
@@ -22,6 +23,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
+    authActions: bindActionCreators(authAc, dispatch),
 });
 
 
@@ -80,9 +82,10 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        const { userActions } = this.props;
+        const {userActions, authActions} = this.props;
+        authActions.checkAuthAction();
 
-        userActions.getUsers();
+        userActions.getUserAction();
     }
     unloadButton() {
         this.setState({ confirmLoading: false });
@@ -115,11 +118,11 @@ class User extends React.Component {
     sendForm = () => {
         const { userActions } = this.props;
         const { userForm } = this.state;
-        userActions.createNewUser(userForm).then(
+        userActions.createUserAction(userForm).then(
             data => {
                 if (data) {
                     this.setState({ visible: false });
-                    userActions.getUsers();
+                    userActions.getUserAction();
                     this.form.resetFields();
                 }
             },
@@ -184,6 +187,7 @@ class User extends React.Component {
 
 User.propTypes = {
     userActions: PropTypes.object.isRequired,
+    authActions: PropTypes.object.isRequired,
     createError: PropTypes.object,
     config: PropTypes.object.isRequired,
     users: PropTypes.array,

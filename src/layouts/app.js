@@ -10,13 +10,15 @@ import {connect} from 'react-redux';
 import './app.css';
 import * as commonAc from '../ducks/modules/common';
 import * as authAc from '../ducks/modules/auth';
-import utils from '../utils/index';
+import * as apiAc from '../ducks/modules/api';
+
 
 const {Header, Content} = Layout;
 
 const mapDispatchToProps = dispatch => ({
     commonActions: bindActionCreators(commonAc, dispatch),
     authActions: bindActionCreators(authAc, dispatch),
+    apiActions: bindActionCreators(apiAc, dispatch),
 });
 
 const mapStateToProps = state => ({
@@ -31,35 +33,43 @@ const mapStateToProps = state => ({
 class App extends React.Component {
 
     componentDidMount() {
-        const {commonActions} = this.props;
-        commonActions.getConfig();
+        const {commonActions, authActions} = this.props;
+        commonActions.getConfigAction();
+        authActions.checkAuthAction();
     }
 
     componentWillReceiveProps(nextProps) {
-        const auth = utils.checkAuth();
+        const {auth} = this.props;
         const {route} = nextProps;
-        if (!auth) {
-            try {
-                if (route.location.pathname !== '/') {
-                    window.location = '/';
+        if (nextProps.auth.role !== auth.role) {
+            if (nextProps.auth.role === 'guest') {
+                try {
+                    if (route.location.pathname !== '/') {
+                        window.location = '/';
+                    }
+                } catch (err) {
+                    throw err;
                 }
-            } catch (err) {
-                throw err;
             }
         }
     }
 
     logout = () => {
         const {authActions} = this.props;
-        authActions.logOutUser();
+        authActions.logOutUserAction();
     };
 
 
     render() {
-        const {apiError, auth, children, route} = this.props;
+        const {apiError, auth, children, route, apiActions} = this.props;
 
+        let CurrentPath;
+        try {
+            CurrentPath = route.location.pathname;
+        } catch (exception) {
+            CurrentPath = '/';
+        }
 
-        const CurrentPath = route.location;
         const defaultKey = (CurrentPath === '/users') ? ['2'] : ['1']; // Is not the best way but is working
         let username = null;
         let visibleNotification = null;
@@ -71,8 +81,9 @@ class App extends React.Component {
                 message: 'ERROR',
                 description: message,
             }));
+            apiActions.clearError();
         }
-        if (auth) {
+        if (auth.role !== 'guest') {
             username = (<span className="username">Hello {auth.username}</span>);
         } else {
             username = null;
@@ -116,6 +127,7 @@ App.propTypes = {
 
     commonActions: PropTypes.object.isRequired,
     authActions: PropTypes.object.isRequired,
+    apiActions: PropTypes.object.isRequired,
     apiError: PropTypes.object,
     auth: PropTypes.object,
     children: PropTypes.object,

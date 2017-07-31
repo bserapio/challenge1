@@ -1,33 +1,46 @@
-
-import connectService from '../services/connect';
-
 const DEFAULT_PATH = 'dashboard/client';
 export const GET_CLIENTS_SUCCESS = `${{DEFAULT_PATH}}/GET_CLIENT_SUCCESS`;
 export const GET_CLIENTS_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENT_REQUEST`;
 export const GET_CLIENTS_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_ERROR`;
 export const GET_CLIENTS_UPDATE_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_UPDATE_REQUEST`;
 export const GET_CLIENTS_UPDATE_SUCCESS = `${{DEFAULT_PATH}}/GET_UPDATE_SUCCESS`;
+export const GET_CLIENTS_UPDATE_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_UPDATE_ERROR`;
 export const GET_CLIENTS_REMOVE_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_REMOVE_REQUEST`;
 export const GET_CLIENTS_REMOVE_SUCCESS = `${{DEFAULT_PATH}}/GET_CLIENTS_REMOVE_SUCCESS`;
+export const GET_CLIENTS_REMOVE_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_REMOVE_ERROR`;
 export const GET_CLIENTS_CREATION_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_CREATION_REQUEST`;
+export const GET_CLIENTS_CREATION_RESPONSE = `${{DEFAULT_PATH}}/GET_CLIENTS_CREATION_RESPONSE`;
+export const GET_CLIENTS_CREATION_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_CREATION_ERROR`;
 export const GET_CLIENTS_ELEVATOR_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATOR_REQUEST`;
 export const GET_CLIENTS_ELEVATOR_SUCCESS = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATOR_SUCCESS`;
+export const GET_CLIENTS_ELEVATOR_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATOR_ERROR`;
 export const SEARCH_FILTER = `${{DEFAULT_PATH}}/SEARCH_FILTER`;
 
+const prepareClients = data => {
+    const results = data.rows;
+    results.forEach((item, index) => {
+        if (Object.prototype.hasOwnProperty.call(item, 'ClientMetum')) {
+            const element = item.ClientMetum;
+            if (element) {
+                Object.keys(element).forEach(prop => {
+                    if (element && Object.prototype.hasOwnProperty.call(element, prop)) {
+                        if (prop === 'User') {
+                            Object.keys(element[prop]).forEach(prop1 => {
+                                item[`ClientMetum#User#${prop1}`] = element[prop][prop1];
+                            });
+                        } else {
+                            item[`ClientMetum#${prop}`] = element[prop];
+                        }
+                    }
+                });
+                item.key = item.id;
+                results[index] = item;
+            }
+        }
+    });
+    return results;
+};
 
-export function getClientSuccess(clients) {
-    return {
-        type: GET_CLIENTS_SUCCESS,
-        payload: {clients},
-    };
-}
-
-export function getClientUpdateSuccess(clients) {
-    return {
-        type: GET_CLIENTS_UPDATE_SUCCESS,
-        payload: {clients},
-    };
-}
 
 export function getElevatorUpdateSuccess(res) {
     return {
@@ -36,200 +49,121 @@ export function getElevatorUpdateSuccess(res) {
     };
 }
 
-export function getClientAction() {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_REQUEST,
-            payload: {},
-        });
 
-        return connectService.getClients().then(
-            res => {
-                const results = res.data.rows;
-                results.forEach((item, index) => {
-                    if (Object.prototype.hasOwnProperty.call(item, 'ClientMetum')) {
-                        const element = item.ClientMetum;
-                        if (element) {
-                            Object.keys(element).forEach(prop => {
-                                if (element && Object.prototype.hasOwnProperty.call(element, prop)) {
-                                    if (prop === 'User') {
-                                        Object.keys(element[prop]).forEach(prop1 => {
-                                            item[`ClientMetum#User#${prop1}`] = element[prop][prop1];
-                                        });
-                                    } else {
-                                        item[`ClientMetum#${prop}`] = element[prop];
-                                    }
-                                }
-                            });
-                            item.key = item.id;
-                            results[index] = item;
-                        }
-                    }
-                });
-                res.data.rows = results;
-                const clients = res.data;
-                return dispatch(
-                    {
-                        type: GET_CLIENTS_SUCCESS,
-                        payload: {clients},
-                    }
-                );
+export const getClientAction = () => ({
+    types: [GET_CLIENTS_REQUEST, GET_CLIENTS_SUCCESS, GET_CLIENTS_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'GET',
+            url: '/services/client',
+
+        },
+    },
+});
+
+export const updateClientAction = data => ({
+    types: [GET_CLIENTS_UPDATE_REQUEST, GET_CLIENTS_UPDATE_SUCCESS, GET_CLIENTS_UPDATE_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'PUT',
+            url: `services/client/${data.id}`,
+            data,
+
+        },
+    },
+});
+
+export const updateClientActionBooleanAction = (data, method) => {
+    let url;
+    switch (method) {
+
+        case 'active': {
+            url = `services/client/${data.id}/activate`;
+            break;
+        }
+        case 'maintenance': {
+            url = `services/client/${data.id}/manteinance`;
+            break;
+        }
+        case 'autoUpdate': {
+            url = `services/client/${data.id}/autoUpdate`;
+            break;
+        }
+        case 'invoice': {
+            url = `services/client/${data.id}/invoice`;
+            break;
+        }
+        case 'channel': {
+            url = `services/client/${data.id}/channel`;
+            break;
+        }
+
+        case 'ikentoo': {
+            url = `services/client/${data.id}/ikentoo`;
+            break;
+        }
+        default: {
+            url = null;
+        }
+    }
+
+    if (url === null) {
+        return url;
+    }
+    return {
+        types: [GET_CLIENTS_UPDATE_REQUEST, GET_CLIENTS_UPDATE_SUCCESS, GET_CLIENTS_UPDATE_ERROR],
+        client: 'default',
+        payload: {
+            request: {
+                method: 'PUT',
+                url,
+                data,
+
             },
-            clientError => dispatch(
-                {
-                    type: GET_CLIENTS_ERROR,
-                    payload: clientError,
-                }
-            )
-        );
+        },
     };
-}
-
-export function updateClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
+};
 
 
-        return connectService.updateClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
+export const removeClientAction = data => ({
+    types: [GET_CLIENTS_REMOVE_REQUEST, GET_CLIENTS_REMOVE_SUCCESS, GET_CLIENTS_REMOVE_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'DELETE',
+            url: `services/client/${data.id}`,
 
-export function updateActiveClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
+        },
+    },
+});
 
+export const createClientAction = data => ({
+    types: [GET_CLIENTS_CREATION_REQUEST, GET_CLIENTS_CREATION_RESPONSE, GET_CLIENTS_CREATION_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'POST',
+            url: 'services/client',
+            data,
 
-        return connectService.updateActiveClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
+        },
+    },
+});
 
-export function updateManteinanceClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
+export const checkElevateAction = data => ({
+    types: [GET_CLIENTS_ELEVATOR_REQUEST, GET_CLIENTS_ELEVATOR_SUCCESS, GET_CLIENTS_ELEVATOR_ERROR],
+    client: 'default',
+    payload: {
+        request: {
+            method: 'POST',
+            url: 'services/client/elevate',
+            data,
 
-
-        return connectService.updateManteinanceClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-
-
-}
-
-export function updateAutoUpdateClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateAutoUpdateClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-
-export function updateInvoiceClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateInvoiceClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-
-
-}
-
-export function updateChannelClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateChannelClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-
-
-}
-
-export function updateIkentooClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-
-
-        return connectService.updateIkentooClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-
-
-}
-
-export function removeClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_UPDATE_REQUEST,
-            payload: {record},
-        });
-        return connectService.removeClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function createClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_CREATION_REQUEST,
-            payload: {record},
-        });
-        return connectService.createClient(record).then(
-            () => dispatch(getClientAction())
-        );
-    };
-}
-
-export function checkElevateClient(record) {
-    return dispatch => {
-        dispatch({
-            type: GET_CLIENTS_ELEVATOR_REQUEST,
-            payload: {record},
-        });
-        return connectService.elevateClient(record).then(
-            res => {
-                dispatch(getElevatorUpdateSuccess(res.data));
-                return res.data;
-            }
-        );
-    };
-}
+        },
+    },
+});
 
 export function searchFilter(searchText) {
     return dispatch => {
@@ -246,10 +180,12 @@ const initialState = {
     searchClient: '',
 };
 
+
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GET_CLIENTS_SUCCESS: {
-            const {clients} = action.payload;
+            const clients = prepareClients(action.payload.data);
+
             return {
                 ...state,
                 clients,
@@ -271,5 +207,4 @@ export default function reducer(state = initialState, action) {
         }
 
     }
-
 }

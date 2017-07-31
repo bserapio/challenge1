@@ -1,15 +1,44 @@
-import configureStore from '../../ducks/configureStore';
-
 const DEFAULT_PATH = 'dashboard/api';
-
+export const SEND_REQUEST = `${{DEFAULT_PATH}}/SEND_REQUEST`;
 export const OK_RESPONSE = `${{DEFAULT_PATH}}/OK_RESPONSE`;
+export const CLEAR_ERROR = `${{DEFAULT_PATH}}/CLEAR_ERROR`;
+export const ERROR_400 = `${{DEFAULT_PATH}}/ERROR_400`;
 export const ERROR_401 = `${{DEFAULT_PATH}}/ERROR_401`;
 export const ERROR_403 = `${{DEFAULT_PATH}}/ERROR_403`;
 export const ERROR_405 = `${{DEFAULT_PATH}}/ERROR_405`;
 export const ERROR_500 = `${{DEFAULT_PATH}}/ERROR_500`;
 
-export function okResponse(response) {
-    return response;
+export function sendRequest() {
+    return dispatch => dispatch({
+        type: SEND_REQUEST,
+        payload: {},
+    });
+}
+
+export function clearError() {
+    return dispatch => dispatch({
+        type: CLEAR_ERROR,
+        payload: {},
+    });
+}
+
+export function okResponse() {
+    return dispatch => dispatch({
+        type: OK_RESPONSE,
+        payload: {},
+    });
+}
+
+export function error400() {
+    return dispatch => {
+        const apiError = {};
+        apiError.code = '400';
+        apiError.message = 'Bad Request';
+        return dispatch({
+            type: ERROR_400,
+            payload: {apiError},
+        });
+    };
 }
 
 export function error401() {
@@ -17,8 +46,9 @@ export function error401() {
         const apiError = {};
         apiError.code = '401';
         apiError.message = 'You are not logged in';
-        configureStore.history.push('/');
+
         localStorage.removeItem('user');
+        window.location = '/';
         return dispatch({
             type: ERROR_401,
             payload: {apiError},
@@ -72,12 +102,15 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case SEND_REQUEST:
+        case CLEAR_ERROR:
         case OK_RESPONSE: {
             return {
                 ...state,
                 apiError: null,
             };
         }
+        case ERROR_400:
         case ERROR_401:
         case ERROR_403:
         case ERROR_405:

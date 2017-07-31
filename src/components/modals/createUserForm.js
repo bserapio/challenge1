@@ -1,6 +1,6 @@
 import React from 'react';
 import {Form, Input, Modal, Select, Alert} from 'antd';
-
+import PropTypes from 'prop-types';
 
 
 const Option = Select.Option;
@@ -18,7 +18,7 @@ class CreateForm extends React.Component {
         if (!visible) {
             return null;
         }
-        const roles = config.roles
+        const roles = config.roles;
         const {getFieldDecorator} = form;
 
         const rolesChildren = [];
@@ -29,7 +29,6 @@ class CreateForm extends React.Component {
 
         let errorMessage = null;
         if (createError) {
-            console.log(createError);
             const message = createError.data.errors[0].message;
 
             errorMessage = (<Alert
@@ -90,6 +89,22 @@ class CreateForm extends React.Component {
 }
 
 const UserCreateForm = Form.create()(CreateForm);
+CreateForm.propTypes = {
+    createError: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onCreate: PropTypes.func.isRequired,
+    config: PropTypes.object.isRequired,
+    visible: PropTypes.bool.isRequired,
+    form: PropTypes.object.isRequired,
+    confirmLoading: PropTypes.bool.isRequired,
+};
 
+CreateForm.defaultProps = {
+    clients: [],
+    users: [],
+    auth: [],
+
+};
 
 export default UserCreateForm;

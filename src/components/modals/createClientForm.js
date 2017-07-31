@@ -1,5 +1,6 @@
 import React from 'react';
 import {Form, Input, Modal, Select} from 'antd';
+import PropTypes from 'prop-types';
 
 const Option = Select.Option;
 
@@ -9,10 +10,10 @@ class CreateForm extends React.Component {
 
     handleSelectLanguageChange = value => {
         this.props.onLanguageChange(value);
-    }
+    };
     handleSelectTypeChange = value => {
         this.props.onTypeChange(value);
-    }
+    };
     render() {
         const {visible, onCancel, onCreate, form, confirmLoading, config} = this.props;
         if (!visible) {
@@ -85,5 +86,21 @@ class CreateForm extends React.Component {
 }
 
 const ClientCreateForm = Form.create()(CreateForm);
+CreateForm.propTypes = {
+    onLanguageChange: PropTypes.func.isRequired,
+    onTypeChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onCreate: PropTypes.func.isRequired,
+    config: PropTypes.object.isRequired,
+    visible: PropTypes.bool.isRequired,
+    form: PropTypes.object.isRequired,
+    confirmLoading: PropTypes.bool.isRequired,
+};
 
+CreateForm.defaultProps = {
+    clients: [],
+    users: [],
+    auth: [],
+
+};
 export default ClientCreateForm;

@@ -10,6 +10,7 @@ import UpdateClientForm from '../../components/modals/updateClientForm';
 import ElevatePrigilegesForm from '../../components/modals/elevatePrivileges';
 
 import * as userAc from '../../ducks/modules/user';
+import * as authAc from '../../ducks/modules/auth';
 import * as clientAc from '../../ducks/modules/client';
 import * as commonAc from '../../ducks/modules/common';
 import './client.css';
@@ -21,13 +22,14 @@ const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
     clientActions: bindActionCreators(clientAc, dispatch),
     commonActions: bindActionCreators(commonAc, dispatch),
+    authActions: bindActionCreators(authAc, dispatch),
 });
 
 const mapStateToProps = state => {
     const reg = new RegExp(state.client.searchText, 'gi');
     let clients;
     if (state.client.searchText !== '' && state.client.searchText) {
-        clients = state.client.clients.rows.map(record => {
+        clients = state.client.clients.map(record => {
             const match = record.identifier.match(reg);
             if (match) {
                 return {
@@ -47,7 +49,7 @@ const mapStateToProps = state => {
         });
         clients = clients.filter(utils.removeUndefined);
     } else {
-        clients = state.client.clients.rows;
+        clients = state.client.clients;
     }
     return {
         auth: state.auth.auth,
@@ -90,8 +92,8 @@ class Clients extends React.Component {
         filtered: false,
     };
     componentDidMount() {
-
-
+        const {authActions} = this.props;
+        authActions.checkAuthAction();
     }
 
 
@@ -99,7 +101,7 @@ class Clients extends React.Component {
         const { userActions, clientActions, auth } = this.props;
 
         if (nextProps.auth !== auth) {
-            userActions.getUsers();
+            userActions.getUserAction();
             clientActions.getClientAction();
         }
     }
@@ -160,12 +162,13 @@ class Clients extends React.Component {
     sendCreateForm = form => {
         const { clientActions } = this.props;
         const { visible, clientForm, formLoading } = this.state;
-        clientActions.createClient(clientForm).then(
+        clientActions.createClientAction(clientForm).then(
             () => {
                 visible.create = false;
                 formLoading.create = false;
                 this.setState({ visible, formLoading });
                 form.resetFields();
+                clientActions.getClientAction();
             },
             err => {
                 console.log(err);
@@ -192,43 +195,49 @@ class Clients extends React.Component {
 
     editDone(newRecord, record, key, type) {
         const { clientActions } = this.props;
+        let method = null;
         if (type === 'save') {
             if (newRecord !== record) {
                 switch (key) {
-
-
                     case 'active': {
-                        clientActions.updateActiveClient(newRecord).then(data => data, error => error);
-
+                        method = 'active';
                         break;
                     }
                     case 'maintenance': {
-                        clientActions.updateManteinanceClient(newRecord).then(data => data, error => error);
+                        method = 'maintenance';
                         break;
                     }
                     case 'autoUpdate': {
-                        clientActions.updateAutoUpdateClient(newRecord).then(data => data, error => error);
+                        method = 'autoUpdate';
                         break;
                     }
 
                     case 'ClientMetum#newInvoice': {
-                        clientActions.updateInvoiceClient(newRecord).then(data => data, error => error);
+                        method = 'invoice';
                         break;
                     }
                     case 'ClientMetum#newChannel': {
-                        clientActions.updateChannelClient(newRecord).then(data => data, error => error);
+                        method = 'channel';
                         break;
                     }
 
 
                     case 'ClientMetum#ikentoo': {
-                        clientActions.updateIkentooClient(newRecord).then(data => data, error => error);
+                        method = 'ikentoo';
+                        break;
+                    }
+                    default: {
+                        method = null;
                         break;
                     }
 
-                    default: {
-                        clientActions.updateClient(newRecord).then(data => data, error => error);
-                    }
+                }
+                if (method) {
+                    clientActions.updateClientActionBooleanAction(newRecord, method).then(
+                        () => {
+                            clientActions.getClientAction();
+                        }
+                    );
                 }
             }
         } else {
@@ -269,11 +278,12 @@ class Clients extends React.Component {
             } else {
                 editedRecord.name = values.name;
                 formLoading.update = true;
-                clientActions.updateClient(editedRecord).then(
+                clientActions.updateClientAction(editedRecord).then(
                     () => {
                         visible.update = false;
                         formLoading.update = false;
                         this.setState({ visible, formLoading });
+                        clientActions.getClientAction();
                     },
                     errReq => {
                         console.log(errReq);
@@ -309,7 +319,7 @@ class Clients extends React.Component {
     sendElevatorForm() {
         const { clientActions } = this.props;
         const { elevatorForm, formLoading } = this.state;
-        clientActions.checkElevateClient(elevatorForm).then(
+        clientActions.checkElevateAction(elevatorForm).then(
             res => {
                 const elevateUrl = {
                     key: res.key,
@@ -338,7 +348,9 @@ class Clients extends React.Component {
     };
     remove = record => {
         const { clientActions } = this.props;
-        clientActions.removeClient(record);
+        clientActions.removeClientAction(record).then(() => {
+            clientActions.getClientAction();
+        });
     };
 
 
@@ -435,7 +447,7 @@ class Clients extends React.Component {
         try {
             acl = config.acl;
         } catch (err) {
-            commonActions.getConfig();
+            commonActions.getConfigAction();
         }
 
 
@@ -649,6 +661,7 @@ Clients.propTypes = {
     userActions: PropTypes.object.isRequired,
     clientActions: PropTypes.object.isRequired,
     commonActions: PropTypes.object.isRequired,
+    authActions: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     clients: PropTypes.array,
     users: PropTypes.array,
