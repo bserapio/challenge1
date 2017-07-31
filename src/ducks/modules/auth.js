@@ -1,6 +1,7 @@
 import configureStore from '../../ducks/configureStore';
 
 import {push} from 'react-router-redux';
+
 const DEFAULT_PATH = 'dashboard/auth';
 export const LOGIN_REQUEST = `${{DEFAULT_PATH}}/LOGIN_REQUEST`;
 export const LOGIN_SUCCESS = `${{DEFAULT_PATH}}/LOGIN_SUCCESS`;
@@ -21,15 +22,21 @@ export function checkAuthAction() {
 
         const checkAuth = localStorage.getItem('user');
         if (checkAuth) {
-            console.log(checkAuth);
-            const auth = {};
-            auth.data = JSON.parse(checkAuth);
-            configureStore.history.push(window.location.pathname);
-            return dispatch(
-                {
-                    type: LOGIN_SUCCESS,
-                    payload: auth,
+            try {
+                const auth = {};
+                auth.data = JSON.parse(checkAuth);
+                configureStore.history.replace(window.location.pathname);
+                return dispatch(
+                    {
+                        type: LOGIN_SUCCESS,
+                        payload: auth,
+                    });
+            } catch (err) {
+                return dispatch({
+                    type: LOGIN_ERROR,
+                    payload: {},
                 });
+            }
         }
         return dispatch({
             type: LOGIN_ERROR,

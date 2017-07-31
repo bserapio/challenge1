@@ -83,7 +83,6 @@ class User extends React.Component {
 
     componentDidMount() {
         const {userActions, authActions} = this.props;
-
         authActions.checkAuthAction();
 
         userActions.getUserAction();

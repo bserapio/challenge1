@@ -1,6 +1,3 @@
-
-import connectService from '../services/connect';
-
 const DEFAULT_PATH = 'dashboard/client';
 export const GET_CLIENTS_SUCCESS = `${{DEFAULT_PATH}}/GET_CLIENT_SUCCESS`;
 export const GET_CLIENTS_REQUEST = `${{DEFAULT_PATH}}/GET_CLIENT_REQUEST`;

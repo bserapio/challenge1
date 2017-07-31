@@ -33,8 +33,9 @@ const mapStateToProps = state => ({
 class App extends React.Component {
 
     componentDidMount() {
-        const {commonActions} = this.props;
+        const {commonActions, authActions} = this.props;
         commonActions.getConfigAction();
+        authActions.checkAuthAction();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -62,8 +63,13 @@ class App extends React.Component {
     render() {
         const {apiError, auth, children, route, apiActions} = this.props;
 
+        let CurrentPath;
+        try {
+            CurrentPath = route.location.pathname;
+        } catch (exception) {
+            CurrentPath = '/';
+        }
 
-        const CurrentPath = route.location;
         const defaultKey = (CurrentPath === '/users') ? ['2'] : ['1']; // Is not the best way but is working
         let username = null;
         let visibleNotification = null;
@@ -75,9 +81,9 @@ class App extends React.Component {
                 message: 'ERROR',
                 description: message,
             }));
-            apiActions.clearError()
+            apiActions.clearError();
         }
-        if (auth) {
+        if (auth.role !== 'guest') {
             username = (<span className="username">Hello {auth.username}</span>);
         } else {
             username = null;

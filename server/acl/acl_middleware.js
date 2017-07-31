@@ -28,10 +28,7 @@ exports.aclMiddleware = (req, res, next) => {
     }
     let keys;
     try {
-        if (!req.user.id) {
-            throw {message: 'You are not logged', id: 401};
-        }
-
+        const id = req.user.id;
         if (!(groupsAcl.adminGroup.indexOf(req.user.role) !== -1)) {
             for (const url in aclRoutes.urlPath) {
                 const re = pathToRegexp(url, keys);
@@ -54,6 +51,11 @@ exports.aclMiddleware = (req, res, next) => {
         }
     } catch (err) {
         console.log(err);
-        return res.status(err.id).json({message: err.message});
+        if (err.hasOwnProperty('id')) {
+            return res.status(err.id).json({message: 'You are not logged'});
+        } else {
+            return res.status(401).json({message: err.message});
+        }
     }
+
 };
