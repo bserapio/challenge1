@@ -104,8 +104,14 @@ export const updateClientActionBooleanAction = (data, method) => {
             url = `services/client/${data.id}/ikentoo`;
             break;
         }
+        default: {
+            url = null;
+        }
     }
 
+    if (url === null) {
+        return url;
+    }
     return {
         types: [GET_CLIENTS_UPDATE_REQUEST, GET_CLIENTS_UPDATE_SUCCESS, GET_CLIENTS_UPDATE_ERROR],
         client: 'default',

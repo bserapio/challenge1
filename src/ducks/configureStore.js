@@ -6,10 +6,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 
-import * as apiAc from './modules/api';
-
 import thunk from 'redux-thunk';
-import api from './modules/api';
+
+import * as apiAc from './modules/api';
 import auth from './modules/auth';
 import client from './modules/client';
 import user from './modules/user';
@@ -31,7 +30,7 @@ const axiosClient = axios.create({ // all axios can be used, shown in axios docu
 
 const reducer = combineReducers({
     router: routerReducer,
-    api,
+    api: apiAc.default,
     auth,
     client,
     user,
@@ -42,23 +41,21 @@ const reducer = combineReducers({
 const middlewareConfig = {
     interceptors: {
         request: [{
-            success: function ({getState, dispatch, getSourceAction}, req) {
+            success({getState, dispatch, getSourceAction}, req) {
                 dispatch(apiAc.sendRequest(req));
                 return req;
             },
-            error: function ({getState, dispatch, getSourceAction}, error) {
+            error({getState, dispatch, getSourceAction}, error) {
                 console.log(error);
                 return error;
-            }
-        }
+            },
+        },
         ],
         response: [{
-            success: function ({getState, dispatch, getSourceAction}, req) {
+            success({getState, dispatch, getSourceAction}, req) {
                 return req;
-
             },
-            error: function ({getState, dispatch, getSourceAction}, error) {
-
+            error({getState, dispatch, getSourceAction}, error) {
                 switch (error.response.status) {
 
                     case 401: {
@@ -73,15 +70,16 @@ const middlewareConfig = {
                     case 500: {
                         return dispatch(apiAc.error500());
                     }
+                    default: {
+                        return error;
+                    }
 
 
                 }
-
-
-            }
-        }
-        ]
-    }
+            },
+        },
+        ],
+    },
 };
 const composeEnhancers = composeWithDevTools({});
 

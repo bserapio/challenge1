@@ -11,7 +11,7 @@ import './app.css';
 import * as commonAc from '../ducks/modules/common';
 import * as authAc from '../ducks/modules/auth';
 import * as apiAc from '../ducks/modules/api';
-import utils from '../utils/index';
+
 
 const {Header, Content} = Layout;
 
