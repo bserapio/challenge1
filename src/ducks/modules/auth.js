@@ -2,12 +2,12 @@ import configureStore from '../../ducks/configureStore';
 import connectService from '../services/connect';
 
 const DEFAULT_PATH = 'dashboard/auth';
-export const LOGIN_REQUEST = `${{DEFAULT_PATH}}/LOGIN_REQUEST`;
-export const LOG_IN_SUCCESS = `${{DEFAULT_PATH}}/LOG_IN_SUCCESS`;
-export const LOG_OUT = `${{DEFAULT_PATH}}/LOG_OUT`;
-export const LOGIN_FAIL = `${{DEFAULT_PATH}}/LOGIN_FAIL`;
-export const CHECK_LOGIN = `${{DEFAULT_PATH}}/CHECK_LOGIN`;
-export const NOT_LOGGED = `${{DEFAULT_PATH}}/NOT_LOGGED`;
+export const LOGIN_REQUEST = `${{ DEFAULT_PATH }}/LOGIN_REQUEST`;
+export const LOG_IN_SUCCESS = `${{ DEFAULT_PATH }}/LOG_IN_SUCCESS`;
+export const LOG_OUT = `${{ DEFAULT_PATH }}/LOG_OUT`;
+export const LOGIN_FAIL = `${{ DEFAULT_PATH }}/LOGIN_FAIL`;
+export const CHECK_LOGIN = `${{ DEFAULT_PATH }}/CHECK_LOGIN`;
+export const NOT_LOGGED = `${{ DEFAULT_PATH }}/NOT_LOGGED`;
 
 
 export function checkAuth() {
@@ -25,7 +25,7 @@ export function checkAuth() {
             return dispatch(
                 {
                     type: LOG_IN_SUCCESS,
-                    payload: {auth},
+                    payload: { auth },
                 });
         }
         return dispatch({
@@ -49,13 +49,13 @@ export function loginUser(credentials) {
 
                 dispatch({
                     type: LOG_IN_SUCCESS,
-                    payload: {auth},
+                    payload: { auth },
                 });
             },
             loginError => {
                 dispatch({
                     type: LOGIN_FAIL,
-                    payload: {loginError},
+                    payload: { loginError },
                 });
             }
         );
@@ -64,16 +64,15 @@ export function loginUser(credentials) {
 
 export function logOutUser() {
     return dispatch => {
-
-        dispatch({type: LOG_OUT});
+        dispatch({ type: LOG_OUT });
         localStorage.removeItem('user');
         configureStore.history.push('/');
-    }
+    };
 }
 
 
 const initialState = {
-    auth: {role: 'guest', id: -1},
+    auth: { role: 'guest', id: -1 },
     loginError: null,
 };
 
@@ -81,7 +80,7 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
 
         case LOG_IN_SUCCESS: {
-            const {auth} = action.payload;
+            const { auth } = action.payload;
             return {
                 ...state,
                 auth,
@@ -99,7 +98,7 @@ export default function reducer(state = initialState, action) {
         case LOG_OUT: {
             return {
                 ...state,
-                auth: {role: 'guest', id: -1},
+                auth: { role: 'guest', id: -1 },
                 loginError: null,
                 apiError: null,
                 users: [],
@@ -107,7 +106,7 @@ export default function reducer(state = initialState, action) {
             };
         }
         case LOGIN_FAIL: {
-            const {loginError} = action.payload;
+            const { loginError } = action.payload;
 
             return {
                 ...state,
