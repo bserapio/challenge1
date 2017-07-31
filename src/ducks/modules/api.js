@@ -1,12 +1,12 @@
-import configureStore from '../../ducks/configureStore';
+
 
 const DEFAULT_PATH = 'dashboard/api';
 
-export const OK_RESPONSE = `${{DEFAULT_PATH}}/OK_RESPONSE`;
-export const ERROR_401 = `${{DEFAULT_PATH}}/ERROR_401`;
-export const ERROR_403 = `${{DEFAULT_PATH}}/ERROR_403`;
-export const ERROR_405 = `${{DEFAULT_PATH}}/ERROR_405`;
-export const ERROR_500 = `${{DEFAULT_PATH}}/ERROR_500`;
+export const OK_RESPONSE = `${{ DEFAULT_PATH }}/OK_RESPONSE`;
+export const ERROR_401 = `${{ DEFAULT_PATH }}/ERROR_401`;
+export const ERROR_403 = `${{ DEFAULT_PATH }}/ERROR_403`;
+export const ERROR_405 = `${{ DEFAULT_PATH }}/ERROR_405`;
+export const ERROR_500 = `${{ DEFAULT_PATH }}/ERROR_500`;
 
 export function okResponse(response) {
     return response;
@@ -17,11 +17,11 @@ export function error401() {
         const apiError = {};
         apiError.code = '401';
         apiError.message = 'You are not logged in';
-        configureStore.history.push('/');
+        window.location = '/';
         localStorage.removeItem('user');
         return dispatch({
             type: ERROR_401,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -33,7 +33,7 @@ export function error403() {
         apiError.message = 'You are not allow to do that operation';
         return dispatch({
             type: ERROR_403,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -46,7 +46,7 @@ export function error405() {
         apiError.message = 'Method not allow';
         return dispatch({
             type: ERROR_405,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -60,7 +60,7 @@ export function error500() {
         apiError.message = 'Method not allow';
         return dispatch({
             type: ERROR_500,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -82,7 +82,7 @@ export default function reducer(state = initialState, action) {
         case ERROR_403:
         case ERROR_405:
         case ERROR_500: {
-            const {apiError} = action.payload;
+            const { apiError } = action.payload;
             return {
                 ...state,
                 apiError,

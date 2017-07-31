@@ -4,15 +4,15 @@ import Link from 'react-router-redux-dom-link';
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Layout, Menu, LocaleProvider, notification} from 'antd';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import { Layout, Menu, LocaleProvider, notification } from 'antd';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import './app.css';
 import * as commonAc from '../ducks/modules/common';
 import * as authAc from '../ducks/modules/auth';
 import utils from '../utils/index';
 
-const {Header, Content} = Layout;
+const { Header, Content } = Layout;
 
 const mapDispatchToProps = dispatch => ({
     commonActions: bindActionCreators(commonAc, dispatch),
@@ -31,32 +31,39 @@ const mapStateToProps = state => ({
 class App extends React.Component {
 
     componentDidMount() {
-        const {commonActions} = this.props;
+        const { commonActions,authActions } = this.props;
         commonActions.getConfig();
+        const auth = authActions.checkAuth();
     }
 
     componentWillReceiveProps(nextProps) {
-        const auth = utils.checkAuth();
-        const {route} = nextProps;
-        if (!auth) {
-            try {
-                if (route.location.pathname !== '/') {
-                    window.location = '/';
+        const { auth } = this.props;
+        console.log(nextProps);
+
+        const { route } = nextProps;
+        console.log(auth);
+        console.log(this.props.auth);
+        if (nextProps.auth.role !== auth.role) {
+            if (nextProps.auth.role === 'guest') {
+                try {
+                    if (route.location.pathname !== '/') {
+                        window.location = '/';
+                    }
+                } catch (err) {
+                    throw err;
                 }
-            } catch (err) {
-                throw err;
             }
         }
     }
 
     logout = () => {
-        const {authActions} = this.props;
+        const { authActions } = this.props;
         authActions.logOutUser();
     };
 
 
     render() {
-        const {apiError, auth, children, route} = this.props;
+        const { apiError, auth, children, route } = this.props;
 
 
         const CurrentPath = route.location;
@@ -83,7 +90,7 @@ class App extends React.Component {
                 <Layout className="layout">
 
                     <Header>
-                        <div className="logo"/>
+                        <div className="logo" />
                         {auth !== null && auth.role !== 'guest' &&
 
 
@@ -91,7 +98,7 @@ class App extends React.Component {
                             theme="dark"
                             mode="horizontal"
                             defaultSelectedKeys={defaultKey}
-                            style={{lineHeight: '64px'}}
+                            style={{ lineHeight: '64px' }}
                         >
                             <Menu.Item key="1"><Link to="/clients">Clients</Link></Menu.Item>
                             <Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
@@ -101,7 +108,7 @@ class App extends React.Component {
 
                         }
                     </Header>
-                    <Content style={{padding: '0 50px'}}>
+                    <Content style={{ padding: '0 50px' }}>
                         {username}
                         {visibleNotification}
                         {children}

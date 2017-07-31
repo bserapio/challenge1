@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 
-import {Route} from 'react-router-dom';
-import {ConnectedRouter} from 'react-router-redux';
+import { Route } from 'react-router-dom';
+import { ConnectedRouter } from 'react-router-redux';
 
 import configureStore from './ducks/configureStore';
 import Home from './containers/home/home';
@@ -18,9 +18,9 @@ ReactDOM.render(
             <ConnectedRouter history={configureStore.history}>
 
                 <div>
-                    <Route exact path="/" component={Home}/>
-                    <Route exact path="/users" component={Users}/>
-                    <Route exact path="/clients" component={Clients}/>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/users" component={Users} />
+                    <Route exact path="/clients" component={Clients} />
 
                 </div>
 
