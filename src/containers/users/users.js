@@ -23,7 +23,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
-    authActions: bindActionCreators(authAc, dispatch)
+    authActions: bindActionCreators(authAc, dispatch),
 });
 
 
@@ -187,6 +187,7 @@ class User extends React.Component {
 
 User.propTypes = {
     userActions: PropTypes.object.isRequired,
+    authActions: PropTypes.object.isRequired,
     createError: PropTypes.object,
     config: PropTypes.object.isRequired,
     users: PropTypes.array,

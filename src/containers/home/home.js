@@ -1,4 +1,5 @@
 import { Form, Icon, Input, Button, Checkbox, Alert } from 'antd';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import {} from 'react-router-redux';
@@ -97,6 +98,21 @@ class NormalLoginForm extends React.Component {
 }
 
 const Home = Form.create()(NormalLoginForm);
+NormalLoginForm.propTypes = {
+    authActions: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    loginError: PropTypes.object,
+    form: PropTypes.object,
+};
+
+NormalLoginForm.defaultProps = {
+    loginError: null,
+    form: null,
+    users: [],
+    auth: [],
+    createError: null,
+
+};
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

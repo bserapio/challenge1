@@ -53,7 +53,6 @@ export default function reducer(state = initialState, action) {
             };
         }
         case GET_USERS_ERROR: {
-            console.log(action.payload);
             return {...state};
         }
         case ERROR_CREATE_USER: {

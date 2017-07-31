@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => ({
     userActions: bindActionCreators(userAc, dispatch),
     clientActions: bindActionCreators(clientAc, dispatch),
     commonActions: bindActionCreators(commonAc, dispatch),
-    authActions: bindActionCreators(authAc, dispatch)
+    authActions: bindActionCreators(authAc, dispatch),
 });
 
 const mapStateToProps = state => {
@@ -94,7 +94,6 @@ class Clients extends React.Component {
     componentDidMount() {
         const {authActions} = this.props;
         authActions.checkAuthAction();
-
     }
 
 
@@ -662,6 +661,7 @@ Clients.propTypes = {
     userActions: PropTypes.object.isRequired,
     clientActions: PropTypes.object.isRequired,
     commonActions: PropTypes.object.isRequired,
+    authActions: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     clients: PropTypes.array,
     users: PropTypes.array,
