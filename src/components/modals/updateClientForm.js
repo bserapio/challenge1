@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Form, Input, Modal, Select, DatePicker } from 'antd';
+import PropTypes from 'prop-types';
 
 const moment = require('moment');
 
@@ -20,15 +21,16 @@ class CreateForm extends React.Component {
             users: [],
         };
     }
-    componentWillReceiveProps(nextProps) {
-        const {users, record} = nextProps;
-        this.setState({record, users});
-    }
 
     componentDidMount() {
 
 
     }
+    componentWillReceiveProps(nextProps) {
+        const {users, record} = nextProps;
+        this.setState({record, users});
+    }
+
 
     handleSelectLanguageChange = value => {
         const { record } = this.state;
@@ -72,7 +74,7 @@ class CreateForm extends React.Component {
             form,
             confirmLoading,
             users,
-            config
+            config,
         } = this.props;
 
         const {record} = this.state;
@@ -164,5 +166,25 @@ class CreateForm extends React.Component {
 }
 
 const UpdateClientForm = Form.create()(CreateForm);
+CreateForm.propTypes = {
+
+    onUpdateCancel: PropTypes.func.isRequired,
+    onUpdateCreate: PropTypes.func.isRequired,
+    config: PropTypes.object.isRequired,
+    visible: PropTypes.bool.isRequired,
+    form: PropTypes.object.isRequired,
+    users: PropTypes.object.isRequired,
+    record: PropTypes.object.isRequired,
+    changeUpdateRecord: PropTypes.object.isRequired,
+    confirmLoading: PropTypes.bool.isRequired,
+};
+
+
+CreateForm.defaultProps = {
+    clients: [],
+    users: [],
+    auth: [],
+
+};
 
 export default UpdateClientForm;

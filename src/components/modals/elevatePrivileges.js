@@ -1,5 +1,6 @@
 import React from 'react';
 import {Form, Input, Modal} from 'antd';
+import PropTypes from 'prop-types';
 
 const FormItem = Form.Item;
 
@@ -11,14 +12,14 @@ class CreateElevatorForm extends React.Component {
             return null;
         }
         const getHtml = res => ({__html: res});
-        const getModal = (modalText, getFieldDecorator) => {
-            if (modalText) {
+        const getModal = (data, getFieldDecorator) => {
+            if (data) {
                 let res = '';
                 const elevatorUrl = {
-                    app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${modalText.key}&opcode=${modalText.identifier}`,
-                    beta: `https://dev.base7.io/use-token?is_backdoor=1&token=${modalText.key}&opcode=${modalText.identifier}`,
-                    stage_app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${modalText.key}&opcode=${modalText.identifier}`,
-                    stage_beta: `https://dev.stage.base7.io/use-token?is_backdoor=1&token=${modalText.key}&opcode=${modalText.identifier}`,
+                    app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${data.key}&opcode=${data.identifier}`,
+                    beta: `https://dev.base7.io/use-token?is_backdoor=1&token=${data.key}&opcode=${data.identifier}`,
+                    stage_app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${data.key}&opcode=${data.identifier}`,
+                    stage_beta: `https://dev.stage.base7.io/use-token?is_backdoor=1&token=${data.key}&opcode=${data.identifier}`,
 
                 };
                 for (const prop in elevatorUrl) {
@@ -64,5 +65,22 @@ class CreateElevatorForm extends React.Component {
 }
 
 const ElevatePrigilegesForm = Form.create()(CreateElevatorForm);
+CreateElevatorForm.propTypes = {
+    onElevatorCreate: PropTypes.func.isRequired,
+    onElevatorCancel: PropTypes.func.isRequired,
+    modalText: PropTypes.object,
+    visible: PropTypes.bool.isRequired,
+    form: PropTypes.object.isRequired,
+    confirmElevatorLoading: PropTypes.bool.isRequired,
+};
+
+
+CreateElevatorForm.defaultProps = {
+    clients: [],
+    users: [],
+    auth: [],
+    modalText: null,
+
+};
 
 export default ElevatePrigilegesForm;
