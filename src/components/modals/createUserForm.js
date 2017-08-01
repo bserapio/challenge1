@@ -97,6 +97,7 @@ CreateForm.propTypes = {
     config: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
     form: PropTypes.object.isRequired,
+
 };
 
 CreateForm.defaultProps = {

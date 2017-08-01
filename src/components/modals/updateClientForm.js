@@ -170,7 +170,7 @@ CreateForm.propTypes = {
     config: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
     form: PropTypes.object.isRequired,
-    users: PropTypes.object.isRequired,
+    users: PropTypes.array.isRequired,
     record: PropTypes.object.isRequired,
     changeUpdateRecord: PropTypes.func.isRequired,
     confirmLoading: PropTypes.bool,
@@ -180,7 +180,7 @@ CreateForm.propTypes = {
 CreateForm.defaultProps = {
     clients: [],
     auth: [],
-    users: {},
+    users: [],
     confirmLoading: null,
 
 };

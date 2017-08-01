@@ -25,7 +25,7 @@ const mapStateToProps = state => ({
     auth: state.auth.auth,
     users: state.user.users,
     apiError: state.api.apiError,
-    route: state.router,
+    router: state.router,
     config: state.common.config,
 });
 
@@ -39,12 +39,13 @@ class App extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {auth} = this.props;
-        const {route} = nextProps;
+        const {auth, router} = this.props;
+
+
         if (nextProps.auth.role !== auth.role) {
             if (nextProps.auth.role === 'guest') {
                 try {
-                    if (route.location.pathname !== '/') {
+                    if (router.location.pathname !== '/') {
                         window.location = '/';
                     }
                 } catch (err) {

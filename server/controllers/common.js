@@ -1,7 +1,7 @@
 'use strict';
 
 const selectors = require('../../config/selectors');
-const acl = require('../acl/acl');
+const acl = require('../acl/aclGroups');
 
 exports.getLanguages = (req, res) => {
     res.json(selectors.languages);

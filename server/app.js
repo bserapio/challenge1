@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
-const acl = require('./acl/acl_middleware');
+const aclModel = require('./acl/index');
 
 const app = express();
 app.use(cors());
@@ -39,7 +39,8 @@ const user = require('./routes/user')(passport, express);
 const client = require('./routes/client')(passport, express);
 const common = require('./routes/common')(passport, express);
 
-app.all('/services/*', acl.aclMiddleware);
+console.log(aclModel.aclFix.get());
+app.all('/services/*', aclModel.aclFix.middleware);
 app.use('/services/client', client);
 app.use('/services/user', user);
 app.use('/common', common);

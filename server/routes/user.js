@@ -1,7 +1,7 @@
 'use strict';
 
 const userController = require('../controllers/user');
-const acl = require('../acl/acl_middleware');
+
 
 module.exports = (passport, express) => {
     const app = express();

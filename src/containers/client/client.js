@@ -98,10 +98,15 @@ class Clients extends React.Component {
 
 
     componentWillReceiveProps(nextProps) {
-        const { userActions, clientActions, auth } = this.props;
-
+        const {userActions, clientActions, auth, config} = this.props;
+        if (!config) {
+            window.location = '/';
+        }
         if (nextProps.auth !== auth) {
-            userActions.getUserAction();
+            const role = nextProps.auth.role;
+            if (config.acl.managerGroup.indexOf(role) !== -1) {
+                userActions.getUserAction();
+            }
             clientActions.getClientAction();
         }
     }
@@ -664,13 +669,14 @@ Clients.propTypes = {
     authActions: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     clients: PropTypes.array,
+    users: PropTypes.array,
     auth: PropTypes.object,
 };
 
 Clients.defaultProps = {
     clients: [],
-    users: {},
-    auth: [],
+    users: [],
+    auth: {},
 
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Clients);
