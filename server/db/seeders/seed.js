@@ -74,9 +74,10 @@ const seedUsers = () => {
             },
         ];
 
-    return db.User.bulkCreate(users).then(() => db.sequelize.query(`ALTER SEQUENCE "users_id_seq" RESTART WITH ${users[users.length - 1].id + 1};`).then(result => result, error => error), error => {
-            console.log(error);
-        }
+
+    return db.User.bulkCreate(users).then(() => db.sequelize.query('ALTER SEQUENCE "users_id_seq" RESTART WITH 7').then(result => result, error => error), error => {
+        console.log(error);
+    }
     );
 };
 
@@ -90,7 +91,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel1',
             dbLogin: 'b7_hotel1',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
         {
             id: 2,
@@ -100,7 +101,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel2',
             dbLogin: 'b7_hotel2',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
         {
             id: 3,
@@ -110,7 +111,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel3',
             dbLogin: 'b7_hotel3',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
         {
             id: 4,
@@ -120,7 +121,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel4',
             dbLogin: 'b7_hotel4',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
         {
             id: 5,
@@ -130,7 +131,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel5',
             dbLogin: 'b7_hotel1',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
         {
             id: 6,
@@ -140,7 +141,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel6',
             dbLogin: 'b7_hotel6',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
         {
             id: 7,
@@ -150,7 +151,7 @@ const seedClientDb = () => {
             dbName: 'client_hotel7',
             dbLogin: 'b7_hotel7',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -161,7 +162,7 @@ const seedClientDb = () => {
             dbName: 'client_summer8',
             dbLogin: 'b7_summer8',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -172,7 +173,7 @@ const seedClientDb = () => {
             dbName: 'client_summer9',
             dbLogin: 'b7_summer9',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -183,7 +184,7 @@ const seedClientDb = () => {
             dbName: 'client_summer10',
             dbLogin: 'b7_summer10',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -194,7 +195,7 @@ const seedClientDb = () => {
             dbName: 'client_summer11',
             dbLogin: 'b7_summer11',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -205,7 +206,7 @@ const seedClientDb = () => {
             dbName: 'client_summer12',
             dbLogin: 'b7_summer12',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -216,7 +217,7 @@ const seedClientDb = () => {
             dbName: 'client_summer13',
             dbLogin: 'b7_summer13',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -227,7 +228,7 @@ const seedClientDb = () => {
             dbName: 'client_summer14',
             dbLogin: 'b7_summer14',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -238,7 +239,7 @@ const seedClientDb = () => {
             dbName: 'client_summer15',
             dbLogin: 'b7_summer15',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -249,7 +250,7 @@ const seedClientDb = () => {
             dbName: 'client_summer16',
             dbLogin: 'b7_summer16',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -260,7 +261,7 @@ const seedClientDb = () => {
             dbName: 'client_summer17',
             dbLogin: 'b7_summer17',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -271,7 +272,7 @@ const seedClientDb = () => {
             dbName: 'client_summer18',
             dbLogin: 'b7_summer18',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
         {
@@ -282,7 +283,7 @@ const seedClientDb = () => {
             dbName: 'client_summer19',
             dbLogin: 'b7_summer19',
             dbPass: 'test123',
-            expireDate: moment().add(30, 'days').format(),
+            expireDate: moment().add('days', 30).format(),
         },
 
 
@@ -466,7 +467,7 @@ const seedClientMeta = () => {
     ];
 
 
-    return db.ClientMeta.bulkCreate(ClientMeta).then(() => db.sequelize.query(`ALTER SEQUENCE "users_id_seq" RESTART WITH ${ClientMeta[ClientMeta.length - 1].id + 1};`).then(result => result, error => error)
+    return db.ClientMeta.bulkCreate(ClientMeta).then(() => db.sequelize.query(`ALTER SEQUENCE "client_meta_id_seq" RESTART WITH ${ClientMeta[ClientMeta.length - 1].id + 1};`).then(result => result, error => error)
 
         , error => {
             console.log(error);

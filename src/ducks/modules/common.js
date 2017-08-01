@@ -10,10 +10,10 @@ const initialState = {
 };
 
 export const getConfigAction = () => {
-    const configStorage = localStorage.getItem('getItem');
+    const configStorage = localStorage.getItem('config');
     if (configStorage) {
         const config = {};
-        config.data = configStorage;
+        config.data = JSON.parse(configStorage);
         return dispatch => {
             dispatch({
                 type: REQUEST_CONFIG_SUCCESS,

@@ -98,13 +98,13 @@ class Clients extends React.Component {
 
 
     componentWillReceiveProps(nextProps) {
-        const {userActions, clientActions, auth, config} = this.props;
+        const { userActions, clientActions,commonActions, auth, config} = this.props;
         if (!config) {
-            window.location = '/';
+            commonActions.getConfigAction();
         }
         if (nextProps.auth !== auth) {
             const role = nextProps.auth.role;
-            if (config.acl.managerGroup.indexOf(role) !== -1) {
+            if (config && config.acl.managerGroup.indexOf(role) !== -1) {
                 userActions.getUserAction();
             }
             clientActions.getClientAction();

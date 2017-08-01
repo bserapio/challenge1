@@ -62,7 +62,7 @@ class App extends React.Component {
 
 
     render() {
-        const { apiError, auth, children, router, apiActions } = this.props;
+        const { apiError, auth, children, router, apiActions, config } = this.props;
 
         let CurrentPath;
         try {
@@ -89,6 +89,14 @@ class App extends React.Component {
         } else {
             username = null;
         }
+        let userMenu = null;
+        if (config && config.acl.managerGroup.indexOf(auth.role) !== -1) {
+            userMenu = (<Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>);
+        } else {
+            userMenu = null;
+        }
+
+
         return (
             <LocaleProvider locale={enUS}>
 
@@ -106,8 +114,7 @@ class App extends React.Component {
                             style={{ lineHeight: '64px' }}
                         >
                             <Menu.Item key="1"><Link to="/clients">Clients</Link></Menu.Item>
-                            <Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
-
+                            {userMenu}
                             <Menu.Item key="3"> <Popconfirm
                                 placement="top"
                                 title="Are you sure that want log out?"
@@ -141,7 +148,7 @@ App.propTypes = {
     auth: PropTypes.object,
     children: PropTypes.object,
     router: PropTypes.object.isRequired,
-
+    config: PropTypes.object.isRequired,
 
 };
 
@@ -150,6 +157,7 @@ App.defaultProps = {
     apiError: null,
     users: [],
     auth: [],
+
     children: null,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -41,6 +41,17 @@ module.exports = (sequelize, DataTypes) => {
             field: 'modified_at',
             allowNull: false,
         },
+        deletedAt: {
+            type: DataTypes.DATE,
+            field: 'deleted_at',
+            allowNull: true,
+        },
+        isActive: {
+            type: DataTypes.BOOLEAN,
+            field: 'is_active',
+            allowNull: false,
+            defaultValue: true
+        },
     }, {
         schema: 'public',
         tableName: 'users',

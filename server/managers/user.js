@@ -5,23 +5,19 @@ const utils = require('../utils/index');
 
 
 const createUser = data => {
-
     data.password = utils.generatePassword(data.password);
     data.createdAt = new Date();
     data.modifiedAt = new Date();
     return db.User.create(data);
 };
-const getUsers = () => {
+const getUsers = () => db.User.findAndCountAll({
 
-    return db.User.findAndCountAll({
+    order: [['id', 'ASC']],
 
-        order: [['id', 'ASC']],
-
-    });
-};
+});
 const detailUser = id => {
     db.User.find({
-        where: {id},
+        where: { id },
         include: [{
             model: db.ClientMeta,
             attributes: {},
@@ -38,7 +34,7 @@ const updateUser = data => {
                     data.password = utils.generatePassword(data.password);
                 }
                 return db.User.update(data, {
-                    where: {id: user.id},
+                    where: { id: user.id },
                     returning: true,
                     plain: true,
                 });

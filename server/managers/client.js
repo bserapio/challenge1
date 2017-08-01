@@ -83,16 +83,13 @@ const fullUpdate = (id, data) => {
             element = {};
             element.user_id = data.ClientMetum.user_id;
             element.type = data.ClientMetum.type;
-            console.log(element);
-            db.ClientMeta.update(element, {where: {client_id: client.id}})
+            db.ClientMeta.update(element, { where: { client_id: client.id } })
                 .then(
                     meta => meta,
                     error => error
                 );
         },
-        error => {
-            return error;
-        }
+        error => error
     ).catch(error => {
         throw error;
     });
@@ -100,5 +97,5 @@ const fullUpdate = (id, data) => {
 
 
 module.exports = {
-    createClient, listClient, updateClient, detailClient, deleteClient, fullUpdate
+    createClient, listClient, detailClient, deleteClient, fullUpdate,updateClient
 };
