@@ -7,10 +7,10 @@ const generateKey = opcode => {
     return sha1(pub + opcode);
 };
 
-const stringOrder = (a, b) => {
+const stringOrder = (a, b,key) => {
     {
-        const nameA = a.username.toUpperCase();
-        const nameB = b.username.toUpperCase();
+        const nameA = a[key].toUpperCase();
+        const nameB = b[key].toUpperCase();
         if (nameA < nameB) {
             return -1;
         } else if (nameA > nameB) {

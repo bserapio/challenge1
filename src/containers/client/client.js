@@ -526,7 +526,7 @@ class Clients extends React.Component {
                 title: 'Name',
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
-                sorter: (a, b) => utils.stringOrder(a, b),
+                sorter: (a, b) => utils.stringOrder(a, b,'name'),
                 render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text', acl.userGroup),
             },
             {
