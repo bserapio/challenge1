@@ -109,7 +109,7 @@ const clientActions = {
             methods: ['*'],
         },
         {
-            groups: [groupsAcl.managerGroup], // min group
+            groups: [groupsAcl.userGroup], // min group
             methods: ['GET', 'POST', 'PUT'],
         },
     ],
