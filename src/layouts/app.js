@@ -4,7 +4,7 @@ import Link from 'react-router-redux-dom-link';
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Layout, Menu, LocaleProvider, notification} from 'antd';
+import {Layout, Menu, LocaleProvider, notification, Popconfirm} from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import './app.css';
@@ -62,11 +62,11 @@ class App extends React.Component {
 
 
     render() {
-        const {apiError, auth, children, route, apiActions} = this.props;
+        const {apiError, auth, children, router, apiActions} = this.props;
 
         let CurrentPath;
         try {
-            CurrentPath = route.location.pathname;
+            CurrentPath = router.location.pathname;
         } catch (exception) {
             CurrentPath = '/';
         }
@@ -107,7 +107,15 @@ class App extends React.Component {
                         >
                             <Menu.Item key="1"><Link to="/clients">Clients</Link></Menu.Item>
                             <Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
-                            <Menu.Item key="3"><Link to="/logout" onClick={this.logout}>Log out</Link></Menu.Item>
+
+                            <Menu.Item key="3"> <Popconfirm
+                                placement="top"
+                                title="Are you sure that want log out?"
+                                onConfirm={this.logout}
+                                okText="Yes"
+                                cancelText="No"
+                                key="deletePopup"
+                            >Log out</Popconfirm></Menu.Item>
 
                         </Menu>
 
@@ -132,7 +140,7 @@ App.propTypes = {
     apiError: PropTypes.object,
     auth: PropTypes.object,
     children: PropTypes.object,
-    route: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
 
 
 };
