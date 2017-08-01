@@ -36,19 +36,19 @@ class User extends React.Component {
                 title: 'Username',
                 dataIndex: 'username',
                 onFilter: (value, record) => record.username.indexOf(value) === 0,
-                sorter: (a, b) => utils.stringOrder(a, b,'username'),
+                sorter: (a, b) => utils.stringOrder(a, b, 'username'),
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 onFilter: (value, record) => record.name.indexOf(value) === 0,
-                sorter: (a, b) => utils.stringOrder(a, b,'name'),
+                sorter: (a, b) => utils.stringOrder(a, b, 'name'),
             },
             {
                 title: 'Role',
                 dataIndex: 'role',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
-                sorter: (a, b) => utils.stringOrder(a, b,'role'),
+                sorter: (a, b) => utils.stringOrder(a, b, 'role'),
                 filters: utils.rolesFilter,
             },
             {
@@ -82,7 +82,7 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        const {userActions, authActions} = this.props;
+        const { userActions, authActions } = this.props;
         authActions.checkAuthAction();
 
         userActions.getUserAction();
