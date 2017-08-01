@@ -74,7 +74,6 @@ const acl = {
     },
 
 };
-
 const usersPath = {
     '/services/user': [
         {
@@ -98,6 +97,33 @@ const clientChannel = {
         {
             groups: [groupsAcl.managerGroup],
             methods: ['GET', 'POST'],
+        },
+    ],
+
+};
+const clientActivateActions = {
+    '/services/client/:id(\\d+)/activate': [
+        {
+            groups: [groupsAcl.adminGroup], // min group
+            methods: ['*'],
+        },
+        {
+            groups: [groupsAcl.userGroup], // min group
+            methods: ['GET', 'POST', 'PUT'],
+        },
+    ],
+
+};
+
+const clientManteinanceActions = {
+    '/services/client/:id(\\d+)/manteinance': [
+        {
+            groups: [groupsAcl.adminGroup], // min group
+            methods: ['*'],
+        },
+        {
+            groups: [groupsAcl.userGroup], // min group
+            methods: ['GET', 'POST', 'PUT'],
         },
     ],
 
@@ -171,7 +197,8 @@ const clientelevate = {
 const aclFix = acl;
 aclFix.add(usersPath);
 aclFix.add(clientList);
-aclFix.add(clientList);
+aclFix.add(clientActivateActions);
+aclFix.add(clientManteinanceActions);
 aclFix.add(clientDetail);
 aclFix.add(clientChannel);
 aclFix.add(clientActions);
