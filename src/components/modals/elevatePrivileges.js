@@ -77,7 +77,6 @@ CreateElevatorForm.propTypes = {
 
 CreateElevatorForm.defaultProps = {
     clients: [],
-    users: [],
     auth: [],
     modalText: null,
 

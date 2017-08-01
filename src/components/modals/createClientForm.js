@@ -94,13 +94,12 @@ CreateForm.propTypes = {
     config: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
     form: PropTypes.object.isRequired,
-    confirmLoading: PropTypes.bool.isRequired,
 };
 
 CreateForm.defaultProps = {
     clients: [],
-    users: [],
     auth: [],
+    confirmLoading: null,
 
 };
 export default ClientCreateForm;

@@ -190,12 +190,12 @@ User.propTypes = {
     authActions: PropTypes.object.isRequired,
     createError: PropTypes.object,
     config: PropTypes.object.isRequired,
-    users: PropTypes.array,
+    users: PropTypes.object.isRequired,
 };
 
 User.defaultProps = {
 
-    users: [],
+    users: {},
     auth: [],
     createError: null,
 

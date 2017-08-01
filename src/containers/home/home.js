@@ -108,7 +108,6 @@ NormalLoginForm.propTypes = {
 NormalLoginForm.defaultProps = {
     loginError: null,
     form: null,
-    users: [],
     auth: [],
     createError: null,
 

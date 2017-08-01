@@ -14,13 +14,10 @@ const FormItem = Form.Item;
 class CreateForm extends React.Component {
 
 
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            record: {},
-            users: [],
-        };
-    }
+    state = {
+        record: {},
+        users: {},
+    };
 
     componentDidMount() {
 
@@ -175,15 +172,16 @@ CreateForm.propTypes = {
     form: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     record: PropTypes.object.isRequired,
-    changeUpdateRecord: PropTypes.object.isRequired,
-    confirmLoading: PropTypes.bool.isRequired,
+    changeUpdateRecord: PropTypes.func.isRequired,
+    confirmLoading: PropTypes.bool,
 };
 
 
 CreateForm.defaultProps = {
     clients: [],
-    users: [],
     auth: [],
+    users: {},
+    confirmLoading: null,
 
 };
 

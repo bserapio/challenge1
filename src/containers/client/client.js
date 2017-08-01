@@ -664,13 +664,12 @@ Clients.propTypes = {
     authActions: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     clients: PropTypes.array,
-    users: PropTypes.array,
     auth: PropTypes.object,
 };
 
 Clients.defaultProps = {
     clients: [],
-    users: [],
+    users: {},
     auth: [],
 
 };
