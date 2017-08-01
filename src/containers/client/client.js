@@ -184,9 +184,8 @@ class Clients extends React.Component {
     // Update User
     showUpdateModal = record => {
         const { visible } = this.state;
-        let { editedRecord } = this.state;
         visible.update = true;
-        editedRecord = { ...record };
+        const editedRecord = {...record};
         this.setState({ visible, editedRecord });
     };
     saveFormRefUpdate = form => {
