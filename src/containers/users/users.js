@@ -38,12 +38,13 @@ class User extends React.Component {
         paginationText: 'Show All',
         loading: false,
         visible: {
-            create:false,
-            update:false
+            create: false,
+            update: false,
         },
-        confirmLoading:{
-            create:false,
-            update:false
+        editedRecord:{},
+        confirmLoading: {
+            create: false,
+            update: false,
         },
         errorCreate: null,
 
@@ -67,19 +68,26 @@ class User extends React.Component {
         this.setState({ confirmLoading: false });
     }
     showCreateModal = () => {
-        const {visible} = this.state;
+        const { visible } = this.state;
         visible.create = true;
         this.setState(visible);
     };
 
-    showUpdateModal = () => {
-        const {visible} = this.state;
+    showUpdateModal = (record) => {
+        const { visible } = this.state;
         visible.update = true;
+        const editedRecord = {...record};
+        this.setState({ visible, editedRecord });
+    };
+    handleUpdateCancel = () => {
+        const { visible } = this.state;
+        visible.update = false;
         this.setState(visible);
     };
-
     handleCancel = () => {
-        this.setState({ visible: false });
+        const { visible } = this.state;
+        visible.create = false;
+        this.setState(visible);
     };
     handleCreate = () => {
         const { userForm } = this.state;
@@ -236,7 +244,7 @@ class User extends React.Component {
 
 
     render() {
-        const { visible, confirmLoading, loading, pagination, paginationText } = this.state;
+        const { visible, confirmLoading, loading, pagination, paginationText,editedRecord } = this.state;
 
         const { createError, users, config, commonActions } = this.props;
 
@@ -257,7 +265,7 @@ class User extends React.Component {
                     if (Object.keys(record).length === 0) {
                         return null;
                     }
-                    if ( record.deletedAt) {
+                    if (record.deletedAt) {
                         return null;
                     }
 
@@ -268,7 +276,7 @@ class User extends React.Component {
                             <Popconfirm
                                 placement="top"
                                 title="Do you want to delete the client?"
-                                onConfirm={() => this.updateRecord(record,'delete')}
+                                onConfirm={() => this.updateRecord(record, 'delete')}
                                 okText="Yes"
                                 cancelText="No"
                             >
@@ -353,10 +361,10 @@ class User extends React.Component {
                     onCreate={this.handleUpdateCreate}
                     onChange={value => this.handleSelectChange(value)}
                     createError={createError}
+                    record={editedRecord}
                     config={config}
 
                 />
-
 
 
                 <Table

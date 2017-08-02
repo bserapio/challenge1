@@ -14,7 +14,7 @@ class UserForm extends React.Component {
         this.props.onChange(value);
     }
     render() {
-        const {visible, onCancel, onCreate, form, confirmLoading, createError, config} = this.props;
+        const {visible, onCancel, onCreate, form, confirmLoading, createError, config,record} = this.props;
         if (!visible) {
             return null;
         }
@@ -54,6 +54,7 @@ class UserForm extends React.Component {
                     {errorMessage}
                     <FormItem label="Username">
                         {getFieldDecorator('username', {
+                            initialValue: record.username,
                             rules: [{required: true, message: 'Please input the username'}],
                         })(
                             <Input />
@@ -70,13 +71,14 @@ class UserForm extends React.Component {
 
                     <FormItem label="Name">
                         {getFieldDecorator('name', {
+                            initialValue: record.name,
                             rules: [{required: true, message: 'Please input your name'}],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <div>
-                        <Select defaultValue="super" style={{width: 120}} onChange={this.handleSelectChange}>
+                        <Select defaultValue={record.role} style={{width: 120}} onChange={this.handleSelectChange}>
                             {rolesChildren}
                         </Select>
 
