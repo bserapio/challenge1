@@ -5,9 +5,11 @@ const userController = require('../controllers/user');
 
 module.exports = (passport, express) => {
     const app = express();
-    app.route('/:id/client')
+    app.route('/:id(\\d+)/client')
         .get(userController.clientListUser);
-    app.route('/:id')
+    app.route('/:id(\\d+)/activate')
+        .put(userController.activateUser);
+    app.route('/:id(\\d+)')
         .put(userController.updateUser)
         .get(userController.detailUser);
     app.route('/')

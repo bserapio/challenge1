@@ -8,6 +8,11 @@ export const GET_USERS_SUCCESS = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_ERROR = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
 export const GET_USERS_REQUEST = `${{ DEFAULT_PATH }}/GET_USERS_REQUEST`;
 
+export const UPDATE_USERS_REQUEST = `${{ DEFAULT_PATH }}/GET_USERS_REQUEST`;
+export const UPDATE_USERS_SUCCESS = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
+export const UPDATE_USERS_ERROR = `${{ DEFAULT_PATH }}/GET_USERS_SUCCESS`;
+
+
 export const getUserAction = () => ({
     types: [GET_USERS_REQUEST, GET_USERS_SUCCESS, GET_USERS_ERROR],
     client: 'default',
@@ -19,6 +24,34 @@ export const getUserAction = () => ({
         },
     },
 });
+
+export const updateUserActionBooleanAction = (data, method) => {
+    let url;
+    switch (method) {
+
+        case 'active': {
+            url = `services/user/${data.id}/activate`;
+            break;
+        }
+        default: {
+            url = null;
+            break;
+        }
+    }
+
+    return {
+        types: [UPDATE_USERS_REQUEST, UPDATE_USERS_SUCCESS, UPDATE_USERS_ERROR],
+        client: 'default',
+        payload:
+        {
+            request: {
+                method: 'PUT',
+                url,
+                data,
+            },
+        },
+    };
+};
 
 
 export const createUserAction = data => ({
@@ -53,7 +86,7 @@ export default function reducer(state = initialState, action) {
             };
         }
         case GET_USERS_ERROR: {
-            return {...state};
+            return { ...state };
         }
         case ERROR_CREATE_USER: {
             const { createError } = action.payload;

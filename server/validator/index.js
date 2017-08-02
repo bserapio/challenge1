@@ -17,11 +17,11 @@ const Lang = t.subtype(t.Str, s => Object.prototype.hasOwnProperty.call(selector
 const Type = t.subtype(t.Str, s => selector.types.indexOf(s.trim().toLowerCase()) > -1);
 
 
-
 const CreateInput = t.struct({
     username: t.Str,
     name: t.Str,
     password: Password,
+    isActive: t.maybe(t.Bool),
     role: Role,
 });
 
@@ -31,6 +31,7 @@ const CreateUpdateInput = t.struct({
     name: t.maybe(t.Str),
     password: t.maybe(Password),
     role:   t.maybe(Role),
+    isActive: t.maybe(t.Bool),
 });
 
 

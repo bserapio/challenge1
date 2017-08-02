@@ -16,7 +16,8 @@ const getUsers = () => db.User.findAndCountAll({
 
 });
 const detailUser = id => {
-    db.User.find({
+    console.log(id);
+ return    db.User.find({
         where: { id },
         include: [{
             model: db.ClientMeta,
@@ -26,7 +27,7 @@ const detailUser = id => {
 };
 
 const updateUser = data => {
-    detailUser(data.id).then(
+    return detailUser(data.id).then(
         user => {
             if (user) {
                 data.updatedAt = new Date();

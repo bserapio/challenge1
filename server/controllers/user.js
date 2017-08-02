@@ -5,6 +5,17 @@ const domain = require('../validator');
 const userManager = require('../managers/user');
 const clientMetaManager = require('../managers/client_meta');
 
+
+const performUserUpdate = (id, element, input) => {
+    const result = t.validate(input, domain.CreateUpdateDbInput);
+    if (result.isValid()) {
+        element.id = id
+        return userManager.updateUser(element);
+    }
+    throw result.errors;
+};
+
+
 exports.addUser = (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateInput);
@@ -22,7 +33,6 @@ exports.addUser = (req, res) => {
     }
 };
 exports.listUser = (req, res) => {
-
     userManager.getUsers()
         .then(
             result => res.json(result),
@@ -40,26 +50,7 @@ exports.detailUser = (req, res) => {
             error => res.status(500).json(error)
         );
 };
-exports.updateUser = (req, res) => {
-    const input = req.body;
-    const result = t.validate(input, domain.CreateUpdateInput);
-    if (result.isValid()) {
-        userManager.updateUser
-            .then(
-                user => res.json(user),
-                error => res.status(400).json(error)
-            )
-            .catch(
-                error => {
-                    if (error.id === 404) {
-                        return res.status(404).json({message: error.message});
-                    }
-                    return res.status(500).json({message: 'kk'});
-                });
-    } else {
-        res.status(400).json(result.errors);
-    }
-};
+
 exports.clientListUser = (req, res) => {
     const limit = req.param('limit');
     const page = req.param('page', 1);
@@ -76,4 +67,29 @@ exports.clientDetailUser = (req, res) => {
     clientMetaManager.detailMeta(req.params.idMeta).then(result => {
         res.json(result);
     });
+};
+
+exports.updateUser = (req, res) => {
+    const input = req.body;
+    return performUserUpdate(req.params.id, input, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
+};
+
+
+exports.activateUser = (req, res) => {
+    const input = req.body;
+    const element = {};
+    element.isActive = input.isActive;
+    return performUserUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
 };

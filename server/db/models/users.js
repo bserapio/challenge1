@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             field: 'is_active',
             allowNull: false,
-            defaultValue: true
+            defaultValue: true,
         },
     }, {
         schema: 'public',
