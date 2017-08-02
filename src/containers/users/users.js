@@ -41,7 +41,7 @@ class User extends React.Component {
             create: false,
             update: false,
         },
-        editedRecord:{},
+        editedRecord: {},
         confirmLoading: {
             create: false,
             update: false,
@@ -73,10 +73,10 @@ class User extends React.Component {
         this.setState(visible);
     };
 
-    showUpdateModal = (record) => {
+    showUpdateModal = record => {
         const { visible } = this.state;
         visible.update = true;
-        const editedRecord = {...record};
+        const editedRecord = { ...record };
         this.setState({ visible, editedRecord });
     };
     handleUpdateCancel = () => {
@@ -194,6 +194,12 @@ class User extends React.Component {
         }
     }
 
+    changeUpdateRecord = record => {
+        const editedRecord = { ...record };
+        this.setState({ editedRecord });
+    };
+
+
     renderColumns(data, index, key, text, type, aclObject) {
         const { auth } = this.props;
 
@@ -243,8 +249,9 @@ class User extends React.Component {
     }
 
 
+
     render() {
-        const { visible, confirmLoading, loading, pagination, paginationText,editedRecord } = this.state;
+        const { visible, confirmLoading, loading, pagination, paginationText, editedRecord } = this.state;
 
         const { createError, users, config, commonActions } = this.props;
 
@@ -363,6 +370,7 @@ class User extends React.Component {
                     createError={createError}
                     record={editedRecord}
                     config={config}
+                    changeUpdateRecord={record => this.changeUpdateRecord(record)}
 
                 />
 
