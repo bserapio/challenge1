@@ -324,8 +324,9 @@ class Clients extends React.Component {
         const { elevatorForm, formLoading } = this.state;
         clientActions.checkElevateAction(elevatorForm).then(
             res => {
+                const key = res.payload.data.key;
                 const elevateUrl = {
-                    key: res.key,
+                    key,
                     identifier: elevatorForm.identifier,
                 };
                 formLoading.elevate = false;

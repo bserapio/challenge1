@@ -1,32 +1,36 @@
 import React from 'react';
-import {Form, Input, Modal} from 'antd';
+import { Form, Input, Modal } from 'antd';
 import PropTypes from 'prop-types';
+
+const env = process.env.NODE_ENV || 'development';
+const config = require('../../config/config')[env];
 
 const FormItem = Form.Item;
 
 
 class CreateElevatorForm extends React.Component {
     render() {
-        const {visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading, modalText} = this.props;
+        const { visible, onElevatorCancel, onElevatorCreate, form, confirmElevatorLoading, modalText } = this.props;
         if (!visible) {
             return null;
         }
-        const getHtml = res => ({__html: res});
+        const getHtml = res => ({ __html: res });
         const getModal = (data, getFieldDecorator) => {
             if (data) {
+                console.log(data);
                 let res = '';
                 const elevatorUrl = {
-                    app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${data.key}&opcode=${data.identifier}`,
-                    beta: `https://dev.base7.io/use-token?is_backdoor=1&token=${data.key}&opcode=${data.identifier}`,
-                    stage_app: `https://app.stage.base7booking.com/api/backdoor/penetrate?key=${data.key}&opcode=${data.identifier}`,
-                    stage_beta: `https://dev.stage.base7.io/use-token?is_backdoor=1&token=${data.key}&opcode=${data.identifier}`,
+                    app: `${config.app + data.key}&opcode=${data.identifier}`,
+                    beta: `${config.beta + data.key}&opcode=${data.identifier}`,
+                    stage_app: `${config.stage_app + data.key}&opcode=${data.identifier}`,
+                    stage_beta: `${config.stage_beta + data.key}&opcode=${data.identifier}`,
 
                 };
                 for (const prop in elevatorUrl) {
                     const url = elevatorUrl[prop];
                     res += `<div> <a href=${url}>${prop}</a></div>`;
                 }
-                return <div dangerouslySetInnerHTML={getHtml(res)}/>;
+                return <div dangerouslySetInnerHTML={getHtml(res)} />;
             }
             return (
                 <Form layout="vertical">
@@ -36,14 +40,14 @@ class CreateElevatorForm extends React.Component {
                                 required: true,
                                 message: 'Please input your password!',
                             }],
-                        })(<Input type="password"/>)}
+                        })(<Input type="password" />)}
                     </FormItem>
                 </Form>
             );
         };
 
 
-        const {getFieldDecorator} = form;
+        const { getFieldDecorator } = form;
         return (
             <Modal
                 visible={visible}

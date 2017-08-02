@@ -1,12 +1,12 @@
 const DEFAULT_PATH = 'dashboard/api';
-export const SEND_REQUEST = `${{DEFAULT_PATH}}/SEND_REQUEST`;
-export const OK_RESPONSE = `${{DEFAULT_PATH}}/OK_RESPONSE`;
-export const CLEAR_ERROR = `${{DEFAULT_PATH}}/CLEAR_ERROR`;
-export const ERROR_400 = `${{DEFAULT_PATH}}/ERROR_400`;
-export const ERROR_401 = `${{DEFAULT_PATH}}/ERROR_401`;
-export const ERROR_403 = `${{DEFAULT_PATH}}/ERROR_403`;
-export const ERROR_405 = `${{DEFAULT_PATH}}/ERROR_405`;
-export const ERROR_500 = `${{DEFAULT_PATH}}/ERROR_500`;
+export const SEND_REQUEST = `${{ DEFAULT_PATH }}/SEND_REQUEST`;
+export const OK_RESPONSE = `${{ DEFAULT_PATH }}/OK_RESPONSE`;
+export const CLEAR_ERROR = `${{ DEFAULT_PATH }}/CLEAR_ERROR`;
+export const ERROR_400 = `${{ DEFAULT_PATH }}/ERROR_400`;
+export const ERROR_401 = `${{ DEFAULT_PATH }}/ERROR_401`;
+export const ERROR_403 = `${{ DEFAULT_PATH }}/ERROR_403`;
+export const ERROR_405 = `${{ DEFAULT_PATH }}/ERROR_405`;
+export const ERROR_500 = `${{ DEFAULT_PATH }}/ERROR_500`;
 
 export function sendRequest() {
     return dispatch => dispatch({
@@ -34,15 +34,15 @@ export function error400(data) {
         const apiError = {};
         let message;
         if (data.message) {
-            message = data.message
+            message = data.message;
         } else {
-            message= 'Bad Request';
+            message = 'Bad Request';
         }
         apiError.code = '400';
         apiError.message = message;
         return dispatch({
             type: ERROR_400,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -57,7 +57,7 @@ export function error401() {
         window.location = '/';
         return dispatch({
             type: ERROR_401,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -69,7 +69,7 @@ export function error403() {
         apiError.message = 'You are not allow to do that operation';
         return dispatch({
             type: ERROR_403,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -82,7 +82,7 @@ export function error405() {
         apiError.message = 'Method not allow';
         return dispatch({
             type: ERROR_405,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -96,7 +96,7 @@ export function error500() {
         apiError.message = 'Method not allow';
         return dispatch({
             type: ERROR_500,
-            payload: {apiError},
+            payload: { apiError },
         });
     };
 }
@@ -121,7 +121,7 @@ export default function reducer(state = initialState, action) {
         case ERROR_403:
         case ERROR_405:
         case ERROR_500: {
-            const {apiError} = action.payload;
+            const { apiError } = action.payload;
             return {
                 ...state,
                 apiError,
