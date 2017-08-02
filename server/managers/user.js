@@ -15,19 +15,15 @@ const getUsers = () => db.User.findAndCountAll({
     order: [['id', 'ASC']],
 
 });
-const detailUser = id => {
-    console.log(id);
- return    db.User.find({
-        where: { id },
-        include: [{
-            model: db.ClientMeta,
-            attributes: {},
-        }],
-    });
-};
+const detailUser = id => db.User.find({
+    where: { id },
+    include: [{
+        model: db.ClientMeta,
+        attributes: {},
+    }],
+});
 
-const updateUser = data => {
-    return detailUser(data.id).then(
+const updateUser = data => detailUser(data.id).then(
         user => {
             if (user) {
                 data.updatedAt = new Date();
@@ -42,7 +38,6 @@ const updateUser = data => {
             }
             throw new Error('User does not exists', 404);
         });
-};
 module.exports = {
     createUser, getUsers, detailUser, updateUser,
 };
