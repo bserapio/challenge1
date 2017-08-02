@@ -17,19 +17,19 @@ const app = express();
 app.use(cors());
 app.options('*', cors());
 // create a write stream (in append mode)
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 
-app.use(morgan('combined', {stream: accessLogStream}));
+app.use(morgan('combined', { stream: accessLogStream }));
 require('./acl/passport')(passport);
 
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
 
-app.use(session({secret: 'secret', resave: false, saveUninitialized: true, httpOnly: false}));
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: true, httpOnly: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
