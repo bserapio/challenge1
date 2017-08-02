@@ -71,6 +71,19 @@ export const createUserAction = data => ({
     },
 });
 
+export const updateUserAction = data => ({
+
+    types: [UPDATE_USERS_REQUEST, UPDATE_USERS_SUCCESS, UPDATE_USERS_ERROR],
+    payload: {
+        request: {
+            method: 'PUT',
+            url: `/services/user/${data.id}`,
+            data,
+
+        },
+    },
+});
+
 
 const initialState = {
     users: [],

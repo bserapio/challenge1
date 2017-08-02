@@ -14,6 +14,10 @@ class UserForm extends React.Component {
         record: {},
     };
 
+    componentWillReceiveProps(nextProps) {
+        const { record } = nextProps;
+        this.setState({ record });
+    }
     handleSelectChange = value => {
         const { record } = this.state;
         const { changeUpdateRecord } = this.props;
@@ -22,7 +26,8 @@ class UserForm extends React.Component {
         changeUpdateRecord(record);
     };
     render() {
-        const { visible, onCancel, onCreate, form, confirmLoading, createError, config, record } = this.props;
+        const { visible, onUpdateCancel, onUpdateCreate, form, confirmLoading, createError, config, record } = this.props;
+
         if (!visible) {
             return null;
         }
@@ -54,9 +59,9 @@ class UserForm extends React.Component {
                 title="Update an Exising User"
                 okText="Update"
                 cancelText="Cancel"
-                onCancel={onCancel}
+                onCancel={onUpdateCancel}
                 confirmLoading={confirmLoading}
-                onOk={onCreate}
+                onOk={onUpdateCreate}
             >
                 <Form layout="vertical">
                     {errorMessage}
@@ -70,7 +75,7 @@ class UserForm extends React.Component {
                     </FormItem>
                     <FormItem label="Password" hasFeedback>
                         {getFieldDecorator('password', {
-                            rules: [{ required: true, message: 'Please input your password!' },
+                            rules: [{ required: false, message: 'Please input your password!' },
                                 { min: 6, message: 'Password must be 6 chars' }],
                         })(
                             <Input type="password" />
@@ -101,8 +106,8 @@ class UserForm extends React.Component {
 const UserUpdateForm = Form.create()(UserForm);
 UserForm.propTypes = {
     createError: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onCreate: PropTypes.func.isRequired,
+    onUpdateCancel: PropTypes.func.isRequired,
+    onUpdateCreate: PropTypes.func.isRequired,
     config: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
     form: PropTypes.object.isRequired,

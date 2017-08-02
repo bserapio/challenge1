@@ -92,13 +92,13 @@ class Clients extends React.Component {
         filtered: false,
     };
     componentDidMount() {
-        const {authActions} = this.props;
+        const { authActions } = this.props;
         authActions.checkAuthAction();
     }
 
 
     componentWillReceiveProps(nextProps) {
-        const { userActions, clientActions,commonActions, auth, config} = this.props;
+        const { userActions, clientActions, commonActions, auth, config } = this.props;
         if (!config) {
             commonActions.getConfigAction();
         }
@@ -185,7 +185,7 @@ class Clients extends React.Component {
     showUpdateModal = record => {
         const { visible } = this.state;
         visible.update = true;
-        const editedRecord = {...record};
+        const editedRecord = { ...record };
         this.setState({ visible, editedRecord });
     };
     saveFormRefUpdate = form => {
@@ -274,7 +274,6 @@ class Clients extends React.Component {
         const { clientActions } = this.props;
         formLoading.update = true;
         this.setState({ formLoading });
-
         this.formUpdate.validateFields((err, values) => {
             if (err) {
                 formLoading.update = false;
@@ -526,7 +525,7 @@ class Clients extends React.Component {
                 title: 'Name',
                 dataIndex: 'name',
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
-                sorter: (a, b) => utils.stringOrder(a, b,'name'),
+                sorter: (a, b) => utils.stringOrder(a, b, 'name'),
                 render: (text, record, index) => this.renderColumns(clients, index, 'name', text, 'text', acl.userGroup),
             },
             {

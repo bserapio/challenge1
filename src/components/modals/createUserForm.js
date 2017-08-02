@@ -15,6 +15,7 @@ class CreateForm extends React.Component {
     }
     render() {
         const {visible, onCancel, onCreate, form, confirmLoading, createError, config} = this.props;
+
         if (!visible) {
             return null;
         }

@@ -77,6 +77,7 @@ class User extends React.Component {
         const { visible } = this.state;
         visible.update = true;
         const editedRecord = { ...record };
+        console.log(editedRecord);
         this.setState({ visible, editedRecord });
     };
     handleUpdateCancel = () => {
@@ -105,12 +106,51 @@ class User extends React.Component {
             }
         });
     };
+    handleUpdateCreate = () => {
+        const { confirmLoading, visible } = this.state;
+        const { editedRecord } = this.state;
+        const { userActions } = this.props;
+        confirmLoading.update = true;
+        this.setState({ confirmLoading });
+        console.log(this.formUpdate);
+
+        this.formUpdate.validateFields((err, values) => {
+            if (err) {
+                confirmLoading.update = false;
+                this.setState({ confirmLoading });
+            } else {
+                delete editedRecord.password;
+                editedRecord.name = values.name;
+                editedRecord.username = values.username;
+                if (values.password) {
+                    editedRecord.password = values.password;
+                }
+                confirmLoading.update = true;
+                console.log(editedRecord);
+
+
+                userActions.updateUserAction(editedRecord).then(
+                    () => {
+                        visible.update = false;
+                        confirmLoading.update = false;
+                        this.setState({ visible, confirmLoading });
+                        userActions.getUserAction();
+                    },
+                    errReq => {
+                        console.log(errReq);
+                    }
+                );
+            }
+        });
+    };
+
+
     saveFormRef = form => {
         this.form = form;
     };
 
     updateFormRef = form => {
-        this.updateForm = form;
+        this.formUpdate = form;
     };
 
     sendForm = () => {
@@ -195,7 +235,8 @@ class User extends React.Component {
     }
 
     changeUpdateRecord = record => {
-        const editedRecord = { ...record };
+        let { editedRecord } = this.state;
+        editedRecord = { ...record };
         this.setState({ editedRecord });
     };
 
@@ -247,7 +288,6 @@ class User extends React.Component {
         }
         return text;
     }
-
 
 
     render() {
@@ -363,10 +403,9 @@ class User extends React.Component {
                 <UpdateCreateForm
                     ref={this.updateFormRef}
                     visible={visible.update}
-                    onCancel={this.handleUpdateCancel}
+                    onUpdateCancel={this.handleUpdateCancel}
                     confirmLoading={confirmLoading.update}
-                    onCreate={this.handleUpdateCreate}
-                    onChange={value => this.handleSelectChange(value)}
+                    onUpdateCreate={this.handleUpdateCreate}
                     createError={createError}
                     record={editedRecord}
                     config={config}
