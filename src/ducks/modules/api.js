@@ -29,11 +29,17 @@ export function okResponse() {
     });
 }
 
-export function error400() {
+export function error400(data) {
     return dispatch => {
         const apiError = {};
+        let message;
+        if (data.message) {
+            message = data.message
+        } else {
+            message= 'Bad Request';
+        }
         apiError.code = '400';
-        apiError.message = 'Bad Request';
+        apiError.message = message;
         return dispatch({
             type: ERROR_400,
             payload: {apiError},

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, Modal, Select, Alert} from 'antd';
+import { Form, Input, Modal, Select, Alert } from 'antd';
 import PropTypes from 'prop-types';
 
 
@@ -14,13 +14,13 @@ class CreateForm extends React.Component {
         this.props.onChange(value);
     }
     render() {
-        const {visible, onCancel, onCreate, form, confirmLoading, createError, config} = this.props;
+        const { visible, onCancel, onCreate, form, confirmLoading, createError, config } = this.props;
 
         if (!visible) {
             return null;
         }
         const roles = config.roles;
-        const {getFieldDecorator} = form;
+        const { getFieldDecorator } = form;
 
         const rolesChildren = [];
         Object.keys(roles).forEach(element => {
@@ -55,29 +55,29 @@ class CreateForm extends React.Component {
                     {errorMessage}
                     <FormItem label="Username">
                         {getFieldDecorator('username', {
-                            rules: [{required: true, message: 'Please input the username'}],
+                            rules: [{ required: true, message: 'Please input the username' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem label="Password" hasFeedback>
                         {getFieldDecorator('password', {
-                            rules: [{required: true, message: 'Please input your password!'},
-                                {min: 6, message: 'Password must be 6 chars'}],
+                            rules: [{ required: true, message: 'Please input your password!' },
+                                { min: 6, message: 'Password must be 6 chars' }],
                         })(
-                            <Input type="password"/>
+                            <Input type="password" />
                         )}
                     </FormItem>
 
                     <FormItem label="Name">
                         {getFieldDecorator('name', {
-                            rules: [{required: true, message: 'Please input your name'}],
+                            rules: [{ required: true, message: 'Please input your name' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <div>
-                        <Select defaultValue="super" style={{width: 120}} onChange={this.handleSelectChange}>
+                        <Select defaultValue="super" style={{ width: 120 }} onChange={this.handleSelectChange}>
                             {rolesChildren}
                         </Select>
 

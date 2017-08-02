@@ -23,6 +23,11 @@ const detailUser = id => db.User.find({
     }],
 });
 
+const getUserByUserName = username => db.User.find({
+    where: { username },
+});
+
+
 const updateUser = data => detailUser(data.id).then(
         user => {
             if (user) {
@@ -36,8 +41,10 @@ const updateUser = data => detailUser(data.id).then(
                     plain: true,
                 });
             }
+
+
             throw new Error('User does not exists', 404);
         });
 module.exports = {
-    createUser, getUsers, detailUser, updateUser,
+    createUser, getUsers, detailUser, updateUser, getUserByUserName,
 };

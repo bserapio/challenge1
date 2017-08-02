@@ -9,7 +9,7 @@ const clientMetaManager = require('../managers/client_meta');
 const performUserUpdate = (id, element, input) => {
     const result = t.validate(input, domain.CreateUpdateDbInput);
     if (result.isValid()) {
-        element.id = id
+        element.id = id;
         return userManager.updateUser(element);
     }
     throw result.errors;
@@ -71,15 +71,27 @@ exports.clientDetailUser = (req, res) => {
 
 exports.updateUser = (req, res) => {
     const input = req.body;
+
+    if (input.username) {
+        userManager.getUserByUserName(input.username).then(user => {
+            if (user) {
+                res.status(400).json({ message: 'username already exists' });
+            }
+        });
+    }
+
+
     return performUserUpdate(req.params.id, input, input).then(
         result => res.json(result),
-        error => res.status(400).json(error)
+        error => {
+            console.log(error);
+            res.status(400).json(error);
+        }
     )
         .catch(
             error => res.status(500).json(error)
         );
 };
-
 
 
 exports.activateUser = (req, res) => {
