@@ -11,7 +11,7 @@ const createUser = data => {
     return db.User.create(data);
 };
 const getUsers = () => db.User.findAndCountAll({
-
+    where: { deletedAt: null },
     order: [['id', 'ASC']],
 
 });

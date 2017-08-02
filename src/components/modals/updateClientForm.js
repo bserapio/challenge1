@@ -11,7 +11,7 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 
 
-class CreateForm extends React.Component {
+class UpdateForm extends React.Component {
 
 
     state = {
@@ -24,21 +24,21 @@ class CreateForm extends React.Component {
 
     }
     componentWillReceiveProps(nextProps) {
-        const {users, record} = nextProps;
-        this.setState({record, users});
+        const { users, record } = nextProps;
+        this.setState({ record, users });
     }
 
 
     handleSelectLanguageChange = value => {
         const { record } = this.state;
-        const {changeUpdateRecord} = this.props;
+        const { changeUpdateRecord } = this.props;
         record.lang = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };
 
     handleSelectTypeChange = value => {
-        const {changeUpdateRecord} = this.props;
+        const { changeUpdateRecord } = this.props;
         const { record } = this.state;
         record.ClientMetum.type = value;
         this.setState({ record });
@@ -47,7 +47,7 @@ class CreateForm extends React.Component {
 
     handleSelectUserChange = value => {
         const { record } = this.state;
-        const {changeUpdateRecord} = this.props;
+        const { changeUpdateRecord } = this.props;
         record.ClientMetum.user_id = value;
         this.setState({ record });
         changeUpdateRecord(record);
@@ -56,7 +56,7 @@ class CreateForm extends React.Component {
 
     handleUpdateExpire = value => {
         const { record } = this.state;
-        const {changeUpdateRecord} = this.props;
+        const { changeUpdateRecord } = this.props;
         record.expireDate = value.format('YYYY-MM-DD');
         this.setState({ record });
         changeUpdateRecord(record);
@@ -74,7 +74,7 @@ class CreateForm extends React.Component {
             config,
         } = this.props;
 
-        const {record} = this.state;
+        const { record } = this.state;
         if (!visible) {
             return null;
         }
@@ -162,8 +162,8 @@ class CreateForm extends React.Component {
     }
 }
 
-const UpdateClientForm = Form.create()(CreateForm);
-CreateForm.propTypes = {
+const UpdateClientForm = Form.create()(UpdateForm);
+UpdateForm.propTypes = {
 
     onUpdateCancel: PropTypes.func.isRequired,
     onUpdateCreate: PropTypes.func.isRequired,
@@ -177,7 +177,7 @@ CreateForm.propTypes = {
 };
 
 
-CreateForm.defaultProps = {
+UpdateForm.defaultProps = {
     clients: [],
     auth: [],
     users: [],

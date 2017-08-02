@@ -81,10 +81,23 @@ exports.updateUser = (req, res) => {
 };
 
 
+
 exports.activateUser = (req, res) => {
     const input = req.body;
     const element = {};
     element.isActive = input.isActive;
+    return performUserUpdate(req.params.id, element, input).then(
+        result => res.json(result),
+        error => res.status(400).json(error)
+    )
+        .catch(
+            error => res.status(500).json(error)
+        );
+};
+exports.deleteUser = (req, res) => {
+    const input = req.body;
+    const element = {};
+    element.deletedAt = new Date();
     return performUserUpdate(req.params.id, element, input).then(
         result => res.json(result),
         error => res.status(400).json(error)

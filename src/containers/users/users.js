@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import UserCreateForm from '../../components/modals/createUserForm';
+import UpdateCreateForm from '../../components/modals/updateUserForm';
 
 import * as userAc from '../../ducks/modules/user';
 import * as authAc from '../../ducks/modules/auth';
@@ -36,8 +37,14 @@ class User extends React.Component {
         pagination: {},
         paginationText: 'Show All',
         loading: false,
-        visible: false,
-        confirmLoading: false,
+        visible: {
+            create:false,
+            update:false
+        },
+        confirmLoading:{
+            create:false,
+            update:false
+        },
         errorCreate: null,
 
         userForm: {
@@ -59,9 +66,18 @@ class User extends React.Component {
     unloadButton() {
         this.setState({ confirmLoading: false });
     }
-    showModal = () => {
-        this.setState({ visible: true });
+    showCreateModal = () => {
+        const {visible} = this.state;
+        visible.create = true;
+        this.setState(visible);
     };
+
+    showUpdateModal = () => {
+        const {visible} = this.state;
+        visible.update = true;
+        this.setState(visible);
+    };
+
     handleCancel = () => {
         this.setState({ visible: false });
     };
@@ -84,6 +100,11 @@ class User extends React.Component {
     saveFormRef = form => {
         this.form = form;
     };
+
+    updateFormRef = form => {
+        this.updateForm = form;
+    };
+
     sendForm = () => {
         const { userActions } = this.props;
         const { userForm } = this.state;
@@ -102,8 +123,6 @@ class User extends React.Component {
         );
         this.unloadButton();
     };
-
-
     handleSelectChange = value => {
         const { userForm } = this.state;
         userForm.role = value;
@@ -141,6 +160,10 @@ class User extends React.Component {
                 switch (key) {
                     case 'isActive': {
                         method = 'active';
+                        break;
+                    }
+                    case 'delete': {
+                        method = 'delete';
                         break;
                     }
 
@@ -234,6 +257,9 @@ class User extends React.Component {
                     if (Object.keys(record).length === 0) {
                         return null;
                     }
+                    if ( record.deletedAt) {
+                        return null;
+                    }
 
                     return (
                         <Button.Group size="small">
@@ -242,7 +268,7 @@ class User extends React.Component {
                             <Popconfirm
                                 placement="top"
                                 title="Do you want to delete the client?"
-                                onConfirm={() => this.remove(record)}
+                                onConfirm={() => this.updateRecord(record,'delete')}
                                 okText="Yes"
                                 cancelText="No"
                             >
@@ -294,8 +320,8 @@ class User extends React.Component {
 
             {
                 title: 'Deleted',
-                dataIndex: 'deleteAt',
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'deleteAt', text, 'datetime'),
+                dataIndex: 'deletedAt',
+                render: (text, record, index) => this.renderColumns(users.rows, index, 'deletedAt', text, 'datetime'),
             },
 
         ];
@@ -303,22 +329,35 @@ class User extends React.Component {
         return (
             <div>
                 <Button.Group size="default">
-                    <Button type="primary" onClick={this.showModal}>Create an User</Button>
+                    <Button type="primary" onClick={this.showCreateModal}>Create an User</Button>
                     <Button type="primary" onClick={this.showAll}>{paginationText}</Button>
                 </Button.Group>
 
 
                 <UserCreateForm
                     ref={this.saveFormRef}
-                    visible={visible}
+                    visible={visible.create}
                     onCancel={this.handleCancel}
-                    confirmLoading={confirmLoading}
+                    confirmLoading={confirmLoading.create}
                     onCreate={this.handleCreate}
                     onChange={value => this.handleSelectChange(value)}
                     createError={createError}
                     config={config}
 
                 />
+                <UpdateCreateForm
+                    ref={this.updateFormRef}
+                    visible={visible.update}
+                    onCancel={this.handleUpdateCancel}
+                    confirmLoading={confirmLoading.update}
+                    onCreate={this.handleUpdateCreate}
+                    onChange={value => this.handleSelectChange(value)}
+                    createError={createError}
+                    config={config}
+
+                />
+
+
 
                 <Table
                     columns={columns}

@@ -33,6 +33,10 @@ export const updateUserActionBooleanAction = (data, method) => {
             url = `services/user/${data.id}/activate`;
             break;
         }
+        case 'delete': {
+            url = `services/user/${data.id}/delete`;
+            break;
+        }
         default: {
             url = null;
             break;
