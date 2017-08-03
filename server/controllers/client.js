@@ -43,22 +43,20 @@ exports.addClient = (req, res) => {
 exports.listClient = async (req, res) => {
     try {
         const result =  await clientManager.listClient();
+        console.log(result);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
     }
 };
 
-exports.detailClient = (req, res) => {
-    clientManager.detailClient(req.params.id).then(response => {
-        res.json(response);
-    },
-        error => {
-            res.status(400).json(error);
-        }).catch(error => {
-            res.status(500).json(error);
-        }
-    );
+exports.detailClient = async (req, res) => {
+    try {
+        const result =  await clientManager.detailClient(req.params.id);
+        return res.json(result[0]);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
 exports.removeClient = (req, res) => {

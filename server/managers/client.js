@@ -35,27 +35,32 @@ const createClient = (user, data) => {
 
 const listClient = async () => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+
     try {
         const query = {
-            with: {
-                client_meta: {
-                    columns: [],
-                    with: { user: { columns: [] },
-                    },
-                },
-                order: [['id', 'ASC']],
-            } };
-        return await dataProvider.fetchAll('clients', query);
+            'with': { 'client_metas': { 'columns': [] } },
+        };
+        return await dataProvider.fetchAll('clientDb', query);
     } catch (err) {
         throw err;
     }
 };
 
-const detailClient = id => db.ClientDb.findById(id)
-    .then(client => client, error => error)
-    .catch(error => {
-        throw error;
-    });
+const detailClient = async id => {
+    const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+
+    try {
+        const query = {
+            where: { id: `${id}` },
+            'with': { 'client_metas': { 'columns': [] } },
+        };
+
+
+        return await dataProvider.fetchAll('clientDb', query);
+    } catch (err) {
+        throw err;
+    }
+};
 
 const deleteClient = id => detailClient(id).then(
     client => {
