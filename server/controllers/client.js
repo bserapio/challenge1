@@ -59,14 +59,17 @@ exports.detailClient = async (req, res) => {
     }
 };
 
-exports.removeClient = (req, res) => {
-    clientManager.deleteClient(req.params.id).then(result => {
-        res.status(204).json(result);
-    },
-        error => {
-            res.status(400).json({ message: 'record does not exists' });
+exports.removeClient = async (req, res) => {
+    try {
+        let message = 'Nothing deleted';
+        const result =  await clientManager.deleteClient(req.params.id);
+        if (result) {
+            message = 'Remove succesfully;';
         }
-    ).catch();
+        return res.status(204).json({ message });
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
 

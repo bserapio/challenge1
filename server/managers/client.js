@@ -62,17 +62,14 @@ const detailClient = async id => {
     }
 };
 
-const deleteClient = id => detailClient(id).then(
-    client => {
-        if (client) {
-            return client.destroy();
-        }
-        throw new Error('Client does not exists', 404);
-    },
-    error => error
-)
-    .catch(error => error);
-
+const deleteClient = async id => {
+    const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+    try {
+        return await dataProvider.destroy('clientDb', parseInt(id));
+    } catch (err) {
+        throw err;
+    }
+};
 const updateClient = (id, data) => db.ClientDb.findById(id)
     .then(
         client => {
