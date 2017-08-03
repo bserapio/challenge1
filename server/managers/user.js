@@ -1,8 +1,8 @@
 'use strict';
 
-const db = require('../db/models');
+const db = require('../old_db/models');
 const utils = require('../utils/index');
-
+const dbApiService  = require('../db/dbApiService');
 
 const createUser = data => {
     data.password = utils.generatePassword(data.password);
@@ -10,11 +10,17 @@ const createUser = data => {
     data.modifiedAt = new Date();
     return db.User.create(data);
 };
-const getUsers = () => db.User.findAndCountAll({
-    where: { deletedAt: null },
-    order: [['id', 'ASC']],
+const getUsers = async () => {
+    const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+    try {
+        const query = { where: { deletedAt: null },
+            order: [['id', 'ASC']] };
+        return await dataProvider.fetchAll('users', query);
 
-});
+    } catch (err) {
+        throw err;
+    }
+};
 const detailUser = id => db.User.find({
     where: { id },
     include: [{

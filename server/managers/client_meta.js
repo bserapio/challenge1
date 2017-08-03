@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('../db/models');
+const db = require('../old_db/models');;
 const utils = require('../utils/index');
 
 

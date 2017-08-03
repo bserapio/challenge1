@@ -1,8 +1,9 @@
 'use strict';
 
-const db = require('../db/models');
+const db = require('../old_db/models');
 const utils = require('../utils/index');
 const moment = require('moment');
+const dbApiService  = require('../db/dbApiService');
 
 const createClient = (user, data) => {
     data.autoUpdate = true;
@@ -32,15 +33,23 @@ const createClient = (user, data) => {
         );
 };
 
-const listClient = () => db.ClientDb.findAndCountAll({
-    include: [{
-        model: db.ClientMeta,
-        include: [db.User],
-        attributes: {},
-
-    }],
-    order: [['id', 'ASC']],
-});
+const listClient = async () => {
+    const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+    try {
+        const query = {
+            with: {
+                client_meta: {
+                    columns: [],
+                    with: { user: { columns: [] },
+                    },
+                },
+                order: [['id', 'ASC']],
+            } };
+        return await dataProvider.fetchAll('clients', query);
+    } catch (err) {
+        throw err;
+    }
+};
 
 const detailClient = id => db.ClientDb.findById(id)
     .then(client => client, error => error)
@@ -97,5 +106,5 @@ const fullUpdate = (id, data) => {
 
 
 module.exports = {
-    createClient, listClient, detailClient, deleteClient, fullUpdate,updateClient
+    createClient, listClient, detailClient, deleteClient, fullUpdate, updateClient,
 };

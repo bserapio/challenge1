@@ -1,0 +1,33 @@
+
+{
+  "development":
+          {
+
+              "db_host": "127.0.0.1",
+              "db_user": "dev",
+              "db_pass": "12345",
+              "db_driver": "postgres",
+              "db_schema": "public",
+              "db_name": "backend_db"
+
+          },
+  "production":
+          {
+            "db_host": "127.0.0.1",
+            "db_user": "dev",
+            "db_pass": "12345",
+            "db_driver": "postgres",
+            "db_schema": "public",
+            "db_name": "backend_db"
+          },
+  "testing":
+        {
+          "db_host": "127.0.0.1",
+          "db_user": "dev",
+          "db_pass": "12345",
+          "db_driver": "postgres",
+          "db_schema": "public",
+          "db_name": "backend_db"
+        }
+
+}

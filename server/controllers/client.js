@@ -2,7 +2,7 @@
 
 const t = require('tcomb-validation');
 const domain = require('../validator');
-const db = require('../db/models');
+const db = require('../old_db/models');
 const clientManager = require('../managers/client');
 const clientMetaManager = require('../managers/client_meta');
 
@@ -40,25 +40,23 @@ exports.addClient = (req, res) => {
     }
 };
 
-exports.listClient = (req, res) => {
-    clientManager.listClient()
-        .then(
-            client => res.json(client),
-            error => res.status(400).json(error)
-        )
-        .catch(
-            error => res.status(500).json(error)
-        );
+exports.listClient = async (req, res) => {
+    try {
+        const result =  await clientManager.listClient();
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
 exports.detailClient = (req, res) => {
     clientManager.detailClient(req.params.id).then(response => {
-            res.json(response)
-        },
+        res.json(response);
+    },
         error => {
-            res.status(400).json(error)
+            res.status(400).json(error);
         }).catch(error => {
-            res.status(500).json(error)
+            res.status(500).json(error);
         }
     );
 };
