@@ -6,12 +6,16 @@ const db = require('../old_db/models');
 const clientManager = require('../managers/client');
 const clientMetaManager = require('../managers/client_meta');
 
-const performClientUpdate = (id, element, input) => {
+const performClientUpdate = async (id, element, input) => {
     const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        return clientManager.updateClient(id, element);
+    try {
+        if (!result.isValid()) {
+            throw result.errors;
+        }
+        return await clientManager.updateClient(id, element);
+    } catch (err) {
+        throw err;
     }
-    throw result.errors;
 };
 
 const performClientMetaUpdate = (id, element, input) => {
@@ -73,17 +77,17 @@ exports.removeClient = async (req, res) => {
 };
 
 
-exports.activateClient = (req, res) => {
+exports.activateClient = async (req, res) => {
     const input = req.body;
     const element = {};
     element.active = input.active;
-    return performClientUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+
+    try {
+        const result = await performClientUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 };
 
 
