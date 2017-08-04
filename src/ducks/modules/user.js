@@ -95,6 +95,7 @@ export default function reducer(state = initialState, action) {
 
         case GET_USERS_SUCCESS: {
             const users = action.payload.data;
+
             return {
                 ...state,
                 createError: null,

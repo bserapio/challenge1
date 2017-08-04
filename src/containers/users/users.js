@@ -340,14 +340,14 @@ class User extends React.Component {
                 dataIndex: 'username',
                 onFilter: (value, record) => record.username.indexOf(value) === 0,
                 sorter: (a, b) => utils.stringOrder(a, b, 'username'),
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'username', text, 'text', acl.adminGroup),
+                render: (text, record, index) => this.renderColumns(users, index, 'username', text, 'text', acl.adminGroup),
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 onFilter: (value, record) => record.name.indexOf(value) === 0,
                 sorter: (a, b) => utils.stringOrder(a, b, 'name'),
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'name', text, 'text', acl.adminGroup),
+                render: (text, record, index) => this.renderColumns(users, index, 'name', text, 'text', acl.adminGroup),
             },
             {
                 title: 'Role',
@@ -355,28 +355,28 @@ class User extends React.Component {
                 onFilter: (value, record) => record.role.indexOf(value) === 0,
                 sorter: (a, b) => utils.stringOrder(a, b, 'role'),
                 filters: utils.rolesFilter,
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'role', text, 'text', acl.adminGroup),
+                render: (text, record, index) => this.renderColumns(users, index, 'role', text, 'text', acl.adminGroup),
             },
             {
-                title: 'isActive',
-                dataIndex: 'isActive',
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'isActive', text, 'boolean', acl.adminGroup),
+                title: 'is_active',
+                dataIndex: 'is_active',
+                render: (text, record, index) => this.renderColumns(users, index, 'isActive', text, 'boolean', acl.adminGroup),
             },
             {
                 title: 'Created',
-                dataIndex: 'createdAt',
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'createdAt', text, 'datetime'),
+                dataIndex: 'created_at',
+                render: (text, record, index) => this.renderColumns(users, index, 'created_at', text, 'datetime'),
             },
             {
                 title: 'Modified',
-                dataIndex: 'modifiedAt',
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'modifiedAt', text, 'datetime'),
+                dataIndex: 'modified_at',
+                render: (text, record, index) => this.renderColumns(users, index, 'modified_at', text, 'datetime'),
             },
 
             {
                 title: 'Deleted',
-                dataIndex: 'deletedAt',
-                render: (text, record, index) => this.renderColumns(users.rows, index, 'deletedAt', text, 'datetime'),
+                dataIndex: 'deleted_at',
+                render: (text, record, index) => this.renderColumns(users, index, 'deleted_at', text, 'datetime'),
             },
 
         ];
@@ -417,7 +417,7 @@ class User extends React.Component {
                 <Table
                     columns={columns}
                     rowKey={record => record.id}
-                    dataSource={users.rows}
+                    dataSource={users}
                     pagination={pagination}
                     loading={loading}
                 />
