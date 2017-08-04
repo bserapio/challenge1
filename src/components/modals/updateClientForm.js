@@ -40,7 +40,7 @@ class UpdateForm extends React.Component {
     handleSelectTypeChange = value => {
         const { changeUpdateRecord } = this.props;
         const { record } = this.state;
-        record.ClientMetum.type = value;
+        record.client_metas.type = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };
@@ -48,7 +48,7 @@ class UpdateForm extends React.Component {
     handleSelectUserChange = value => {
         const { record } = this.state;
         const { changeUpdateRecord } = this.props;
-        record.ClientMetum.user_id = value;
+        record.client_metas.user_id = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };
@@ -57,7 +57,7 @@ class UpdateForm extends React.Component {
     handleUpdateExpire = value => {
         const { record } = this.state;
         const { changeUpdateRecord } = this.props;
-        record.expireDate = value.format('YYYY-MM-DD');
+        record.expire_date = value.format('YYYY-MM-DD');
         this.setState({ record });
         changeUpdateRecord(record);
     };
@@ -84,11 +84,11 @@ class UpdateForm extends React.Component {
         const { getFieldDecorator } = form;
         const children = [];
 
-        if (users.rows) {
-            Object.keys(users.rows).forEach(element => {
-                const ele = users.rows[element];
-                const id = String(ele.id);
-                children.push(<Option value={id} key={id}>{ele.username}</Option>);
+        if (users) {
+            Object.keys(users).forEach(element => {
+
+                const ele = users[element];
+                children.push(<Option value={element} key={element}>{ele}</Option>);
             });
         }
         const langChildren = [];
@@ -143,13 +143,13 @@ class UpdateForm extends React.Component {
 
 
                     <FormItem label="Client Type" hasFeedback>
-                        <Select defaultValue={record['ClientMetum#type']} onChange={this.handleSelectTypeChange}>
+                        <Select defaultValue={record['client_metas#type']} onChange={this.handleSelectTypeChange}>
                             {typeChildren}
                         </Select>
                     </FormItem>
 
                     <FormItem label="Owner" hasFeedback>
-                        <Select defaultValue={String(record['ClientMetum#user_id'])} onChange={this.handleSelectUserChange}>
+                        <Select defaultValue={String(users[record['client_metas#user_id']])} onChange={this.handleSelectUserChange}>
                             {children}
                         </Select>
                     </FormItem>

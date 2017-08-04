@@ -54,11 +54,20 @@ const mapStateToProps = state => {
     } else {
         clients = state.client.clients;
     }
+    const users = {};
+    state.user.users.forEach(item => {
+        const id = item.id;
+        const username = item.username;
+        const x = {};
+        x[id] = username;
+        Object.assign(users, x);
+    });
+
     return {
         auth: state.auth.auth,
-        users: state.user.users,
         config: state.common.config,
         clients,
+        users,
     };
 };
 class Clients extends React.Component {
@@ -380,7 +389,7 @@ class Clients extends React.Component {
     };
 
     renderColumns(data, index, key, text, type, aclObject) {
-        const { auth } = this.props;
+        const { auth, users } = this.props;
 
         let extraButton = null;
         if (!data) {
@@ -388,6 +397,7 @@ class Clients extends React.Component {
         } else if (Object.keys(data[index]).length === 0) {
             return text;
         }
+
         if (type === 'boolean') {
             let element = null;
             if (key === 'client_metas#new_channel') {
@@ -445,6 +455,9 @@ class Clients extends React.Component {
             }
 
             return [element, extraButton];
+        }
+        if (key === 'client_metas#user_id') {
+            return users[text];
         }
         return text;
     }
