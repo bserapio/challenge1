@@ -32,7 +32,9 @@ const detailMeta = id => db.ClientMeta.findOne({
 const updateMeta = async (id, data) => {
     try {
         const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
-        return await dataProvider.update('clientMeta', parseInt(id, 10), data);
+        console.log(data);
+        const result =  await dataProvider.update('clientMeta', parseInt(id, 10), data);
+        return result;
     } catch (err) {
         throw err;
     }

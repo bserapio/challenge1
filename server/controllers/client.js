@@ -49,6 +49,7 @@ exports.addClient = async (req, res) => {
 exports.listClient = async (req, res) => {
     try {
         const result =  await clientManager.listClient();
+
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
@@ -106,7 +107,7 @@ exports.manteinanceClient = async (req, res) => {
 exports.autoUpdateClient = async (req, res) => {
     const input = req.body;
     const element = {};
-    element.autoUpdate = input.autoUpdate;
+    element.auto_update = input.auto_update;
     try {
         const result = await performClientUpdate(req.params.id, element, input);
         return res.json(result);
@@ -118,7 +119,7 @@ exports.autoUpdateClient = async (req, res) => {
 exports.newInvoiceClient = async (req, res) => {
     const input = req.body;
     const element = {};
-    element.newInvoice = input.ClientMetum.newInvoice;
+    element.new_invoice = input.client_metas.new_invoice;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
@@ -130,7 +131,7 @@ exports.newInvoiceClient = async (req, res) => {
 exports.channelClient = async (req, res) => {
     const input = req.body;
     const element = {};
-    element.newChannel = input.ClientMetum.newChannel;
+    element.new_channel = input.client_metas.new_channel;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
@@ -143,7 +144,7 @@ exports.channelClient = async (req, res) => {
 exports.ikentooClient = async (req, res) => {
     const input = req.body;
     const element = {};
-    element.ikentoo = input.ClientMetum.ikentoo;
+    element.ikentoo = input.client_metas.ikentoo;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);

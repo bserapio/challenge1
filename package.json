@@ -60,8 +60,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "migrate": "cd server/db && ../../node_modules/.bin/sequelize db:migrate",
-    "seed": "cd server/db/seeders/ && node seed.js"
+    "migrate": "cd server/old_db && ../../node_modules/.bin/sequelize db:migrate",
+    "seed": "cd server/old_db/seeders/ && node seed.js"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
