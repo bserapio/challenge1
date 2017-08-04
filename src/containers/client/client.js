@@ -15,6 +15,9 @@ import * as clientAc from '../../ducks/modules/client';
 import * as commonAc from '../../ducks/modules/common';
 import './client.css';
 
+const env = process.env.NODE_ENV || 'development';
+const configParams = require('../../config/config')[env];
+
 
 const utils = require('../../utils/');
 
@@ -369,9 +372,9 @@ class Clients extends React.Component {
         const key = utils.generateKey(identifier);
         let url;
         if (type === 'ikentoo') {
-            url = `https://app.base7booking.com/ikentoo/admin/panel?key=${key}&opcode=${identifier}`;
+            url = `${configParams.ikentoo + key}&opcode=${identifier}`;
         } else if (type === 'channel') {
-            url = `https://app.base7booking.com/channel/admin/panel?key=${key}&opcode=${identifier}`;
+            url = `${configParams.channel + key}&opcode=${identifier}`;
         }
         return window.open(url);
     };
@@ -387,7 +390,7 @@ class Clients extends React.Component {
         }
         if (type === 'boolean') {
             let element = null;
-            if (key === 'client_metas#newChannel') {
+            if (key === 'client_metas#new_channel') {
                 if (aclObject.indexOf(auth.role) !== -1) {
                     extraButton = (<Button
                         type="primary"

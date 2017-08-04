@@ -41,21 +41,21 @@ const reducer = combineReducers({
 const middlewareConfig = {
     interceptors: {
         request: [{
-            success({getState, dispatch, getSourceAction}, req) {
+            success({ getState, dispatch, getSourceAction }, req) {
                 dispatch(apiAc.sendRequest(req));
                 return req;
             },
-            error({getState, dispatch, getSourceAction}, error) {
+            error({ getState, dispatch, getSourceAction }, error) {
                 console.log(error);
                 return error;
             },
         },
         ],
         response: [{
-            success({getState, dispatch, getSourceAction}, req) {
+            success({ getState, dispatch, getSourceAction }, req) {
                 return req;
             },
-            error({getState, dispatch, getSourceAction}, error) {
+            error({ getState, dispatch, getSourceAction }, error) {
                 console.log(error.response);
                 switch (error.response.status) {
                     case 400: {

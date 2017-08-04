@@ -6,7 +6,6 @@ const userManager = require('../managers/user');
 const clientMetaManager = require('../managers/client_meta');
 
 
-
 const performUserUpdate = (id, element, input) => {
     const result = t.validate(input, domain.CreateUpdateDbInput);
     if (result.isValid()) {
@@ -40,8 +39,6 @@ exports.listUser = async (req, res) => {
     } catch (err) {
         return res.status(500).json(err);
     }
-
-
 };
 exports.detailUser = (req, res) => {
     userManager.detailUser(req.params.id)

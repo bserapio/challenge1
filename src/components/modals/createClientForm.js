@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, Modal, Select} from 'antd';
+import { Form, Input, Modal, Select } from 'antd';
 import PropTypes from 'prop-types';
 
 const Option = Select.Option;
@@ -15,14 +15,14 @@ class CreateForm extends React.Component {
         this.props.onTypeChange(value);
     };
     render() {
-        const {visible, onCancel, onCreate, form, confirmLoading, config} = this.props;
+        const { visible, onCancel, onCreate, form, confirmLoading, config } = this.props;
         if (!visible) {
             return null;
         }
         const langs = config.lang;
         const types = config.types;
 
-        const {getFieldDecorator} = form;
+        const { getFieldDecorator } = form;
 
         const langChildren = [];
         Object.keys(langs).forEach(element => {
@@ -49,15 +49,15 @@ class CreateForm extends React.Component {
                 <Form layout="vertical">
                     <FormItem label="Opcode" hasFeedback>
                         {getFieldDecorator('identifier', {
-                            rules: [{required: true, message: 'Please input the Opcode of collection!'},
-                                {max: 13, message: 'Opcode must be less than 13 chars'}],
+                            rules: [{ required: true, message: 'Please input the Opcode of collection!' },
+                                { max: 13, message: 'Opcode must be less than 13 chars' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem label="Hotel Name" hasFeedback>
                         {getFieldDecorator('name', {
-                            rules: [{required: true, message: 'Please input your Name!'}],
+                            rules: [{ required: true, message: 'Please input your Name!' }],
                         })(
                             <Input />
                         )}

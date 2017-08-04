@@ -10,7 +10,7 @@ module.exports = {
                 allowNull: false,
                 defaultValue: true,
             }
-        )
+        );
     },
     down(queryInterface, Sequelize) {
         return queryInterface.dropTable('users');

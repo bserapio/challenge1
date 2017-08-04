@@ -1,12 +1,12 @@
 import configureStore from '../../ducks/configureStore';
 
 const DEFAULT_PATH = 'dashboard/auth';
-export const LOGIN_REQUEST = `${{DEFAULT_PATH}}/LOGIN_REQUEST`;
-export const LOGIN_SUCCESS = `${{DEFAULT_PATH}}/LOGIN_SUCCESS`;
-export const LOGIN_ERROR = `${{DEFAULT_PATH}}/LOGIN_ERROR`;
-export const LOGOUT_REQUEST = `${{DEFAULT_PATH}}/LOGOUT_REQUEST`;
-export const LOGOUT_SUCCESS = `${{DEFAULT_PATH}}/LOGOUT_SUCCESS`;
-export const CHECK_LOGIN = `${{DEFAULT_PATH}}/CHECK_LOGIN`;
+export const LOGIN_REQUEST = `${{ DEFAULT_PATH }}/LOGIN_REQUEST`;
+export const LOGIN_SUCCESS = `${{ DEFAULT_PATH }}/LOGIN_SUCCESS`;
+export const LOGIN_ERROR = `${{ DEFAULT_PATH }}/LOGIN_ERROR`;
+export const LOGOUT_REQUEST = `${{ DEFAULT_PATH }}/LOGOUT_REQUEST`;
+export const LOGOUT_SUCCESS = `${{ DEFAULT_PATH }}/LOGOUT_SUCCESS`;
+export const CHECK_LOGIN = `${{ DEFAULT_PATH }}/CHECK_LOGIN`;
 
 
 export function checkAuthAction() {
@@ -68,7 +68,7 @@ export const logOutUserAction = () => ({
 
 
 const initialState = {
-    auth: {role: 'guest', id: -1},
+    auth: { role: 'guest', id: -1 },
     loginError: null,
 };
 
@@ -96,7 +96,7 @@ export default function reducer(state = initialState, action) {
             localStorage.removeItem('user');
             return {
                 ...state,
-                auth: {role: 'guest', id: -1},
+                auth: { role: 'guest', id: -1 },
                 loginError: null,
                 apiError: null,
                 users: [],
@@ -104,7 +104,7 @@ export default function reducer(state = initialState, action) {
             };
         }
         case LOGIN_ERROR: {
-            const {loginError} = action.payload;
+            const { loginError } = action.payload;
 
             return {
                 ...state,

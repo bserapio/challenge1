@@ -38,7 +38,7 @@ class NormalLoginForm extends React.Component {
     };
 
     sendForm() {
-        const {authActions, history} = this.props;
+        const { authActions, history } = this.props;
         const { credentials } = this.state;
         authActions.loginUserAction(credentials).then(
             () => {

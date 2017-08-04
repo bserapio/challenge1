@@ -58,7 +58,7 @@ const acl = {
                         if (pass) {
                             return next();
                         }
-                        throw {message: 'You are not allow', id: 403};
+                        throw { message: 'You are not allow', id: 403 };
                     }
                 }
             } else {
@@ -66,9 +66,9 @@ const acl = {
             }
         } catch (err) {
             if (Object.prototype.hasOwnProperty.call(err, 'id')) {
-                return res.status(err.id).json({message: 'You are not logged'});
+                return res.status(err.id).json({ message: 'You are not logged' });
             }
-            return res.status(401).json({message: err.message});
+            return res.status(401).json({ message: err.message });
         }
         return next();
     },

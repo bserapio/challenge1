@@ -16,7 +16,6 @@ const getUsers = async () => {
         const query = { where: { deleted_at: null },
             order: [['id', 'ASC']] };
         return await dataProvider.fetchAll('users', query);
-
     } catch (err) {
         throw err;
     }

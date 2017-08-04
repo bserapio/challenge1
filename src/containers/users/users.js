@@ -77,7 +77,7 @@ class User extends React.Component {
         const { visible } = this.state;
         visible.update = true;
         const editedRecord = { ...record };
-        console.log(editedRecord);
+
         this.setState({ visible, editedRecord });
     };
     handleUpdateCancel = () => {
@@ -112,7 +112,7 @@ class User extends React.Component {
         const { userActions } = this.props;
         confirmLoading.update = true;
         this.setState({ confirmLoading });
-        console.log(this.formUpdate);
+
 
         this.formUpdate.validateFields((err, values) => {
             if (err) {
@@ -126,9 +126,6 @@ class User extends React.Component {
                     editedRecord.password = values.password;
                 }
                 confirmLoading.update = true;
-                console.log(editedRecord);
-
-
                 userActions.updateUserAction(editedRecord).then(
                     () => {
                         visible.update = false;

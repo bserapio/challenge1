@@ -7,7 +7,7 @@ const generateKey = opcode => {
     return sha1(pub + opcode);
 };
 
-const stringOrder = (a, b,key) => {
+const stringOrder = (a, b, key) => {
     {
         const nameA = a[key].toUpperCase();
         const nameB = b[key].toUpperCase();

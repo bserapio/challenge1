@@ -2,13 +2,10 @@
 
 module.exports = {
     up(queryInterface, Sequelize) {
-
         queryInterface.addConstraint('users', ['username'], {
             type: 'unique',
-            name: 'user_unique_username'
+            name: 'user_unique_username',
         });
-
-
     },
 
     down(queryInterface, Sequelize) {

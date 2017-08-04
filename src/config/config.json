@@ -3,21 +3,27 @@
     "app": "https://app.stage.base7booking.com/api/backdoor/penetrate?key=",
     "beta": "https://dev.base7.io/use-token?is_backdoor=1&token=",
     "stage_app": "https://app.stage.base7booking.com/api/backdoor/penetrate?key=",
-    "stage_beta": "https://dev.stage.base7.io/use-token?is_backdoor=1&token="
+    "stage_beta": "https://dev.stage.base7.io/use-token?is_backdoor=1&token=",
+    "ikentoo":"https://app.base7booking.com/ikentoo/admin/panel?key=",
+    "channel":"https://app.base7booking.com/channel/admin/panel?key="
 
   },
   "test": {
     "app": "https://app.stage.base7booking.com/api/backdoor/penetrate?key=",
     "beta": "https://dev.base7.io/use-token?is_backdoor=1&token=",
     "stage_app": "https://app.stage.base7booking.com/api/backdoor/penetrate?key=",
-    "stage_beta": "https://dev.stage.base7.io/use-token?is_backdoor=1&token="
+    "stage_beta": "https://dev.stage.base7.io/use-token?is_backdoor=1&token=",
+    "ikentoo":"https://app.base7booking.com/ikentoo/admin/panel?key=",
+    "channel":"https://app.base7booking.com/channel/admin/panel?key="
 
   },
   "production": {
     "app": "https://app.stage.base7booking.com/api/backdoor/penetrate?key=",
     "beta": "https://dev.base7.io/use-token?is_backdoor=1&token=",
     "stage_app": "https://app.stage.base7booking.com/api/backdoor/penetrate?key=",
-    "stage_beta": "https://dev.stage.base7.io/use-token?is_backdoor=1&token="
+    "stage_beta": "https://dev.stage.base7.io/use-token?is_backdoor=1&token=",
+    "ikentoo":"https://app.base7booking.com/ikentoo/admin/panel?key=",
+    "channel":"https://app.base7booking.com/channel/admin/panel?key="
 
   }
 }

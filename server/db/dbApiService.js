@@ -10,6 +10,7 @@ const ConnectorService = require('dbaseql/libs/services/connector');
 const DataProvider = require('dbaseql/libs/dataProvider');
 const loadSchemas = require('dbaseql/libs/utils/loadSchemas');
 const path = require('path');
+
 const env = process.env.NODE_ENV || 'development';
 
 const parameters = require(`${__dirname}/../../config/parameters.json`)[env]; // eslint-disable-line
@@ -28,7 +29,7 @@ const connectorService = new ConnectorService({
 });
 
 const testSchemas = loadSchemas({
-    schemaContext:path.join(__dirname, './schemas'),
+    schemaContext: path.join(__dirname, './schemas'),
     schemaPath: path.join(__dirname, './schemas'),
 });
 
