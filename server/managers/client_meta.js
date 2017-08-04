@@ -1,8 +1,7 @@
 'use strict';
 
-const db = require('../old_db/models');;
-const utils = require('../utils/index');
-
+const db = require('../old_db/models');
+const dbApiService  = require('../db/dbApiService');
 
 const listMeta = (id, limit, page) => {
     let offset = limit * (page - 1);
@@ -24,23 +23,20 @@ const listMeta = (id, limit, page) => {
 };
 
 const detailMeta = id => db.ClientMeta.findOne({
-    where: {id},
+    where: { id },
     include: [
-        {model: db.ClientDb, attributes: {}},
-        {model: db.User, attributes: {}},
+        { model: db.ClientDb, attributes: {} },
+        { model: db.User, attributes: {} },
     ],
 });
-const updateMeta = (id, data) => db.ClientMeta.findById(id)
-        .then(
-            client => {
-                if (client) {
-                    return client.update(data);
-                }
-                throw new Error('Client does not exists', 404);
-            },
-            error => error
-        )
-        .catch(error => error);
+const updateMeta = async (id, data) => {
+    try {
+        const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+        return await dataProvider.update('clientMeta', parseInt(id, 10), data);
+    } catch (err) {
+        throw err;
+    }
+};
 
 module.exports = {
     listMeta, detailMeta, updateMeta,

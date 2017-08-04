@@ -17,19 +17,19 @@ export const GET_CLIENTS_ELEVATOR_ERROR = `${{DEFAULT_PATH}}/GET_CLIENTS_ELEVATO
 export const SEARCH_FILTER = `${{DEFAULT_PATH}}/SEARCH_FILTER`;
 
 const prepareClients = data => {
-    const results = data.rows;
+    const results = data;
     results.forEach((item, index) => {
-        if (Object.prototype.hasOwnProperty.call(item, 'ClientMetum')) {
-            const element = item.ClientMetum;
+        if (Object.prototype.hasOwnProperty.call(item, 'client_metas')) {
+            const element = item.client_metas;
             if (element) {
                 Object.keys(element).forEach(prop => {
                     if (element && Object.prototype.hasOwnProperty.call(element, prop)) {
-                        if (prop === 'User') {
+                        if (prop === 'users') {
                             Object.keys(element[prop]).forEach(prop1 => {
-                                item[`ClientMetum#User#${prop1}`] = element[prop][prop1];
+                                item[`client_metas#users#${prop1}`] = element[prop][prop1];
                             });
                         } else {
-                            item[`ClientMetum#${prop}`] = element[prop];
+                            item[`client_metas#${prop}`] = element[prop];
                         }
                     }
                 });

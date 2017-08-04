@@ -18,36 +18,37 @@ const performClientUpdate = async (id, element, input) => {
     }
 };
 
-const performClientMetaUpdate = (id, element, input) => {
+const performClientMetaUpdate = async (id, element, input) => {
     const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        return clientMetaManager.updateMeta(id, element);
+    try {
+        if (!result.isValid()) {
+            throw result.errors;
+        }
+        return await clientMetaManager.updateMeta(id, element);
+    } catch (err) {
+        throw err;
     }
-    throw result.errors;
 };
 
 
-exports.addClient = (req, res) => {
+exports.addClient = async (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateDbInput);
     if (!result.isValid()) {
         res.status(400).json(result.errors);
     } else {
-        clientManager.createClient(req.user, input)
-            .then(
-                client => res.json(client),
-                error => res.status(400).json(error)
-            )
-            .catch(
-                error => res.status(500).json(error)
-            );
+        try {
+            const client = await clientManager.createClient(req.user, input);
+            return res.json(client);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
     }
 };
 
 exports.listClient = async (req, res) => {
     try {
         const result =  await clientManager.listClient();
-        console.log(result);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
@@ -76,7 +77,6 @@ exports.removeClient = async (req, res) => {
     }
 };
 
-
 exports.activateClient = async (req, res) => {
     const input = req.body;
     const element = {};
@@ -86,88 +86,83 @@ exports.activateClient = async (req, res) => {
         const result = await performClientUpdate(req.params.id, element, input);
         return res.json(result);
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json(err);
+    }
+};
+
+exports.manteinanceClient = async (req, res) => {
+    const input = req.body;
+    const element = {};
+    element.maintenance = input.maintenance;
+    try {
+        const result = await performClientUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
     }
 };
 
 
-exports.manteinanceClient = (req, res) => {
-    const input = req.body;
-    const element = {};
-    element.maintenance = input.maintenance;
-    return performClientUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
-};
-
-
-exports.autoUpdateClient = (req, res) => {
+exports.autoUpdateClient = async (req, res) => {
     const input = req.body;
     const element = {};
     element.autoUpdate = input.autoUpdate;
-    return performClientUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+    try {
+        const result = await performClientUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
-exports.newInvoiceClient = (req, res) => {
+exports.newInvoiceClient = async (req, res) => {
     const input = req.body;
     const element = {};
     element.newInvoice = input.ClientMetum.newInvoice;
-    performClientMetaUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+    try {
+        const result = await performClientMetaUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
-exports.channelClient = (req, res) => {
+exports.channelClient = async (req, res) => {
     const input = req.body;
     const element = {};
     element.newChannel = input.ClientMetum.newChannel;
-    performClientMetaUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+    try {
+        const result = await performClientMetaUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
 
-exports.ikentooClient = (req, res) => {
+exports.ikentooClient = async (req, res) => {
     const input = req.body;
     const element = {};
     element.ikentoo = input.ClientMetum.ikentoo;
-    performClientMetaUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+    try {
+        const result = await performClientMetaUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
-exports.updateClient = (req, res) => {
+exports.updateClient = async (req, res) => {
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
-        clientManager.fullUpdate(req.params.id, input).then(
-            result => res.json(result),
-            error => res.status(400).json(error)
-        ).catch(error => res.status(500).json(error));
-    } else {
-        res.status(400).json(result.errors);
+    try {
+        if (!result.isValid()) {
+            throw result.errors;
+        }
+        const resu = await clientManager.fullUpdate(req.params.id, input);
+        return res.json(resu);
+    } catch (err) {
+        return res.status(500).json(err);
     }
 };
 

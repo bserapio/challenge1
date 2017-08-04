@@ -13,7 +13,7 @@ const createUser = data => {
 const getUsers = async () => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
     try {
-        const query = { where: { deletedAt: null },
+        const query = { where: { deleted_at: null },
             order: [['id', 'ASC']] };
         return await dataProvider.fetchAll('users', query);
 

@@ -560,23 +560,23 @@ class Clients extends React.Component {
             },
             {
                 title: 'new_invoice',
-                dataIndex: 'ClientMetum#newInvoice',
-                key: 'ClientMetum#newInvoice',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newInvoice', text, 'boolean', acl.managerGroup),
+                dataIndex: 'client_metas#newInvoice',
+                key: 'client_metas#newInvoice',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#newInvoice', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'channel_manager',
-                dataIndex: 'ClientMetum#newChannel',
-                key: 'ClientMetum#newChannel',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#newChannel', text, 'boolean', acl.managerGroup),
+                dataIndex: 'client_metas#newChannel',
+                key: 'client_metas#newChannel',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#newChannel', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'ikentoo',
-                dataIndex: 'ClientMetum#ikentoo',
-                key: 'ClientMetum#ikentoo',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#ikentoo', text, 'boolean', acl.managerGroup),
+                dataIndex: 'client_metas#ikentoo',
+                key: 'client_metas#ikentoo',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#ikentoo', text, 'boolean', acl.managerGroup),
 
             },
             {
@@ -586,17 +586,17 @@ class Clients extends React.Component {
             },
             {
                 title: 'Type',
-                dataIndex: 'ClientMetum#type',
-                onFilter: (value, record) => record['ClientMetum#type'].indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#type', text, 'text'),
+                dataIndex: 'client_metas#type',
+                onFilter: (value, record) => record['client_metas#type'].indexOf(value) === 0,
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#type', text, 'text'),
                 filters: utils.typeFilter,
 
             },
             {
                 title: 'user',
-                dataIndex: 'ClientMetum#User#username',
-                key: 'ClientMetum#User#username',
-                render: (text, record, index) => this.renderColumns(clients, index, 'ClientMetum#User#username', text, 'text'),
+                dataIndex: 'client_metas#user_id',
+                key: 'client_metas#user_id',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#user_id', text, 'text'),
 
             },
         ];
