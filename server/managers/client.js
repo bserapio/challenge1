@@ -28,7 +28,10 @@ const listClient = async () => {
 
     try {
         const query = {
-            'with': { 'client_metas': { 'columns': [] } },
+            'with': {
+                'client_metas': { 'columns': [] },
+
+            },
             order: [['id', 'ASC']],
         };
         return await dataProvider.fetchAll('clientDb', query);

@@ -27,7 +27,7 @@ exports.addUser = async (req, res) => {
         const input = req.body;
         const result = t.validate(input, domain.CreateInput);
         if (!result.isValid()) {
-            throw err;
+            throw result.errors;
         }
         const element = await userManager.createUser(input);
         return res.json(element);
@@ -60,19 +60,15 @@ exports.detailUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const input = req.body;
 
-    try {
-        const user = await userManager.checkUsername(input.username);
-        if (user.length === 0) {
-            throw err;
-        }
+    const user = await userManager.checkUsername(input.username);
+    if (user.length === 0) {
         return res.status(400).json({ message: 'user already exist', user });
-    } catch (err) {
-        try {
-            const result = await performUserUpdate(req.params.id, input, input, req, res);
-            return res.json(result);
-        } catch (err2) {
-            return res.status(500).json(err2);
-        }
+    }
+    try {
+        const result = await performUserUpdate(req.params.id, input, input, req, res);
+        return res.json(result);
+    } catch (err2) {
+        return res.status(500).json(err2);
     }
 };
 

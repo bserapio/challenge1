@@ -29,7 +29,8 @@ module.exports = function (passport) {
              dbApiService.getDataProvider('pool_name', 'schema_name').then(
                  dataProvider => {
                      try {
-                         const query = { where: { username } };
+                         const query = { where: { username: { '$type': 'eq', '$value': username } },
+                             order: [['id', 'ASC']] };
                          dataProvider.fetchAll('users', query).then(
                              user => {
                                  if (user.length === 0) {

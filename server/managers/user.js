@@ -18,8 +18,10 @@ const createUser = async data => {
 const getUsers = async () => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
     try {
-        const query = { where: { deleted_at: null },
+        const query = { where: { deleted_at: { '$type': 'eq', '$value': null } },
             order: [['id', 'ASC']] };
+
+
         return await dataProvider.fetchAll('users', query);
     } catch (err) {
         throw err;
@@ -38,23 +40,21 @@ const detailUser = async id => {
 };
 
 
-
 const checkUsername  = async username => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
 
     try {
-        const query = { where: { username: username},
+        const query = { where: { username: { '$type': 'eq', '$value': username } },
             order: [['id', 'ASC']] };
         return await dataProvider.fetchAll('users', query);
     } catch (err) {
         throw err;
     }
-
-}
+};
 
 const updateUser = async data => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
-    data.updatedAt = new Date();
+    data.updated_at = new Date();
     if (Object.prototype.hasOwnProperty.call(data, 'password')) {
         data.password = utils.generatePassword(data.password);
     }
