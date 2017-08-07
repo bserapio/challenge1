@@ -44,7 +44,7 @@ module.exports = function (passport) {
                                  return done(null, false, { message: 'Incorrect password.' });
                              },
                              error => {
-                                 done(null, false, { message: 'Incorrect password.' });
+                                return  done(null, false, { message: 'Incorrect password.' });
                              }
 
                          );
