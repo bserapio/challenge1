@@ -3,71 +3,56 @@
 const t = require('tcomb-validation');
 const domain = require('../validator');
 const userManager = require('../managers/user');
-const clientMetaManager = require('../managers/client_meta');
 
 
-const performUserUpdate = (id, element, input) => {
-    const result = t.validate(input, domain.CreateUpdateDbInput);
-    if (result.isValid()) {
+const performUserUpdate = async (id, element, input) => {
+    const result = t.validate(input, domain.CreateUpdateInput);
+    try {
+        if (!result.isValid()) {
+            throw result.errors;
+        }
         element.id = id;
-        return userManager.updateUser(element);
+        return await userManager.updateUser(element)
+    } catch (err) {
+        throw err;
     }
-    throw result.errors;
 };
 
 
-exports.addUser = (req, res) => {
-    const input = req.body;
-    const result = t.validate(input, domain.CreateInput);
-    if (result.isValid()) {
-        userManager.createUser(input)
-            .then(
-                response => res.json(response),
-                error => res.status(400).json(error)
-            )
-            .catch(
-                error => res.status(500).json(error)
-            );
-    } else {
-        res.status(400).json(result.errors);
+
+exports.addUser = async (req, res) => {
+    try {
+        const input = req.body;
+        const result = t.validate(input, domain.CreateInput);
+        if (!result.isValid()) {
+            throw err;
+        }
+        const element = await userManager.createUser(input);
+        return res.json(element);
+    } catch (err) {
+        return res.status(500).json(err);
     }
-};
+}
+
+
 exports.listUser = async (req, res) => {
     try {
-        const result = await userManager.getUsers();
-        return res.json(result);
+        const element = await userManager.getUsers();
+        return res.json(element);
     } catch (err) {
         return res.status(500).json(err);
     }
 };
-exports.detailUser = (req, res) => {
-    userManager.detailUser(req.params.id)
-        .then(
-            user => res.json(user),
-            err => res.status(400).json(err)
-        )
-        .catch(
-            error => res.status(500).json(error)
-        );
+exports.detailUser = async (req, res) => {
+    try {
+        const element = await userManager.detailUser(req.params.id);
+        return res.json(element);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
-exports.clientListUser = (req, res) => {
-    const limit = req.param('limit');
-    const page = req.param('page', 1);
 
-    clientMetaManager.listMeta(req.user.id, limit, page)
-        .then(
-            result => res.json(result),
-            error => res.status(400).json(error))
-        .catch(
-            error => res.status(500).json(error)
-        );
-};
-exports.clientDetailUser = (req, res) => {
-    clientMetaManager.detailMeta(req.params.idMeta).then(result => {
-        res.json(result);
-    });
-};
 
 exports.updateUser = (req, res) => {
     const input = req.body;
@@ -93,28 +78,28 @@ exports.updateUser = (req, res) => {
         );
 };
 
+exports.activateUser = async (req, res) => {
+    const input = req.body;
+    const element = {};
+    element.is_active = input.is_active;
 
-exports.activateUser = (req, res) => {
-    const input = req.body;
-    const element = {};
-    element.isActive = input.isActive;
-    return performUserUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+    try {
+        const result = await performUserUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
-exports.deleteUser = (req, res) => {
+
+exports.deleteUser = async (req, res) => {
     const input = req.body;
     const element = {};
-    element.deletedAt = new Date();
-    return performUserUpdate(req.params.id, element, input).then(
-        result => res.json(result),
-        error => res.status(400).json(error)
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+    element.deleted_at = new Date();
+
+    try {
+        const result = await performUserUpdate(req.params.id, element, input);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };

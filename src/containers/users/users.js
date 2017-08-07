@@ -155,6 +155,7 @@ class User extends React.Component {
         const { userForm } = this.state;
         userActions.createUserAction(userForm).then(
             data => {
+                console.log(data);
                 if (data) {
                     this.setState({ visible: false });
                     userActions.getUserAction();
@@ -203,11 +204,11 @@ class User extends React.Component {
         if (type === 'save') {
             if (newRecord !== record) {
                 switch (key) {
-                    case 'isActive': {
+                    case 'is_active': {
                         method = 'active';
                         break;
                     }
-                    case 'delete': {
+                    case 'deleted_at': {
                         method = 'delete';
                         break;
                     }
@@ -220,10 +221,12 @@ class User extends React.Component {
                 }
                 if (method) {
                     userActions.updateUserActionBooleanAction(newRecord, method).then(
-                        () => {
+                        data => {
                             userActions.getUserAction();
                         }
-                    );
+                    ).catch(err => {
+                        console.log(err);
+                    });
                 }
             }
         } else {
@@ -320,7 +323,7 @@ class User extends React.Component {
                             <Popconfirm
                                 placement="top"
                                 title="Do you want to delete the client?"
-                                onConfirm={() => this.updateRecord(record, 'delete')}
+                                onConfirm={() => this.updateRecord(record, 'deleted_at')}
                                 okText="Yes"
                                 cancelText="No"
                             >
@@ -357,7 +360,7 @@ class User extends React.Component {
             {
                 title: 'is_active',
                 dataIndex: 'is_active',
-                render: (text, record, index) => this.renderColumns(users, index, 'isActive', text, 'boolean', acl.adminGroup),
+                render: (text, record, index) => this.renderColumns(users, index, 'is_active', text, 'boolean', acl.adminGroup),
             },
             {
                 title: 'Created',

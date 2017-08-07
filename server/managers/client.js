@@ -17,7 +17,7 @@ const createClient = async (user, data) => {
         if (!(data.dbPass)) {
             data.dbPass = utils.randomPassword(20);
         }
-        return await dataProvider.createAndSave('clientDb', query);
+        return await dataProvider.createAndSave('clientDb', data);
     } catch (err) {
         throw err;
     }

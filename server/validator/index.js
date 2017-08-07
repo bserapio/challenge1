@@ -58,6 +58,7 @@ const CreateUpdateDbInput = t.struct({
     name: t.maybe(t.Str),
     dbPass: t.maybe(Password),
     type: t.maybe(Type),
+    is_active:t.maybe(t.Bool),
     client_metas: t.maybe(CreateUpdateMetaDbInput),
 });
 
