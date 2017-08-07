@@ -38,10 +38,19 @@ const detailUser = async id => {
 };
 
 
-const getUserByUserName = username => db.User.find({
-    where: { username },
-});
 
+const checkUsername  = async username => {
+    const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
+
+    try {
+        const query = { where: { username: username},
+            order: [['id', 'ASC']] };
+        return await dataProvider.fetchAll('users', query);
+    } catch (err) {
+        throw err;
+    }
+
+}
 
 const updateUser = async data => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
@@ -58,5 +67,5 @@ const updateUser = async data => {
 
 
 module.exports = {
-    createUser, getUsers, detailUser, updateUser, getUserByUserName,
+    createUser, getUsers, detailUser, updateUser, checkUsername,
 };

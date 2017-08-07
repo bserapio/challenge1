@@ -6,6 +6,7 @@ const groupsAcl = require('./aclGroups');
 const acl = {
     urlPath: {},
     aclGroup: {},
+    modelAcl: {},
     add(element) {
         for (const k in element) {
             const ele = element[k];
@@ -18,6 +19,9 @@ const acl = {
             }
         }
         Object.assign(this.urlPath, element);
+    },
+    addModelAcl(element) {
+        Object.assign(this.modelAcl, element);
     },
     get() {
         return this.urlPath;
@@ -41,38 +45,23 @@ const acl = {
             return next();
         }
 
-        let keys;
         try {
             const role = req.user.role;
-            if (!(groupsAcl.adminGroup.indexOf(role) !== -1)) {
-                const urlPath = acl.get();
-                for (const url in urlPath) {
-                    const re = pathToRegexp(url, keys);
-                    if (re.exec(req.path)) {
-                        let pass = false;
-                        const routeFound = urlPath[url];
-                        routeFound.forEach(element => {
-                            pass = acl.checkRoute(req, element);
-                        });
-
-                        if (pass) {
-                            return next();
-                        }
-                        throw { message: 'You are not allow', id: 403 };
-                    }
-                }
-            } else {
-                return next();
-            }
+            return next();
         } catch (err) {
             if (Object.prototype.hasOwnProperty.call(err, 'id')) {
                 return res.status(err.id).json({ message: 'You are not logged' });
             }
             return res.status(401).json({ message: err.message });
         }
-        return next();
     },
-
+    modelMiddleware(name, action, group) {
+        if (!Object.prototype.hasOwnProperty.call(this.modelAcl, name)) {
+            return false;
+        }
+        const model = this.modelAcl[name];
+        return model[action].indexOf(group) !== -1;
+    },
 };
 const usersPath = {
     '/services/user': [
@@ -114,7 +103,6 @@ const clientActivateActions = {
     ],
 
 };
-
 const clientManteinanceActions = {
     '/services/client/:id(\\d+)/manteinance': [
         {
@@ -193,6 +181,41 @@ const clientelevate = {
     ],
 
 };
+// ACL MODELS
+const usersModel = {
+    'users': {
+        create: groupsAcl.adminGroup,
+        read: groupsAcl.userGroup,
+        update: groupsAcl.adminGroup,
+        delete: groupsAcl.adminGroup,
+
+    },
+
+};
+
+
+const clientDbModel = {
+    'clientDb': {
+        create: groupsAcl.managerGroup,
+        read: groupsAcl.userGroup,
+        update: groupsAcl.managerGroup,
+        delete: groupsAcl.adminGroup,
+
+    },
+
+};
+
+const clientMetaModel = {
+    'clientMeta': {
+        create: groupsAcl.managerGroup,
+        read: groupsAcl.userGroup,
+        update: groupsAcl.managerGroup,
+        delete: groupsAcl.adminGroup,
+
+    },
+
+};
+
 
 const aclFix = acl;
 aclFix.add(usersPath);
@@ -203,7 +226,9 @@ aclFix.add(clientDetail);
 aclFix.add(clientChannel);
 aclFix.add(clientActions);
 aclFix.add(clientelevate);
-
+aclFix.addModelAcl(usersModel);
+aclFix.addModelAcl(clientDbModel);
+aclFix.addModelAcl(clientMetaModel);
 
 module.exports = {
     aclFix,

@@ -3,24 +3,33 @@
 const t = require('tcomb-validation');
 const domain = require('../validator');
 const userManager = require('../managers/user');
+const aclModel = require('../acl/index');
+
+const checkPermissions = (model, action, req, res) => {
+    if (aclModel.aclFix.modelMiddleware(model, action, req.user.role)) {
+        return true;
+    }
+    return res.status('403').json({ message: 'You are not allow' });
+};
 
 
-const performUserUpdate = async (id, element, input) => {
+const performUserUpdate = async (id, element, input, req, res) => {
+    checkPermissions('users', 'update',  req, res);
     const result = t.validate(input, domain.CreateUpdateInput);
     try {
         if (!result.isValid()) {
             throw result.errors;
         }
         element.id = id;
-        return await userManager.updateUser(element)
+        return await userManager.updateUser(element);
     } catch (err) {
         throw err;
     }
 };
 
 
-
 exports.addUser = async (req, res) => {
+    checkPermissions('users', 'create',  req, res);
     try {
         const input = req.body;
         const result = t.validate(input, domain.CreateInput);
@@ -32,10 +41,11 @@ exports.addUser = async (req, res) => {
     } catch (err) {
         return res.status(500).json(err);
     }
-}
+};
 
 
 exports.listUser = async (req, res) => {
+    checkPermissions('users', 'read',  req, res);
     try {
         const element = await userManager.getUsers();
         return res.json(element);
@@ -44,6 +54,7 @@ exports.listUser = async (req, res) => {
     }
 };
 exports.detailUser = async (req, res) => {
+    checkPermissions('users', 'read',  req, res);
     try {
         const element = await userManager.detailUser(req.params.id);
         return res.json(element);
@@ -53,29 +64,23 @@ exports.detailUser = async (req, res) => {
 };
 
 
-
-exports.updateUser = (req, res) => {
+exports.updateUser = async (req, res) => {
     const input = req.body;
 
-    if (input.username) {
-        userManager.getUserByUserName(input.username).then(user => {
-            if (user) {
-                res.status(400).json({ message: 'username already exists' });
-            }
-        });
-    }
-
-
-    return performUserUpdate(req.params.id, input, input).then(
-        result => res.json(result),
-        error => {
-            console.log(error);
-            res.status(400).json(error);
+    try {
+        const user = await userManager.checkUsername(input.username);
+        if (user.length === 0) {
+            throw err;
         }
-    )
-        .catch(
-            error => res.status(500).json(error)
-        );
+        return res.status(400).json({ message: 'user already exist', user });
+    } catch (err) {
+        try {
+            const result = await performUserUpdate(req.params.id, input, input, req, res);
+            return res.json(result);
+        } catch (err2) {
+            return res.status(500).json(err2);
+        }
+    }
 };
 
 exports.activateUser = async (req, res) => {
@@ -84,7 +89,7 @@ exports.activateUser = async (req, res) => {
     element.is_active = input.is_active;
 
     try {
-        const result = await performUserUpdate(req.params.id, element, input);
+        const result = await performUserUpdate(req.params.id, element, input, req, res);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
@@ -97,7 +102,7 @@ exports.deleteUser = async (req, res) => {
     element.deleted_at = new Date();
 
     try {
-        const result = await performUserUpdate(req.params.id, element, input);
+        const result = await performUserUpdate(req.params.id, element, input, req, res);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);

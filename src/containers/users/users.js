@@ -201,36 +201,34 @@ class User extends React.Component {
     editDone(newRecord, record, key, type) {
         const { userActions } = this.props;
         let method = null;
-        if (type === 'save') {
-            if (newRecord !== record) {
-                switch (key) {
-                    case 'is_active': {
-                        method = 'active';
-                        break;
-                    }
-                    case 'deleted_at': {
-                        method = 'delete';
-                        break;
-                    }
-
-                    default: {
-                        method = null;
-                        break;
-                    }
-
-                }
-                if (method) {
-                    userActions.updateUserActionBooleanAction(newRecord, method).then(
-                        data => {
-                            userActions.getUserAction();
-                        }
-                    ).catch(err => {
-                        console.log(err);
-                    });
-                }
-            }
-        } else {
+        if (type !== 'save') {
             this.setState({ editedRecord: {} });
+        } else if (newRecord !== record) {
+            switch (key) {
+                case 'is_active': {
+                    method = 'active';
+                    break;
+                }
+                case 'deleted_at': {
+                    method = 'delete';
+                    break;
+                }
+
+                default: {
+                    method = null;
+                    break;
+                }
+
+            }
+            if (method) {
+                userActions.updateUserActionBooleanAction(newRecord, method).then(
+                    () => {
+                        userActions.getUserAction();
+                    }
+                ).catch(err => {
+                    console.log(err);
+                });
+            }
         }
     }
 
