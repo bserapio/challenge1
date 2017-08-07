@@ -3,18 +3,11 @@
 const t = require('tcomb-validation');
 const domain = require('../validator');
 const userManager = require('../managers/user');
-const aclModel = require('../acl/index');
-
-const checkPermissions = (model, action, req, res) => {
-    if (aclModel.aclFix.modelMiddleware(model, action, req.user.role)) {
-        return true;
-    }
-    return res.status('403').json({ message: 'You are not allow' });
-};
+const utils = require('../utils/permissions');
 
 
 const performUserUpdate = async (id, element, input, req, res) => {
-    checkPermissions('users', 'update',  req, res);
+    utils.checkPermissions('users', 'update',  req, res);
     const result = t.validate(input, domain.CreateUpdateInput);
     try {
         if (!result.isValid()) {
@@ -29,7 +22,7 @@ const performUserUpdate = async (id, element, input, req, res) => {
 
 
 exports.addUser = async (req, res) => {
-    checkPermissions('users', 'create',  req, res);
+    utils.checkPermissions('users', 'create',  req, res);
     try {
         const input = req.body;
         const result = t.validate(input, domain.CreateInput);
@@ -45,7 +38,7 @@ exports.addUser = async (req, res) => {
 
 
 exports.listUser = async (req, res) => {
-    checkPermissions('users', 'read',  req, res);
+    utils.checkPermissions('users', 'read',  req, res);
     try {
         const element = await userManager.getUsers();
         return res.json(element);
@@ -54,7 +47,7 @@ exports.listUser = async (req, res) => {
     }
 };
 exports.detailUser = async (req, res) => {
-    checkPermissions('users', 'read',  req, res);
+    utils.checkPermissions('users', 'read',  req, res);
     try {
         const element = await userManager.detailUser(req.params.id);
         return res.json(element);

@@ -5,8 +5,10 @@ const domain = require('../validator');
 const db = require('../old_db/models');
 const clientManager = require('../managers/client');
 const clientMetaManager = require('../managers/client_meta');
+const utils = require('../utils/permissions');
 
-const performClientUpdate = async (id, element, input) => {
+const performClientUpdate = async (id, element, input, req, res) => {
+    utils.checkPermissions('clientDb', 'update',  req, res);
     const result = t.validate(input, domain.CreateUpdateDbInput);
     try {
         if (!result.isValid()) {
@@ -32,21 +34,23 @@ const performClientMetaUpdate = async (id, element, input) => {
 
 
 exports.addClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'create',  req, res);
     const input = req.body;
     const result = t.validate(input, domain.CreateDbInput);
     if (!result.isValid()) {
         res.status(400).json(result.errors);
-    } else {
-        try {
-            const client = await clientManager.createClient(req.user, input);
-            return res.json(client);
-        } catch (err) {
-            return res.status(500).json(err);
-        }
+    }
+
+    try {
+        const client = await clientManager.createClient(req.user, input);
+        return res.json(client);
+    } catch (err) {
+        return res.status(500).json(err);
     }
 };
 
 exports.listClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'read',  req, res);
     try {
         const result =  await clientManager.listClient();
 
@@ -57,6 +61,7 @@ exports.listClient = async (req, res) => {
 };
 
 exports.detailClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'read',  req, res);
     try {
         const result =  await clientManager.detailClient(req.params.id);
         return res.json(result[0]);
@@ -66,6 +71,7 @@ exports.detailClient = async (req, res) => {
 };
 
 exports.removeClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'delete',  req, res);
     try {
         let message = 'Nothing deleted';
         const result =  await clientManager.deleteClient(req.params.id);
@@ -79,12 +85,13 @@ exports.removeClient = async (req, res) => {
 };
 
 exports.activateClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'update',  req, res);
     const input = req.body;
     const element = {};
     element.active = input.active;
 
     try {
-        const result = await performClientUpdate(req.params.id, element, input);
+        const result = await performClientUpdate(req.params.id, element, input, req, res);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
@@ -92,11 +99,12 @@ exports.activateClient = async (req, res) => {
 };
 
 exports.manteinanceClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'update',  req, res);
     const input = req.body;
     const element = {};
     element.maintenance = input.maintenance;
     try {
-        const result = await performClientUpdate(req.params.id, element, input);
+        const result = await performClientUpdate(req.params.id, element, input, req, res);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
@@ -105,11 +113,12 @@ exports.manteinanceClient = async (req, res) => {
 
 
 exports.autoUpdateClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'update',  req, res);
     const input = req.body;
     const element = {};
     element.auto_update = input.auto_update;
     try {
-        const result = await performClientUpdate(req.params.id, element, input);
+        const result = await performClientUpdate(req.params.id, element, input, req, res);
         return res.json(result);
     } catch (err) {
         return res.status(500).json(err);
@@ -117,6 +126,7 @@ exports.autoUpdateClient = async (req, res) => {
 };
 
 exports.newInvoiceClient = async (req, res) => {
+    utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
     element.new_invoice = input.client_metas.new_invoice;
@@ -129,6 +139,7 @@ exports.newInvoiceClient = async (req, res) => {
 };
 
 exports.channelClient = async (req, res) => {
+    utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
     element.new_channel = input.client_metas.new_channel;
@@ -142,6 +153,7 @@ exports.channelClient = async (req, res) => {
 
 
 exports.ikentooClient = async (req, res) => {
+    utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
     element.ikentoo = input.client_metas.ikentoo;
@@ -154,6 +166,7 @@ exports.ikentooClient = async (req, res) => {
 };
 
 exports.updateClient = async (req, res) => {
+    utils.checkPermissions('clientDb', 'update',  req, res);
     const input = req.body;
     const result = t.validate(input, domain.CreateUpdateDbInput);
     try {
