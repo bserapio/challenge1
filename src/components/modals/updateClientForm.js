@@ -48,7 +48,7 @@ class UpdateForm extends React.Component {
     handleSelectUserChange = value => {
         const { record } = this.state;
         const { changeUpdateRecord } = this.props;
-        record.client_metas.user_id = value;
+        record.client_metas.userId = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };
@@ -57,7 +57,7 @@ class UpdateForm extends React.Component {
     handleUpdateExpire = value => {
         const { record } = this.state;
         const { changeUpdateRecord } = this.props;
-        record.expire_date = value.format('YYYY-MM-DD');
+        record.expireDate = value.format('YYYY-MM-DD');
         this.setState({ record });
         changeUpdateRecord(record);
     };

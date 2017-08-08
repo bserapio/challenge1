@@ -1,9 +1,6 @@
 /**
- File auto-generated
- * */
-
-'use strict';
-
+File auto-generated
+* */
 
 const Schema    = require('dbaseql/libs/utils/schema');
 
@@ -18,12 +15,12 @@ module.exports = {
             },
             type: Schema.DataTypes.ARRAY,
         },
-        created_at: {
+        createdAt: {
             column: 'created_at',
             isNullable: false,
             type: Schema.DataTypes.DATE,
         },
-        deleted_at: {
+        deletedAt: {
             column: 'deleted_at',
             type: Schema.DataTypes.DATE,
         },
@@ -33,13 +30,13 @@ module.exports = {
             isPrimaryKey: true,
             type: Schema.DataTypes.INTEGER,
         },
-        is_active: {
+        isActive: {
             column: 'is_active',
             default: true,
             isNullable: false,
             type: Schema.DataTypes.BOOLEAN,
         },
-        modified_at: {
+        modifiedAt: {
             column: 'modified_at',
             isNullable: false,
             type: Schema.DataTypes.DATE,

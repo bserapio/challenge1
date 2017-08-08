@@ -8,7 +8,11 @@
               "db_pass": "12345",
               "db_driver": "postgres",
               "db_schema": "public",
-              "db_name": "backend_db"
+              "db_name": "backend_db",
+              "jwtSecret": "MyS3cr3tK3Y",
+              "jwtSession": {
+                  "session": false
+                }
 
           },
   "production":
@@ -18,7 +22,11 @@
             "db_pass": "12345",
             "db_driver": "postgres",
             "db_schema": "public",
-            "db_name": "backend_db"
+            "db_name": "backend_db",
+            "jwtSecret": "MyS3cr3tK3Y",
+            "jwtSession": {
+              "session": false
+            }
           },
   "testing":
         {
@@ -27,7 +35,11 @@
           "db_pass": "12345",
           "db_driver": "postgres",
           "db_schema": "public",
-          "db_name": "backend_db"
+          "db_name": "backend_db",
+          "jwtSecret": "MyS3cr3tK3Y",
+          "jwtSession": {
+            "session": false
+          }
         }
 
 }

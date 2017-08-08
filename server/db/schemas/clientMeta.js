@@ -1,18 +1,21 @@
 /**
 File auto-generated
-* */
-
-'use strict';
+**/
 
 const Schema    = require('dbaseql/libs/utils/schema');
 
 module.exports = {
     attributes: {
-        channel_manager: {
+        channelManager: {
             column: 'channel_manager',
             default: false,
             isNullable: false,
-            type: Schema.DataTypes.BOOLEAN,
+            type: Schema.DataTypes.BOOLEAN
+        },
+        clientId: {
+            column: 'client_id',
+            isNullable: false,
+            type: Schema.DataTypes.INTEGER
         },
         client_db: {
             column: 'client_id',
@@ -20,74 +23,69 @@ module.exports = {
                 associationType: Schema.AssociationTypes.MANY_TO_ONE,
                 model: 'clientDb',
                 table: 'client_db',
-                targetKey: 'id',
+                targetKey: 'id'
             },
-            type: Schema.DataTypes.INTEGER,
+            type: Schema.DataTypes.INTEGER
         },
-        client_id: {
-            column: 'client_id',
-            isNullable: false,
-            type: Schema.DataTypes.INTEGER,
-        },
-        created_at: {
+        createdAt: {
             column: 'created_at',
             isNullable: false,
-            type: Schema.DataTypes.DATE,
+            type: Schema.DataTypes.DATE
         },
         cubilis: {
             column: 'cubilis',
             default: false,
             isNullable: false,
-            type: Schema.DataTypes.BOOLEAN,
+            type: Schema.DataTypes.BOOLEAN
         },
         id: {
             column: 'id',
             isNullable: false,
             isPrimaryKey: true,
-            type: Schema.DataTypes.INTEGER,
+            type: Schema.DataTypes.INTEGER
         },
         ikentoo: {
             column: 'ikentoo',
             default: false,
             isNullable: false,
-            type: Schema.DataTypes.BOOLEAN,
+            type: Schema.DataTypes.BOOLEAN
         },
-        last_login: {
+        lastLogin: {
             column: 'last_login',
-            type: Schema.DataTypes.DATE,
+            type: Schema.DataTypes.DATE
         },
-        modified_at: {
+        modifiedAt: {
             column: 'modified_at',
             isNullable: false,
-            type: Schema.DataTypes.DATE,
+            type: Schema.DataTypes.DATE
         },
-        new_channel: {
+        newChannel: {
             column: 'new_channel',
             default: true,
             isNullable: false,
-            type: Schema.DataTypes.BOOLEAN,
+            type: Schema.DataTypes.BOOLEAN
         },
-        new_invoice: {
+        newInvoice: {
             column: 'new_invoice',
             default: true,
             isNullable: false,
-            type: Schema.DataTypes.BOOLEAN,
+            type: Schema.DataTypes.BOOLEAN
         },
         seekda: {
             column: 'seekda',
             default: false,
             isNullable: false,
-            type: Schema.DataTypes.BOOLEAN,
+            type: Schema.DataTypes.BOOLEAN
         },
         type: {
             column: 'type',
             isNullable: false,
-            type: Schema.DataTypes.STRING,
+            type: Schema.DataTypes.STRING
         },
-        user_id: {
+        userId: {
             column: 'user_id',
             isNullable: false,
-            type: Schema.DataTypes.INTEGER,
+            type: Schema.DataTypes.INTEGER
         },
         users: {
             column: 'user_id',
@@ -95,12 +93,12 @@ module.exports = {
                 associationType: Schema.AssociationTypes.MANY_TO_ONE,
                 model: 'users',
                 table: 'users',
-                targetKey: 'id',
+                targetKey: 'id'
             },
-            type: Schema.DataTypes.INTEGER,
-        },
+            type: Schema.DataTypes.INTEGER
+        }
     },
     name: 'clientMeta',
-    tableName: 'client_meta',
+    tableName: 'client_meta'
 };
 

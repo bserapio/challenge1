@@ -29,7 +29,11 @@ const listClient = async () => {
     try {
         const query = {
             'with': {
-                'client_metas': { 'columns': [] },
+                'client_metas': { 'columns': ['*'],
+                    'with': {
+                        'users': { 'columns': ['*'] },
+
+                    } },
 
             },
             order: [['id', 'ASC']],
@@ -83,7 +87,7 @@ const fullUpdate = async (id, data) => {
     try {
         await updateClient(id, element);
         const clientMetadata = {};
-        clientMetadata.user_id = data.client_metas.user_id;
+        clientMetadata.userId = data.client_metas.userId;
         clientMetadata.type = data.client_metas.type;
         return await clientMeta.updateMeta(parseInt(data.client_metas.id, 10), clientMetadata);
     } catch (err) {

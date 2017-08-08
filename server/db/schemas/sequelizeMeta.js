@@ -1,6 +1,6 @@
 /**
 File auto-generated
-* */
+**/
 
 const Schema    = require('dbaseql/libs/utils/schema');
 
@@ -10,10 +10,10 @@ module.exports = {
             column: 'name',
             isNullable: false,
             isPrimaryKey: true,
-            type: Schema.DataTypes.STRING,
-        },
+            type: Schema.DataTypes.STRING
+        }
     },
     name: 'sequelizeMeta',
-    tableName: 'SequelizeMeta',
+    tableName: 'SequelizeMeta'
 };
 

@@ -12,8 +12,9 @@ import UpdateCreateForm from '../../components/modals/updateUserForm';
 import * as userAc from '../../ducks/modules/user';
 import * as authAc from '../../ducks/modules/auth';
 import * as commonAc from '../../ducks/modules/common';
-import './user.css';
 
+import './user.css';
+const moment = require('moment');
 const utils = require('../../utils/');
 
 const mapStateToProps = state => ({
@@ -205,11 +206,11 @@ class User extends React.Component {
             this.setState({ editedRecord: {} });
         } else if (newRecord !== record) {
             switch (key) {
-                case 'is_active': {
+                case 'isActive': {
                     method = 'active';
                     break;
                 }
-                case 'deleted_at': {
+                case 'deletedAt': {
                     method = 'delete';
                     break;
                 }
@@ -248,7 +249,15 @@ class User extends React.Component {
         } else if (Object.keys(data[index]).length === 0) {
             return text;
         }
-        if (type === 'boolean') {
+        if (type === 'datetime') {
+            if (!moment(text).isValid()) {
+                return text;
+            } else {
+                return moment(text).format("YYYY-MM-DD");
+            }
+        }
+
+            if (type === 'boolean') {
             let element = null;
 
             if (data[index][key] === true) {
@@ -356,25 +365,25 @@ class User extends React.Component {
                 render: (text, record, index) => this.renderColumns(users, index, 'role', text, 'text', acl.adminGroup),
             },
             {
-                title: 'is_active',
-                dataIndex: 'is_active',
+                title: 'isActive',
+                dataIndex: 'isActive',
                 render: (text, record, index) => this.renderColumns(users, index, 'is_active', text, 'boolean', acl.adminGroup),
             },
             {
                 title: 'Created',
-                dataIndex: 'created_at',
-                render: (text, record, index) => this.renderColumns(users, index, 'created_at', text, 'datetime'),
+                dataIndex: 'createdAt',
+                render: (text, record, index) => this.renderColumns(users, index, 'createdAt', text, 'datetime'),
             },
             {
                 title: 'Modified',
-                dataIndex: 'modified_at',
-                render: (text, record, index) => this.renderColumns(users, index, 'modified_at', text, 'datetime'),
+                dataIndex: 'modifiedAt',
+                render: (text, record, index) => this.renderColumns(users, index, 'modifiedAt', text, 'datetime'),
             },
 
             {
                 title: 'Deleted',
-                dataIndex: 'deleted_at',
-                render: (text, record, index) => this.renderColumns(users, index, 'deleted_at', text, 'datetime'),
+                dataIndex: 'deletedAt',
+                render: (text, record, index) => this.renderColumns(users, index, 'deletedAt', text, 'datetime'),
             },
 
         ];

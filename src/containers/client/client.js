@@ -17,7 +17,7 @@ import './client.css';
 
 const env = process.env.NODE_ENV || 'development';
 const configParams = require('../../config/config')[env];
-
+const moment = require('moment');
 
 const utils = require('../../utils/');
 
@@ -223,16 +223,16 @@ class Clients extends React.Component {
                         method = 'maintenance';
                         break;
                     }
-                    case 'auto_update': {
+                    case 'autoUpdate': {
                         method = 'autoUpdate';
                         break;
                     }
 
-                    case 'client_metas#new_invoice': {
+                    case 'client_metas#newInvoice': {
                         method = 'invoice';
                         break;
                     }
-                    case 'client_metas#new_channel': {
+                    case 'client_metas#newChannel': {
                         method = 'channel';
                         break;
                     }
@@ -397,10 +397,12 @@ class Clients extends React.Component {
         } else if (Object.keys(data[index]).length === 0) {
             return text;
         }
-
+        if (type === 'datetime') {
+            return moment(text).format("YYYY-MM-DD");
+        }
         if (type === 'boolean') {
             let element = null;
-            if (key === 'client_metas#new_channel') {
+            if (key === 'client_metas#newChannel') {
                 if (aclObject.indexOf(auth.role) !== -1) {
                     extraButton = (<Button
                         type="primary"
@@ -456,7 +458,7 @@ class Clients extends React.Component {
 
             return [element, extraButton];
         }
-        if (key === 'client_metas#user_id') {
+        if (key === 'client_metas#userId') {
             return users[text];
         }
         return text;
@@ -569,23 +571,23 @@ class Clients extends React.Component {
             },
             {
                 title: 'AutoUpdate',
-                dataIndex: 'auto_update',
-                key: 'auto_update',
-                render: (text, record, index) => this.renderColumns(clients, index, 'auto_update', text, 'boolean', acl.managerGroup),
+                dataIndex: 'autoUpdate',
+                key: 'autoUpdate',
+                render: (text, record, index) => this.renderColumns(clients, index, 'autoUpdate', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'new_invoice',
-                dataIndex: 'client_metas#new_invoice',
-                key: 'client_metas#new_invoice',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#new_invoice', text, 'boolean', acl.managerGroup),
+                dataIndex: 'client_metas#newInvoice',
+                key: 'client_metas#newInvoice',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#newInvoice', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'channel_manager',
-                dataIndex: 'client_metas#new_channel',
-                key: 'client_metas#new_channel',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#new_channel', text, 'boolean', acl.managerGroup),
+                dataIndex: 'client_metas#newChannel',
+                key: 'client_metas#newChannel',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#newChannel', text, 'boolean', acl.managerGroup),
 
             },
             {
@@ -597,8 +599,8 @@ class Clients extends React.Component {
             },
             {
                 title: 'expireDate',
-                dataIndex: 'expire_date',
-                render: (text, record, index) => this.renderColumns(clients, index, 'expire_date', text, 'datetime'),
+                dataIndex: 'expireDate',
+                render: (text, record, index) => this.renderColumns(clients, index, 'expireDate', text, 'datetime'),
             },
             {
                 title: 'Type',
@@ -610,9 +612,9 @@ class Clients extends React.Component {
             },
             {
                 title: 'user',
-                dataIndex: 'client_metas#user_id',
-                key: 'client_metas#user_id',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#user_id', text, 'text'),
+                dataIndex: 'client_metas#userId',
+                key: 'client_metas#userId',
+                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#userId', text, 'text'),
 
             },
         ];

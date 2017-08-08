@@ -116,7 +116,7 @@ exports.autoUpdateClient = async (req, res) => {
     utils.checkPermissions('clientDb', 'update',  req, res);
     const input = req.body;
     const element = {};
-    element.auto_update = input.auto_update;
+    element.autoUpdate = input.autoUpdate;
     try {
         const result = await performClientUpdate(req.params.id, element, input, req, res);
         return res.json(result);
@@ -129,7 +129,7 @@ exports.newInvoiceClient = async (req, res) => {
     utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
-    element.new_invoice = input.client_metas.new_invoice;
+    element.newIvoice = input.client_metas.newIvoice;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
@@ -142,7 +142,7 @@ exports.channelClient = async (req, res) => {
     utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
-    element.new_channel = input.client_metas.new_channel;
+    element.newChannel = input.client_metas.newChannel;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
