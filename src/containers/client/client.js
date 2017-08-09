@@ -232,7 +232,7 @@ class Clients extends React.Component {
                         method = 'invoice';
                         break;
                     }
-                    case 'client_clientMetametas#newChannel': {
+                    case 'clientMeta#newChannel': {
                         method = 'channel';
                         break;
                     }

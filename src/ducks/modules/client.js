@@ -180,7 +180,6 @@ const initialState = {
     searchClient: '',
 };
 
-
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GET_CLIENTS_SUCCESS: {
@@ -200,7 +199,6 @@ export default function reducer(state = initialState, action) {
 
             };
         }
-
 
         default: {
             return state;

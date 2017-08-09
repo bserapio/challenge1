@@ -129,7 +129,7 @@ exports.newInvoiceClient = async (req, res) => {
     utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
-    element.newIvoice = input.client_metas.newIvoice;
+    element.newInvoice = input.clientMeta.newInvoice;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
@@ -142,7 +142,7 @@ exports.channelClient = async (req, res) => {
     utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
-    element.newChannel = input.client_metas.newChannel;
+    element.newChannel = input.clientMeta.newChannel;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
@@ -156,7 +156,7 @@ exports.ikentooClient = async (req, res) => {
     utils.checkPermissions('clientMeta', 'update',  req, res);
     const input = req.body;
     const element = {};
-    element.ikentoo = input.client_metas.ikentoo;
+    element.ikentoo = input.clientMeta.ikentoo;
     try {
         const result = await performClientMetaUpdate(req.params.id, element, input);
         return res.json(result);
