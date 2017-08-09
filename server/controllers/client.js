@@ -2,9 +2,9 @@
 
 const t = require('tcomb-validation');
 const domain = require('../validator');
-const db = require('../old_db/models');
 const clientManager = require('../managers/client');
 const clientMetaManager = require('../managers/client_meta');
+const userManager = require('../managers/user');
 const utils = require('../utils/permissions');
 
 const performClientUpdate = async (id, element, input, req, res) => {
@@ -181,18 +181,21 @@ exports.updateClient = async (req, res) => {
 };
 
 
-exports.elevateClient = (req, res) => {
-    const input = req.body;
-
-    db.User.findOne({ where: { 'username': input.username } }).then(user => {
-        if (!user) {
-            res.status(404).json({ message: 'Incorrect username.' });
-        } else if (!user.validPassword(input.password)) {
-            res.status(403).json({ message: 'Incorrect password.' });
-        } else {
-            res.json({ key: 'doudfsifdkjasvgdasjhgdasgk' });
+exports.elevateClient = async (req, res) => {
+    try {
+        const input = req.body;
+        const user = await userManager.getUserByUsername(input.username);
+        if (user.length === 0) {
+            return res.status(404).json({ message: 'Incorrect username.' });
+        } else if (user.length > 1) {
+            return res.status(403).json({ message: 'More than one account with same username' });
         }
-        // TODO: Here I need call API for elevate Token
-    });
+        if (!utils.checkPassword(req.body.password, user[0].password)) {
+            return res.status(403).json({ message: 'Error in Username/Password' });
+        }
+        return res.json({ key: 'doudfsifdkjasvgdasjhgdasgk' });
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 };
 
