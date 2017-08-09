@@ -39,18 +39,15 @@ class App extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { auth, router } = this.props;
+        const { auth, router } = nextProps;
 
-
-        if (nextProps.auth.role !== auth.role) {
-            if (nextProps.auth.role === 'guest') {
-                try {
-                    if (router.location.pathname !== '/') {
-                        window.location = '/';
-                    }
-                } catch (err) {
-                    throw err;
+        if (auth.role === 'guest') {
+            try {
+                if (router.location.pathname !== '/') {
+                    window.location = '/';
                 }
+            } catch (err) {
+                throw err;
             }
         }
     }
