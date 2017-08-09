@@ -8,31 +8,25 @@ const env = process.env.NODE_ENV || 'development';
 const parameters = require('../../config/parameters.json')[env]; // eslint-disable-lin
 
 const acl = {
-    urlPath: {},
     aclGroup: {},
     modelAcl: {},
 
     addModelAcl(element) {
         Object.assign(this.modelAcl, element);
     },
-    get() {
-        return this.urlPath;
-    },
-
     middleware(req, res, next) {
         if (req.path === '/') {
             return next();
         }
-
-
         if (!req.headers.authorization) {
             return res.status(401).end();
         }
 
         const token = req.headers.authorization.split(' ')[1];
         return jwt.verify(token, parameters.jwtSecret, (err, decoded) => {
-            if (err) { return res.status(401).end(); }
-
+            if (err) {
+                return res.status(401).end();
+            }
             const userId = decoded.sub;
             return userManager.detailUser(userId)
                     .then(user => {
@@ -51,7 +45,6 @@ const acl = {
     },
 };
 
-// ACL MODELS
 const usersModel = {
     'users': {
         create: groupsAcl.adminGroup,
@@ -62,8 +55,6 @@ const usersModel = {
     },
 
 };
-
-
 const clientDbModel = {
     'clientDb': {
         create: groupsAcl.managerGroup,
@@ -74,7 +65,6 @@ const clientDbModel = {
     },
 
 };
-
 const clientMetaModel = {
     'clientMeta': {
         create: groupsAcl.managerGroup,
