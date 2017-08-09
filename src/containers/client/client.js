@@ -228,17 +228,17 @@ class Clients extends React.Component {
                         break;
                     }
 
-                    case 'client_metas#newInvoice': {
+                    case 'clientMeta#newInvoice': {
                         method = 'invoice';
                         break;
                     }
-                    case 'client_metas#newChannel': {
+                    case 'client_clientMetametas#newChannel': {
                         method = 'channel';
                         break;
                     }
 
 
-                    case 'client_metas#ikentoo': {
+                    case 'clientMeta#ikentoo': {
                         method = 'ikentoo';
                         break;
                     }
@@ -402,7 +402,7 @@ class Clients extends React.Component {
         }
         if (type === 'boolean') {
             let element = null;
-            if (key === 'client_metas#newChannel') {
+            if (key === 'clientMeta#newChannel') {
                 if (aclObject.indexOf(auth.role) !== -1) {
                     extraButton = (<Button
                         type="primary"
@@ -413,7 +413,7 @@ class Clients extends React.Component {
                     />);
                 }
             }
-            if (key === 'client_metas#ikentoo') {
+            if (key === 'clientMeta#ikentoo') {
                 if (aclObject.indexOf(auth.role) !== -1) {
                     extraButton = (<Button
                         type="primary"
@@ -458,7 +458,7 @@ class Clients extends React.Component {
 
             return [element, extraButton];
         }
-        if (key === 'client_metas#userId') {
+        if (key === 'clientMeta#userId') {
             return users[text];
         }
         return text;
@@ -578,23 +578,23 @@ class Clients extends React.Component {
             },
             {
                 title: 'new_invoice',
-                dataIndex: 'client_metas#newInvoice',
-                key: 'client_metas#newInvoice',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#newInvoice', text, 'boolean', acl.managerGroup),
+                dataIndex: 'clientMeta#newInvoice',
+                key: 'clientMeta#newInvoice',
+                render: (text, record, index) => this.renderColumns(clients, index, 'clientMeta#newInvoice', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'channel_manager',
-                dataIndex: 'client_metas#newChannel',
-                key: 'client_metas#newChannel',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#newChannel', text, 'boolean', acl.managerGroup),
+                dataIndex: 'clientMeta#newChannel',
+                key: 'clientMeta#newChannel',
+                render: (text, record, index) => this.renderColumns(clients, index, 'clientMeta#newChannel', text, 'boolean', acl.managerGroup),
 
             },
             {
                 title: 'ikentoo',
-                dataIndex: 'client_metas#ikentoo',
-                key: 'client_metas#ikentoo',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#ikentoo', text, 'boolean', acl.managerGroup),
+                dataIndex: 'clientMeta#ikentoo',
+                key: 'clientMeta#ikentoo',
+                render: (text, record, index) => this.renderColumns(clients, index, 'clientMeta#ikentoo', text, 'boolean', acl.managerGroup),
 
             },
             {
@@ -604,17 +604,17 @@ class Clients extends React.Component {
             },
             {
                 title: 'Type',
-                dataIndex: 'client_metas#type',
-                onFilter: (value, record) => record['client_metas#type'].indexOf(value) === 0,
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#type', text, 'text'),
+                dataIndex: 'clientMeta#type',
+                onFilter: (value, record) => record['clientMeta#type'].indexOf(value) === 0,
+                render: (text, record, index) => this.renderColumns(clients, index, 'clientMeta#type', text, 'text'),
                 filters: utils.typeFilter,
 
             },
             {
                 title: 'user',
-                dataIndex: 'client_metas#userId',
-                key: 'client_metas#userId',
-                render: (text, record, index) => this.renderColumns(clients, index, 'client_metas#userId', text, 'text'),
+                dataIndex: 'clientMeta#userId',
+                key: 'clientMeta#userId',
+                render: (text, record, index) => this.renderColumns(clients, index, 'clientMeta#userId', text, 'text'),
 
             },
         ];

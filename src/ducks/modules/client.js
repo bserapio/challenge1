@@ -19,17 +19,17 @@ export const SEARCH_FILTER = `${{ DEFAULT_PATH }}/SEARCH_FILTER`;
 const prepareClients = data => {
     const results = data;
     results.forEach((item, index) => {
-        if (Object.prototype.hasOwnProperty.call(item, 'client_metas')) {
-            const element = item.client_metas;
+        if (Object.prototype.hasOwnProperty.call(item, 'clientMeta')) {
+            const element = item.clientMeta;
             if (element) {
                 Object.keys(element).forEach(prop => {
                     if (element && Object.prototype.hasOwnProperty.call(element, prop)) {
                         if (prop === 'users') {
                             Object.keys(element[prop]).forEach(prop1 => {
-                                item[`client_metas#users#${prop1}`] = element[prop][prop1];
+                                item[`clientMeta#users#${prop1}`] = element[prop][prop1];
                             });
                         } else {
-                            item[`client_metas#${prop}`] = element[prop];
+                            item[`clientMeta#${prop}`] = element[prop];
                         }
                     }
                 });
@@ -184,7 +184,6 @@ const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case GET_CLIENTS_SUCCESS: {
-            console.log(action.payload.data);
             const clients = prepareClients(action.payload.data);
 
             return {

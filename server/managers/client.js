@@ -1,10 +1,12 @@
 'use strict';
 
-const db = require('../old_db/models');
+
 const utils = require('../utils/index');
+const queryUtils = require('../utils/query');
 const moment = require('moment');
 const dbApiService  = require('../db/dbApiService');
 const clientMeta = require('./client_meta');
+
 
 const createClient = async (user, data) => {
     try {
@@ -23,21 +25,21 @@ const createClient = async (user, data) => {
     }
 };
 
-const listClient = async () => {
+const listClient = async role => {
     const dataProvider = await dbApiService.getDataProvider('pool_name', 'schema_name');
-
     try {
-        const query = {
+        const oldQuery = {
             'with': {
-                'client_metas': { 'columns': ['*'],
-                    'with': {
-                        'users': { 'columns': ['*'] },
-
-                    } },
+                'clientMeta': { 'columns': ['*'],
+                    'with': { 'users': { 'columns': ['*'] } },
+                },
 
             },
             order: [['id', 'ASC']],
         };
+
+        const query = queryUtils.buildQuery(oldQuery, role);
+
         return await dataProvider.fetchAll('clientDb', query);
     } catch (err) {
         throw err;

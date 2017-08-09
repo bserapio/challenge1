@@ -52,7 +52,7 @@ exports.addClient = async (req, res) => {
 exports.listClient = async (req, res) => {
     utils.checkPermissions('clientDb', 'read',  req, res);
     try {
-        const result =  await clientManager.listClient();
+        const result =  await clientManager.listClient(req.user.role);
 
         return res.json(result);
     } catch (err) {

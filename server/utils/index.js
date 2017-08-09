@@ -14,18 +14,7 @@ const checkPassword = (pass, cryptedPass) => {
     return bcrypt.compareSync(pass, hash);
 };
 
-const checkPermissions = (model, action, req, res) => {
-    console.log(aclModel);
-
-    if (aclModel.aclFix.modelMiddleware(model, action, req.user.role)) {
-        return true;
-    }
-    return res.status('403').json({ message: 'You are not allow' });
-};
-
-
-
 module.exports = {
 
-    remove, generatePassword, randomPassword, checkPassword,checkPermissions
+    remove, generatePassword, randomPassword, checkPassword
 };

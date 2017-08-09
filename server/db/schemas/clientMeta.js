@@ -17,7 +17,7 @@ module.exports = {
             isNullable: false,
             type: Schema.DataTypes.INTEGER
         },
-        client_db: {
+        clientDb: {
             column: 'client_id',
             references: {
                 associationType: Schema.AssociationTypes.MANY_TO_ONE,

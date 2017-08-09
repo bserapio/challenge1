@@ -6,7 +6,7 @@ const Schema    = require('dbaseql/libs/utils/schema');
 
 module.exports = {
     attributes: {
-        client_metas2: {
+        clientMeta: {
             references: {
                 associationType: Schema.AssociationTypes.ONE_TO_MANY,
                 model: 'clientMeta',

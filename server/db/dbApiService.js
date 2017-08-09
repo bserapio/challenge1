@@ -59,4 +59,5 @@ module.exports = {
         }
         return connections[poolName];
     },
+    ormService,
 };

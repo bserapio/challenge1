@@ -55,12 +55,13 @@ const acl = {
             return res.status(401).json({ message: err.message });
         }
     },
-    modelMiddleware(name, action, group) {
+    modelMiddleware(name, action, role) {
+
         if (!Object.prototype.hasOwnProperty.call(this.modelAcl, name)) {
             return false;
         }
         const model = this.modelAcl[name];
-        return model[action].indexOf(group) !== -1;
+        return model[action].indexOf(role) !== -1;
     },
 };
 const usersPath = {
@@ -181,11 +182,12 @@ const clientelevate = {
     ],
 
 };
+
 // ACL MODELS
 const usersModel = {
     'users': {
         create: groupsAcl.adminGroup,
-        read: groupsAcl.userGroup,
+        read: groupsAcl.managerGroup,
         update: groupsAcl.adminGroup,
         delete: groupsAcl.adminGroup,
 
