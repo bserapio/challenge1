@@ -16,5 +16,5 @@ const checkPassword = (pass, cryptedPass) => {
 
 module.exports = {
 
-    remove, generatePassword, randomPassword, checkPassword
+    remove, generatePassword, randomPassword, checkPassword,
 };
