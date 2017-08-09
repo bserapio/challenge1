@@ -49,6 +49,8 @@ class App extends React.Component {
             } catch (err) {
                 throw err;
             }
+        } else if (router.location.pathname === '/') {
+            window.location = '/clients';
         }
     }
 
@@ -60,7 +62,6 @@ class App extends React.Component {
 
     render() {
         const { apiError, auth, children, router, apiActions, config } = this.props;
-
         let CurrentPath;
         try {
             CurrentPath = router.location.pathname;
@@ -82,7 +83,7 @@ class App extends React.Component {
             apiActions.clearError();
         }
         if (auth.role !== 'guest') {
-            username = (<span className="username">Hello {auth.username}</span>);
+            username = (<span className="username">Hello {auth.name}</span>);
         } else {
             username = null;
         }
