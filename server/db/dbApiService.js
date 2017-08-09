@@ -12,8 +12,7 @@ const loadSchemas = require('dbaseql/libs/utils/loadSchemas');
 const path = require('path');
 
 const env = process.env.NODE_ENV || 'development';
-
-const parameters = require(`${__dirname}/../../config/parameters.json`)[env]; // eslint-disable-line
+const parameters = require('../../config/parameters.json')[env];
 
 
 const connectorService = new ConnectorService({
