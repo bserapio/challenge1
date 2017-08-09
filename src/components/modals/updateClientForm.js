@@ -40,7 +40,7 @@ class UpdateForm extends React.Component {
     handleSelectTypeChange = value => {
         const { changeUpdateRecord } = this.props;
         const { record } = this.state;
-        record.client_metas.type = value;
+        record.clientMeta.type = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };
@@ -48,7 +48,7 @@ class UpdateForm extends React.Component {
     handleSelectUserChange = value => {
         const { record } = this.state;
         const { changeUpdateRecord } = this.props;
-        record.client_metas.userId = value;
+        record.clientMeta.userId = value;
         this.setState({ record });
         changeUpdateRecord(record);
     };
@@ -86,7 +86,6 @@ class UpdateForm extends React.Component {
 
         if (users) {
             Object.keys(users).forEach(element => {
-
                 const ele = users[element];
                 children.push(<Option value={element} key={element}>{ele}</Option>);
             });
@@ -143,13 +142,13 @@ class UpdateForm extends React.Component {
 
 
                     <FormItem label="Client Type" hasFeedback>
-                        <Select defaultValue={record['client_metas#type']} onChange={this.handleSelectTypeChange}>
+                        <Select defaultValue={record['clientMeta#type']} onChange={this.handleSelectTypeChange}>
                             {typeChildren}
                         </Select>
                     </FormItem>
 
                     <FormItem label="Owner" hasFeedback>
-                        <Select defaultValue={String(users[record['client_metas#user_id']])} onChange={this.handleSelectUserChange}>
+                        <Select defaultValue={String(users[record['clientMeta#user_id']])} onChange={this.handleSelectUserChange}>
                             {children}
                         </Select>
                     </FormItem>
