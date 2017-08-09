@@ -53,7 +53,7 @@ export function error401() {
         apiError.code = '401';
         apiError.message = 'You are not logged in';
         localStorage.removeItem('user');
-        window.location = '/';
+        // window.location = '/';
         return dispatch({
             type: ERROR_401,
             payload: { apiError },

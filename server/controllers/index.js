@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
         const user = await userManager.getUserByUsername(req.body.username);
 
         if (user.length === 0) {
-            return res.status(401).json({ message: 'Incorrect username.' });
+            return res.status(401).end();
         } else if (user.length > 1) {
             return res.status(401).json({ message: 'More than one account with same username' });
         }

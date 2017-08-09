@@ -57,29 +57,30 @@ const middlewareConfig = {
                 return req;
             },
             error({ getState, dispatch, getSourceAction }, error) {
-                console.log(error.response);
-                switch (error.response.status) {
-                    case 400: {
-                        return dispatch(apiAc.error400(error.response.data));
-                    }
-                    case 401: {
-                        return dispatch(apiAc.error401());
-                    }
-                    case 403: {
-                        return dispatch(apiAc.error403());
-                    }
-                    case 405: {
-                        return dispatch(apiAc.error405());
-                    }
-                    case 500: {
-                        return dispatch(apiAc.error500());
-                    }
-                    default: {
-                        return error;
-                    }
+                if (error.response) {
+                    switch (error.response.status) {
+                        case 400: {
+                            return dispatch(apiAc.error400(error.response.data));
+                        }
+                        case 401: {
+                            return dispatch(apiAc.error401());
+                        }
+                        case 403: {
+                            return dispatch(apiAc.error403());
+                        }
+                        case 405: {
+                            return dispatch(apiAc.error405());
+                        }
+                        case 500: {
+                            return dispatch(apiAc.error500());
+                        }
+                        default: {
+                            throw error;
+                        }
 
-
+                    }
                 }
+                return error;
             },
         },
         ],

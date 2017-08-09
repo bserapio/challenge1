@@ -41,7 +41,6 @@ const removeUndefined = value => {
 const getToken = () => {
     let token = null;
     const authConfig = checkAuth();
-    console.log(authConfig);
     if (authConfig) {
         token = authConfig.token;
     }

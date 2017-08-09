@@ -41,10 +41,18 @@ class NormalLoginForm extends React.Component {
         const { authActions, history } = this.props;
         const { credentials } = this.state;
         authActions.loginUserAction(credentials).then(
+            data => {
+                if (data.payload.data) {
+                    history.push('/clients');
+                }
+            },
             () => {
-                history.push('/clients');
+                console.log('Entro en err');
             }
-        );
+        )
+            .catch(() => {
+                console.log('entro en catcj');
+            });
     }
 
     render() {
@@ -90,7 +98,7 @@ class NormalLoginForm extends React.Component {
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Log in
                     </Button>
-                    Or <a href="">register now!</a>
+
                 </FormItem>
             </Form>
         );

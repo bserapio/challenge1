@@ -6,7 +6,6 @@ export const LOGIN_SUCCESS = `${{ DEFAULT_PATH }}/LOGIN_SUCCESS`;
 export const LOGIN_ERROR = `${{ DEFAULT_PATH }}/LOGIN_ERROR`;
 export const LOGOUT_REQUEST = `${{ DEFAULT_PATH }}/LOGOUT_REQUEST`;
 export const LOGOUT_SUCCESS = `${{ DEFAULT_PATH }}/LOGOUT_SUCCESS`;
-export const CHECK_LOGIN = `${{ DEFAULT_PATH }}/CHECK_LOGIN`;
 
 
 export function checkAuthAction() {
@@ -16,29 +15,22 @@ export function checkAuthAction() {
                 type: LOGIN_REQUEST,
                 payload: {},
             });
-
-        const checkAuth = localStorage.getItem('user');
-        if (checkAuth) {
-            try {
-                const auth = {};
-                auth.data = JSON.parse(checkAuth);
-                configureStore.history.replace(window.location.pathname);
-                return dispatch(
-                    {
-                        type: LOGIN_SUCCESS,
-                        payload: auth,
-                    });
-            } catch (err) {
-                return dispatch({
-                    type: LOGIN_ERROR,
-                    payload: {},
+        try {
+            const checkAuth = localStorage.getItem('user');
+            const auth = {};
+            auth.data = JSON.parse(checkAuth);
+            configureStore.history.replace(window.location.pathname);
+            return dispatch(
+                {
+                    type: LOGIN_SUCCESS,
+                    payload: auth,
                 });
-            }
+        } catch (err) {
+            return dispatch({
+                type: LOGIN_ERROR,
+                payload: {},
+            });
         }
-        return dispatch({
-            type: LOGIN_ERROR,
-            payload: {},
-        });
     };
 }
 export const loginUserAction = data => ({
@@ -77,15 +69,18 @@ export default function reducer(state = initialState, action) {
 
         case LOGIN_SUCCESS: {
             const auth = action.payload.data;
-            localStorage.setItem('user', JSON.stringify(action.payload.data));
-            return {
-                ...state,
-                auth,
-                apiError: null,
-                loginError: null,
-            };
+            if (auth) {
+                localStorage.setItem('user', JSON.stringify(action.payload.data));
+                return {
+                    ...state,
+                    auth,
+                    apiError: null,
+                    loginError: null,
+                };
+            }
+            return state;
         }
-        case CHECK_LOGIN: {
+        case LOGIN_REQUEST: {
             return {
                 ...state,
                 apiError: null,
@@ -104,11 +99,10 @@ export default function reducer(state = initialState, action) {
             };
         }
         case LOGIN_ERROR: {
-            const { loginError } = action.payload;
-
+            localStorage.removeItem('user');
             return {
                 ...state,
-                loginError,
+                loginError: { message: 'Error' },
             };
         }
 
