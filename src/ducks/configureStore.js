@@ -21,10 +21,6 @@ const middleware = routerMiddleware(history);
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
 
-console.log(utils.checkAuth());
-
-const authConfig = utils.checkAuth();
-
 const axiosClient = axios.create({ // all axios can be used, shown in axios documentation
     baseURL: '/',
     withCredentials: true,
