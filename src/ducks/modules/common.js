@@ -14,6 +14,7 @@ export const getConfigAction = () => {
     if (configStorage) {
         const config = {};
         config.data = JSON.parse(configStorage);
+
         return dispatch => {
             dispatch({
                 type: REQUEST_CONFIG_SUCCESS,

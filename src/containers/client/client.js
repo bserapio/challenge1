@@ -110,12 +110,14 @@ class Clients extends React.Component {
 
 
     componentWillReceiveProps(nextProps) {
-        const { userActions, clientActions, commonActions, auth, config } = this.props;
+        const { userActions, clientActions, commonActions, auth } = this.props;
+        const {config} = nextProps;
         if (!config) {
             commonActions.getConfigAction();
         }
         if (nextProps.auth !== auth) {
             const role = nextProps.auth.role;
+
             if (config && config.acl.managerGroup.indexOf(role) !== -1) {
                 userActions.getUserAction();
             }
@@ -390,7 +392,6 @@ class Clients extends React.Component {
 
     renderColumns(data, index, key, text, type, aclObject) {
         const { auth, users } = this.props;
-
         let extraButton = null;
         if (!data) {
             return text;
