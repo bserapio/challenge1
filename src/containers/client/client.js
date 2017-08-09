@@ -398,7 +398,7 @@ class Clients extends React.Component {
             return text;
         }
         if (type === 'datetime') {
-            return moment(text).format("YYYY-MM-DD");
+            return moment(text).format('YYYY-MM-DD');
         }
         if (type === 'boolean') {
             let element = null;

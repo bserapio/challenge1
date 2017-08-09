@@ -1,7 +1,11 @@
 'use strict';
 
+const jwt = require('jsonwebtoken');
 const pathToRegexp = require('path-to-regexp');
 const groupsAcl = require('./aclGroups');
+const userManager = require('../managers/user');
+const env = process.env.NODE_ENV || 'development';
+const parameters = require(`${__dirname}/../../config/parameters.json`)[env]; // eslint-disable-lin
 
 const acl = {
     urlPath: {},
@@ -44,19 +48,28 @@ const acl = {
         if (req.path === '/') {
             return next();
         }
-
-        try {
-            const role = req.user.role;
-            return next();
-        } catch (err) {
-            if (Object.prototype.hasOwnProperty.call(err, 'id')) {
-                return res.status(err.id).json({ message: 'You are not logged' });
-            }
-            return res.status(401).json({ message: err.message });
+        console.log(req.headers);
+        if (!req.headers.authorization) {
+            return res.status(401).end();
         }
+
+            // get the last part from a authorization header string like "bearer token-value"
+        const token = req.headers.authorization.split(' ')[1];
+        return jwt.verify(token,parameters.jwtSecret, (err, decoded) => {
+                // the 401 code is for unauthorized status
+            if (err) { return res.status(401).end(); }
+
+            const userId = decoded.sub;
+            return userManager.detailUser(userId)
+                    .then(user => {
+                        req.user = { role: user.role, username: user.username };
+                        return next();
+                    }, () => res.status(401).end())
+                .catch(catchErr => res.status(401).end());
+        });
+
     },
     modelMiddleware(name, action, role) {
-
         if (!Object.prototype.hasOwnProperty.call(this.modelAcl, name)) {
             return false;
         }

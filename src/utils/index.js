@@ -38,9 +38,21 @@ const removeUndefined = value => {
     }
     return false;
 };
+const getToken = () => {
+    let token = null;
+    const authConfig = checkAuth();
+    console.log(authConfig);
+    if (authConfig) {
+        token = authConfig.token;
+    }
+    return token;
+};
+
+
 module.exports = {
     stringOrder,
     checkAuth,
+    getToken,
     generateKey,
     removeUndefined,
     typeFilter,

@@ -20,7 +20,7 @@ app.options('*', cors());
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 app.use(morgan('combined', { stream: accessLogStream }));
-require('./acl/passport')(passport);
+
 
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(bodyParser.urlencoded({ extended: false }));

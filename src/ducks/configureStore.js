@@ -7,7 +7,7 @@ import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 
 import thunk from 'redux-thunk';
-
+import utils from '../utils/';
 import * as apiAc from './modules/api';
 import auth from './modules/auth';
 import client from './modules/client';
@@ -21,11 +21,15 @@ const middleware = routerMiddleware(history);
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
 
+console.log(utils.checkAuth());
+
+const authConfig = utils.checkAuth();
 
 const axiosClient = axios.create({ // all axios can be used, shown in axios documentation
     baseURL: '/',
     withCredentials: true,
     cancelToken: source.token,
+
 });
 
 const reducer = combineReducers({
@@ -42,6 +46,7 @@ const middlewareConfig = {
     interceptors: {
         request: [{
             success({ getState, dispatch, getSourceAction }, req) {
+                req.headers.Authorization = `bearer ${utils.getToken()}`;
                 dispatch(apiAc.sendRequest(req));
                 return req;
             },
